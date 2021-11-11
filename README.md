@@ -12,7 +12,7 @@ Hi there 👋，这是我的博客 gukaifeng.cn 的资源仓库。
 大部分文章都在 \_posts 文件夹内，对应的文章博客链接是 `https://gukaifeng.cn/posts/[文章名字]`，  
 文章名字就是 markdown 文件去掉后缀 `.md` 剩下的部分，直接用中文就好，空格用横线 `-` 替代。
 
--
+---
 
 本站文章的发布与更新流程是，我在本地编辑 markdown📝，然后 push 到此仓库🏡，触发 GitHub Webhook🪝，随即博客站服务器拉取此仓库中的最新内容，同步更新♻️。
 
