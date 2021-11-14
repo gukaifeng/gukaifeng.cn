@@ -25,6 +25,3 @@ memtable 是一个内存数据结构。新的写操作会被插入到 memtable �
 ## 参考资料
 
 https://github.com/facebook/rocksdb/wiki/RocksDB-Overview
-
-
-<br/><br/>`此博客结束`
