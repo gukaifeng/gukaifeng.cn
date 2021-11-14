@@ -7,13 +7,15 @@ tags: [数据库, RocksDB]
 
 
 
-# RocksDB -- 术语
+
 
 本篇博客解释了 RocksDB 的相关术语。  
 同时，考虑到术语的特殊性，部分名词仅做解释，不做翻译。
 
+<!--more-->
 
 ##### 1. 2PC (Two-phase commit)
+
 表示分为两个阶段提交。悲观事务可以在两个阶段提交：首先是准备，然后是实际的提交。 See https://github.com/facebook/rocksdb/wiki/Two-Phase-Commit-Implementation
 
 ##### 2. Backup

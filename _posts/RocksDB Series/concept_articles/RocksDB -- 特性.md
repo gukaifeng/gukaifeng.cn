@@ -5,7 +5,9 @@ categories: [技术杂谈]
 tags: [数据库, RocksDB]
 ---
 
-# RocksDB -- 特性
+
+
+
 
 ### 1. Column Families
 
@@ -19,7 +21,7 @@ RocksDB 为用户在跨 column families 中保证了一致的视图，在启用 
 `Write` API 可以自动地插入、更新或删除多个 kv 对。RocksDB 会保证一个` Wirte`，要么完成全部的操作，要么什么都不做。如果` Wirte` 执行插入操作的时候，有 key 已经存在的话，那这个 key 之前的 value 就会被覆盖。  
 [`DeleteRange`](https://github.com/facebook/rocksdb/wiki/DeleteRange)  API 可以用来删除一个范围的 keys。
 
-
+<!--more-->
 
 ### 3. Gets, Iterators and Snapshots
 

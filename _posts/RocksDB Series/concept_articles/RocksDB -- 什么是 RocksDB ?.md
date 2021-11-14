@@ -7,7 +7,9 @@ tags: [数据库, RocksDB]
 
 
 
-# RocksDB -- 什么是 RocksDB ?
+
+
+
 
 
 ## 1. 简介
@@ -15,6 +17,8 @@ tags: [数据库, RocksDB]
 RocksDB 是一个有着 key/value 接口的存储引擎，由 FaceBook 公司基于 LevelDB 开发，并向后兼容 LevelDB 的 API。作为一个存储引擎，RocksDB 工作在各种各样的存储介质上，其最初的目标是快速存储 (尤其是 Flash 存储)。  RocksDB 是一个存储 key/value 的 C++ 库，kv 是任意长度的字节流。支持点查找、范围扫描，并且提供了不同类型的 ACID 保证策略。
 
 RocksDB 平衡了可自定义性与自适应性。RocksDB 支持高度灵活的配置设置，以保证其可以再各种生产环境下运行，包括 SSD、硬盘、ramfs 以及远程存储。RocksDB 支持多种压缩算法，支持一些在产品支持与调试上的优秀工具。另一方面，RocksDB 努力限制旋钮的数量，以提供足够好的开箱即用性能，并在适用的情况下使用一些自适应算法。
+
+<!--more-->
 
 
 ## 2. 特性
