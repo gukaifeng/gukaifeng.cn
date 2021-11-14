@@ -19,7 +19,7 @@ tags: [RocksDB, 数据库]
 
 现在从下面的代码开始来介绍 RocksDB 数据库的几个基础操作：
 
-
+<!--more-->
 
 ```cpp
 #include <cassert>

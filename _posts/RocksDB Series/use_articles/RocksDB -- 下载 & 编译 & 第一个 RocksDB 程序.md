@@ -28,6 +28,8 @@ Release 页面：https://github.com/facebook/rocksdb/releases 。
 首先，进入我们 clone 下的或解压 tar.gz 文件出的 RocksDB 目录。
 我这里是 `~/bubu/rocksdb-6.25.3`。
 
+<!--more-->
+
 ### 2.1. 编译静态库
 
 输入命令 `make static_lib`，将开始编译静态库.  
