@@ -19,7 +19,7 @@ memtable 是一个内存数据结构。新的写操作会被插入到 memtable �
 
 默认的 sstfile 格式是 BlockBasedTable，[点此了解更多](https://gukaifeng.me/2021/05/19/RocksDB-BlockBasedTable-%E5%88%86%E6%9E%90/)。
 
-![](/posts/RocksDB%20--%20高级架构/RocksDB--gao-ji-jia-gou_1.png)
+![](/posts/rocksdb-gao-ji-jia-gou/RocksDB--gao-ji-jia-gou_1.png)
 
 
 ## 参考资料
