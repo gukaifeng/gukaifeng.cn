@@ -3,7 +3,7 @@ title: Java中的Abstract Class(抽象类)
 mathjax: false
 date: 2020-03-16 23:41:56
 updated: 2020-03-16 23:41:56
-tags: [Java,JavaSE]
+tags: [Java]
 categories: [编程语言基础]
 toc: true
 ---

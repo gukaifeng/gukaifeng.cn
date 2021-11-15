@@ -3,7 +3,7 @@ title: Rust -- 集合 HashSet
 date: 2021-10-27 23:08:06
 updated: 2021-10-27 23:08:06
 categories: [编程语言基础]
-tags: [Rust]
+tags: [Rust,数据结构]
 toc: true
 ---
 

@@ -3,7 +3,7 @@ title: JavaBean
 mathjax: false
 date: 2020-03-16 23:58:00
 updated: 2020-03-16 23:58:00
-tags: [Java,JavaSE,JavaBean]
+tags: [Java]
 categories: [编程语言基础]
 toc: true
 ---

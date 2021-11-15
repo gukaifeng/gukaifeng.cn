@@ -3,7 +3,7 @@ title: Rust -- 动态链表 LinkedList
 date: 2021-10-27 23:10:09
 updated: 2021-10-27 23:10:09
 categories: [编程语言基础]
-tags: [Rust]
+tags: [Rust,数据结构]
 toc: true
 ---
 

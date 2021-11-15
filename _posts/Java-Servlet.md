@@ -3,7 +3,7 @@ title: Java Servlet
 mathjax: false
 date: 2020-03-18 11:20:29
 updated: 2020-03-18 11:20:29
-tags: [Java,JavaEE,Servlet,JavaWeb, 服务器]
+tags: [Java]
 categories: [网络编程]
 toc: true
 ---
