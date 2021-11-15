@@ -18,7 +18,7 @@ toc: true
 
 我本想去联系我的名字全拼 id 的持有人，但是到了那个主页后看到的画面是这样子的：
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/%E6%83%B3%E8%A6%81%E7%9A%84%20GitHub%20ID%20%E8%A2%AB%E6%B3%A8%E5%86%8C%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%9F_1.jpg)
+![](https://gukaifeng.cn/posts/xiang-yao-de-github-id-bei-zhu-ce-liao-zen-me-ban/%E6%83%B3%E8%A6%81%E7%9A%84%20GitHub%20ID%20%E8%A2%AB%E6%B3%A8%E5%86%8C%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%9F_1.jpg)
 
 这直接断了我想联系这个人的念头。。。
 
@@ -43,13 +43,13 @@ toc: true
 
 举个例子，我是这么写的：
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/%E6%83%B3%E8%A6%81%E7%9A%84%20GitHub%20ID%20%E8%A2%AB%E6%B3%A8%E5%86%8C%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%9F_2.png)
+![](https://gukaifeng.cn/posts/xiang-yao-de-github-id-bei-zhu-ce-liao-zen-me-ban/%E6%83%B3%E8%A6%81%E7%9A%84%20GitHub%20ID%20%E8%A2%AB%E6%B3%A8%E5%86%8C%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%9F_2.png)
 
 表达一下我的想法：我想要这个 GitHub ID "gukaifeng”，虽然它已经被使用了，但是没有活动。非常感谢！<br/>然后 Send request 。
 
 4\. 接下来就没什么事了，就等消息了，不过真的蛮快的，我中午弄得，大概晚饭前就给我回邮件了！
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/%E6%83%B3%E8%A6%81%E7%9A%84%20GitHub%20ID%20%E8%A2%AB%E6%B3%A8%E5%86%8C%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%9F_3.jpg)
+![](https://gukaifeng.cn/posts/xiang-yao-de-github-id-bei-zhu-ce-liao-zen-me-ban/%E6%83%B3%E8%A6%81%E7%9A%84%20GitHub%20ID%20%E8%A2%AB%E6%B3%A8%E5%86%8C%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%9F_3.jpg)
 
 告诉我我想要的 id 现在可以注册啦，快去抢！大功告成，开心！
 
