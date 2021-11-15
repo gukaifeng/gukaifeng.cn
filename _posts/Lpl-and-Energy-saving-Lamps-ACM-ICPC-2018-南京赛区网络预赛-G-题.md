@@ -4,7 +4,7 @@ mathjax: true
 date: 2018-09-02 09:17:13
 updated: 2018-09-02 09:17:13
 tags: [ACM,线段树,算法]
-categories: [基础算法]
+categories: [算法题目]
 toc: true
 ---
 
