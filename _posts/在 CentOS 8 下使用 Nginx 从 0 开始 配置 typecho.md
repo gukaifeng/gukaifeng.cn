@@ -1,6 +1,7 @@
 ---
 title: 在 CentOS 8 下使用 Nginx 从 0 开始配置 Typecho
 date: 2021-09-05 20:55
+updated: 2021-09-05 20:55
 categories: [技术杂谈]
 tags: [CentOS,Nginx,Typecho,SQLite,PHP]
 toc: true

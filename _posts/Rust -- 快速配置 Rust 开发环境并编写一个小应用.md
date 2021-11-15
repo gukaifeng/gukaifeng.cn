@@ -1,8 +1,10 @@
 ---
 title: Rust -- 快速配置 Rust 开发环境并编写一个小应用
 date: 2021-07-30 09:31
-categories: [Technology]
+updated: 2021-07-30 09:31
+categories: [技术杂谈]
 tags: [Rust]
+toc: true
 ---
 
 

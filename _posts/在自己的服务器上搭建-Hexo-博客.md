@@ -1,6 +1,7 @@
 ---
 title: 在自己的服务器上搭建 Hexo 博客
 date: 2021-11-07 00:58:32
+updated: 2021-11-07 00:58:32
 categories: [技术杂谈]
 tags: [Linux, Hexo, Blog]
 toc: true

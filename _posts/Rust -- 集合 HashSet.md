@@ -1,8 +1,10 @@
 ---
 title: Rust -- 集合 HashSet
 date: 2021-10-27 23:08:06
-categories: [Technology]
+updated: 2021-10-27 23:08:06
+categories: [技术杂谈]
 tags: [Rust]
+toc: true
 ---
 
 和大多编程语言一样，Rust 中的集合也是存 key 的，key 不可重复。
