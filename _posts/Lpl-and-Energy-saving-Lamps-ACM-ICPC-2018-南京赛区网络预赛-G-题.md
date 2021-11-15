@@ -3,7 +3,7 @@ title: ACM-ICPC 2018 南京赛区网络预赛 G 题 Lpl and Energy-saving Lamps�
 mathjax: true
 date: 2018-09-02 09:17:13
 updated: 2018-09-02 09:17:13
-tags: [ACM,线段树,算法]
+tags: [ACM,线段树]
 categories: [算法题解]
 toc: true
 ---

@@ -3,8 +3,8 @@ title: 想要的 GitHub ID 被注册了怎么办？
 mathjax: false
 date: 2018-10-16 19:52:44
 updated: 2018-10-16 19:52:44
-tags: 
-categories: 技术杂谈
+tags: []
+categories: [技术杂谈]
 toc: true
 ---
 

@@ -3,7 +3,7 @@ title: CentOS 8 为窗口添加最大/最小化按钮
 mathjax: false
 date: 2020-12-31 10:51:15
 updated: 2020-12-31 10:51:15
-tags: [Linux, CentOS]
+tags: [Linux,CentOS]
 categories: [技术杂谈]
 toc: true
 ---

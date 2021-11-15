@@ -3,7 +3,7 @@ title: 快速幂模m算法
 mathjax: true
 date: 2018-09-07 20:34:31
 updated: 2018-09-07 20:34:31
-tags: [快速幂,整数快速幂,矩阵快速幂,快速幂模m算法,乘法取模]
+tags: [快速幂]
 categories: [基础算法]
 ---
 

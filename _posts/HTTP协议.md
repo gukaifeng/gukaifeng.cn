@@ -3,7 +3,7 @@ title: HTTP 协议
 mathjax: false
 date: 2020-03-18 10:55:07
 updated: 2020-03-18 10:55:07
-tags: [HTTP,服务器,计算机网络]
+tags: [HTTP,计算机网络]
 categories: [计算机网络基础]
 toc: true
 ---

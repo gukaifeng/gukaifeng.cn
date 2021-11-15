@@ -3,7 +3,7 @@ title: Python 中裁剪图片的方法
 date: 2021-10-19 17:53:57
 updated: 2021-10-19 17:53:57
 categories: [技术杂谈]
-tags: [Python, OpenCV]
+tags: [Python]
 toc: true
 ---
 

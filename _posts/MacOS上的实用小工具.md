@@ -3,7 +3,7 @@ title: MacOS上的实用小工具
 mathjax: false
 date: 2020-04-05 22:41:29
 updated: 2020-04-05 22:41:29
-tags:
+tags: [macOS]
 categories: [技术杂谈]
 toc: true
 ---
