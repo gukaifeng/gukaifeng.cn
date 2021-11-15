@@ -2,7 +2,7 @@
 title: Rust -- 结构体
 date: 2021-09-29 00:19:00
 updated: 2021-09-29 00:19:00
-categories: [技术杂谈]
+categories: [编程语言概念]
 tags: [Rust]
 toc: true
 ---

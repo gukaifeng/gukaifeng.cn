@@ -2,7 +2,7 @@
 title: Rust -- 所有权(Ownership)
 date: 2021-09-13 21:57:16
 updated: 2021-09-13 21:57:16
-categories: [技术杂谈]
+categories: [编程语言概念]
 tags: [Rust]
 toc: true
 ---

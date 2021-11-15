@@ -2,7 +2,7 @@
 title: RocksDB -- 基础操作
 date: 2021-10-19 00:14:57
 updated: 2021-10-19 00:14:57
-categories: [技术杂谈]
+categories: [数据库]
 tags: [RocksDB, 数据库]
 toc: true
 ---
