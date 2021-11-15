@@ -3,7 +3,7 @@ title: 使用 PicGo + GitHub 搭建个人免费图床
 mathjax: false
 date: 2020-12-30 09:36:29
 updated: 2020-12-30 09:36:29
-tags: [GitHub, PicGo, 图床]
+tags: [GitHub, PicGo]
 categories: [技术杂谈]
 toc: true
 ---
