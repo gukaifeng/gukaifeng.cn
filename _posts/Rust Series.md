@@ -1,8 +1,10 @@
 ---
 title: Rust Series
 date: 2021-07-18
-categories: [Technology]
+updated: 2021-07-18
+categories: [技术杂谈]
 tags: [Rust]
+toc: true
 ---
 
 Rust 毕竟还是一门年轻的语言，优秀的学习资料并不是很好找，遇到问题也不那么容易解决。  

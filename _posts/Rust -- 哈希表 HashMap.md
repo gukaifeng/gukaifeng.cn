@@ -1,8 +1,10 @@
 ---
 title: Rust -- 哈希表 HashMap
 date: 2021-10-27 23:07:53
-categories: [Technology]
+updated: 2021-10-27 23:07:53
+categories: [技术杂谈]
 tags: [Rust]
+toc: true
 ---
 
 

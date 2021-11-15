@@ -1,8 +1,10 @@
 ---
 title: Rust -- 双端队列 VecDeque
 date: 2021-10-27 09:12:37
-categories: [Technology]
+updated: 2021-10-27 09:12:37
+categories: [技术杂谈]
 tags: [Rust]
+toc: true
 ---
 
 

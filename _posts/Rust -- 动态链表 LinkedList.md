@@ -1,8 +1,10 @@
 ---
 title: Rust -- 动态链表 LinkedList
 date: 2021-10-27 23:10:09
-categories: [Technology]
+updated: 2021-10-27 23:10:09
+categories: [技术杂谈]
 tags: [Rust]
+toc: true
 ---
 
 

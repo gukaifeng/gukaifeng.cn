@@ -1,8 +1,10 @@
 ---
 title: Rust -- Cargo - Rust 的构建系统和包管理器
 date: 2021-09-09 22:56:34
-categories: [technology]
+updated: 2021-09-09 22:56:34
+categories: [技术杂谈]
 tags: [Rust]
+toc: true
 ---
 
 如果你已经阅读过 "[快速配置 Rust 开发环境并编写一个小应用](https://gukaifeng.cn/archives/30)" 这篇文章，关于 Cargo 的内容可能会有少量重复。

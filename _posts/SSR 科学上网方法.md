@@ -1,6 +1,7 @@
 ---
 title: SSR 科学上网方法
 date: 2019-02-17
+updated: 2019-02-17
 categories: [技术杂谈]
 tags: [科学上网, SSR]
 toc: true

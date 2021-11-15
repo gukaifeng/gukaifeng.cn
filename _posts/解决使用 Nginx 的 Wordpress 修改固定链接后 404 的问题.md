@@ -1,6 +1,7 @@
 ---
 title: 解决使用 Nginx 的 Wordpress 修改固定链接后 404 的问题
 date: 2021-09-03 20:45
+updated: 2021-09-03 20:45
 categories: [技术杂谈]
 tags: [WordPress,Nginx]
 toc: true
