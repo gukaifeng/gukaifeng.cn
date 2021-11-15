@@ -4,7 +4,7 @@ mathjax: false
 date: 2020-03-14 09:44:10
 updated: 2020-03-14 09:44:10
 tags: [Python,Scrapy,爬虫]
-categories: [网络爬虫]
+categories: [爬虫]
 toc: true
 ---
 

@@ -4,7 +4,7 @@ mathjax: false
 date: 2020-03-16 22:42:27
 updated: 2020-03-16 22:42:27
 tags: [Java,JavaSE]
-categories: [编程语言概念]
+categories: [编程语言基础]
 toc: true
 ---
 
@@ -26,3 +26,4 @@ JVM 内存模型
 
 使用一个系统级线程，检测和回收内存。自动回收，但回收不及时。
 
+<!--more-->

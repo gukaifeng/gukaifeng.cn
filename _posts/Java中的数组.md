@@ -4,7 +4,7 @@ mathjax: false
 date: 2020-03-16 22:22:49
 updated: 2020-03-16 22:22:49
 tags: [Java,JavaSE]
-categories: [编程语言概念]
+categories: [编程语言基础]
 toc: true
 ---
 
@@ -20,7 +20,7 @@ toc: true
 int arr1[]; // 方法一
 int[] arr2; // 方法二（常用）
 ```
-
+<!--more-->
 ### 1.2. 初始化
 
 数组一旦初始化，其长度是不可变的。

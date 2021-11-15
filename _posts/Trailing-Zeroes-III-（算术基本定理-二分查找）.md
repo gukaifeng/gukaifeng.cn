@@ -4,7 +4,7 @@ mathjax: true
 date: 2018-10-08 21:35:55
 updated: 2018-10-08 21:35:55
 tags: [LightOJ,算术基本定理,二分法,数论]
-categories: [编程语言概念]
+categories: [编程语言基础]
 toc: true
 ---
 

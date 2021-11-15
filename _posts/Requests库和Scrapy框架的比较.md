@@ -4,7 +4,7 @@ mathjax: false
 date: 2020-03-15 11:08:27
 updated: 2020-03-15 11:08:27
 tags: [Requests,Scrapy,爬虫]
-categories: [网络爬虫]
+categories: [爬虫]
 toc: true
 ---
 
@@ -16,7 +16,7 @@ Requests库和Scrapy框架都是Python中非常重要的第三方爬虫库（框
 2. 两者都可用性很好，文档丰富，入门简单。
 3. 两者都没有处理js、提交表单、应对验证码等功能（可扩展）。
 
-
+<!--more-->
 
 ## 2. Requests和Scrapy的不同点
 

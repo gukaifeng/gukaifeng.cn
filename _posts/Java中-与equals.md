@@ -4,7 +4,7 @@ mathjax: false
 date: 2020-03-16 23:30:09
 updated: 2020-03-16 23:30:09
 tags: [Java,JavaSE]
-categories: [编程语言概念]
+categories: [编程语言基础]
 toc: true
 ---
 
@@ -23,3 +23,4 @@ toc: true
 
 2. 特殊的，当用 equals() 方法进行比较时，对类 File、String、Date 及包装类（Wrapper Class）来说，是比较类型和内容而不考虑引用的是否是一个对象。原因是在这些类中重写了 Object 类的 equals() 方法。
 
+<!--more-->

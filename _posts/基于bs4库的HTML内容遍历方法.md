@@ -4,7 +4,7 @@ mathjax: false
 date: 2020-03-07 09:47:51
 updated: 2020-03-07 09:47:51
 tags: [Python,bs4,BeautifulSoup,爬虫]
-categories: [网络爬虫]
+categories: [爬虫]
 toc: true
 ---
 
@@ -17,7 +17,7 @@ toc: true
 1. 下行遍历：从根节点开始向叶结点遍历。
 2. 上行遍历：从叶结点开始向根节点遍历。
 3. 平行遍历：在平级结点之间遍历。
-
+<!--more-->
 注意，一个标签结点的孩子结点不仅包括标签结点，也包括字符串结点，如`'\n'`等。
 
 ![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/%E5%9F%BA%E4%BA%8Ebs4%E5%BA%93%E7%9A%84HTML%E5%86%85%E5%AE%B9%E9%81%8D%E5%8E%86%E6%96%B9%E6%B3%95_1.png)

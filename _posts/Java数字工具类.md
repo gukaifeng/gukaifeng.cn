@@ -4,7 +4,7 @@ mathjax: false
 date: 2020-03-19 22:55:03
 updated: 2020-03-19 22:55:03
 tags: [Java,JavaSE]
-categories: [编程语言概念]
+categories: [编程语言基础]
 toc: true
 ---
 
@@ -39,3 +39,4 @@ public class MathTest {
 3.0
 ```
 
+<!--more-->

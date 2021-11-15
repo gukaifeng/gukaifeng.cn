@@ -4,7 +4,7 @@ mathjax: true
 date: 2018-10-03 11:09:32
 updated: 2018-10-03 11:09:32
 tags: [POJ,扩展欧几里得,数论]
-categories: [算法题目]
+categories: [算法题解]
 toc: true
 ---
 

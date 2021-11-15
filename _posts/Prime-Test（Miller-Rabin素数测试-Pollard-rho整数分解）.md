@@ -4,7 +4,7 @@ mathjax: true
 date: 2018-10-07 17:25:39
 updated: 2018-10-07 17:25:39
 tags: [POJ,Miller-Rabin素数测试,Pollard rho整数分解,数论]
-categories: [算法题目]
+categories: [算法题解]
 toc: true
 ---
 

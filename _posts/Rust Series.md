@@ -2,7 +2,7 @@
 title: Rust Series
 date: 2021-07-18
 updated: 2021-07-18
-categories: [编程语言概念]
+categories: [编程语言基础]
 tags: [Rust]
 toc: true
 ---

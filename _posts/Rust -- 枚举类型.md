@@ -2,7 +2,7 @@
 title: Rust -- 枚举类型
 date: 2021-10-04 13:46:32
 updated: 2021-10-04 13:46:32
-categories: [编程语言概念]
+categories: [编程语言基础]
 tags: [Rust]
 toc: true
 ---

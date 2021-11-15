@@ -4,7 +4,7 @@ mathjax: false
 date: 2020-03-16 23:40:17
 updated: 2020-03-16 23:40:17
 tags: [Java,JavaSE]
-categories: [编程语言概念]
+categories: [编程语言基础]
 toc: true
 ---
 
@@ -17,7 +17,7 @@ toc: true
     ```java
     public final class TestPerson() { ... }
     ```
-
+<!--more-->
 2. final 标记的方法不能被重写
 
     如Object类中的 getClass()。

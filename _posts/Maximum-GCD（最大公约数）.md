@@ -4,7 +4,7 @@ mathjax: false
 date: 2018-10-05 17:30:31
 updated: 2018-10-05 17:30:31
 tags: [UVA,最大公约数,数论]
-categories: [算法题目]
+categories: [算法题解]
 toc: true
 ---
 

@@ -4,7 +4,7 @@ mathjax: false
 date: 2020-03-17 18:17:50
 updated: 2020-03-17 18:17:50
 tags: [Java,JavaSE]
-categories: [编程语言概念]
+categories: [编程语言基础]
 toc: true
 ---
 
@@ -16,7 +16,7 @@ toc: true
 2. 由程序员在编写程序时，就考虑到错误的检测、错误消息的提示以及错误的处理。
 
 
-
+<!--more-->
 ## 1. 异常事件的分类
 
 Java 程序运行过程中所发生的异常事件可分类两类：

@@ -4,7 +4,7 @@ mathjax: false
 date: 2020-03-20 19:04:38
 updated: 2020-03-20 19:04:38
 tags: [Java,JavaSE,JCF,List,ArrayList,LinkedList,Vector,Collection,数据结构,容器]
-categories: [编程语言概念]
+categories: [编程语言基础]
 toc: true
 ---
 

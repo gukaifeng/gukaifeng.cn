@@ -4,7 +4,7 @@ mathjax: false
 date: 2020-03-20 15:51:13
 updated: 2020-03-20 15:51:13
 tags: [Java,JavaSE,JCF,数据结构,容器]
-categories: [编程语言概念]
+categories: [编程语言基础]
 toc: true
 ---
 
@@ -30,7 +30,7 @@ JCF: Java collections framework，Java集合框架.
 
 典型的容器框架：C++的STL，Java的JCF。
 
-
+<!--more-->
 
 
 ## 1. JCF层级

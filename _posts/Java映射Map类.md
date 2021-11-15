@@ -4,7 +4,7 @@ mathjax: false
 date: 2020-03-20 19:17:22
 updated: 2020-03-20 19:17:22
 tags: [Java,JavaSE,JCF,Map,HashMap,Hashtable,Properties,Collection,数据结构,容器]
-categories: [编程语言概念]
+categories: [编程语言基础]
 toc: true
 ---
 

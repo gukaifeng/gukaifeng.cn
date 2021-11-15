@@ -4,7 +4,7 @@ mathjax: false
 date: 2020-03-21 14:48:33
 updated: 2020-03-21 14:48:33
 tags: [Java,JavaSE,JCF,List,Set,Map,Collections,Arrays,数组,数据结构,容器]
-categories: [编程语言概念]
+categories: [编程语言基础]
 toc: true
 ---
 

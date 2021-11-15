@@ -4,7 +4,7 @@ mathjax: true
 date: 2018-10-03 14:45:14
 updated: 2018-10-03 14:45:14
 tags: [POJ,斐波那契]
-categories: [算法题目]
+categories: [算法题解]
 toc: true
 ---
 

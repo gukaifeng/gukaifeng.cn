@@ -4,7 +4,7 @@ mathjax: true
 date: 2018-10-02 17:41:55
 updated: 2018-10-02 17:41:55
 tags: [LightOJ,欧拉函数,素数筛,数论]
-categories: [算法题目]
+categories: [算法题解]
 toc: true
 ---
 

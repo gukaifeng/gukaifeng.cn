@@ -1,10 +1,10 @@
 ---
-title: HTTP协议
+title: HTTP 协议
 mathjax: false
 date: 2020-03-18 10:55:07
 updated: 2020-03-18 10:55:07
 tags: [HTTP,服务器,计算机网络]
-categories: [网络编程]
+categories: [计算机网络基础]
 toc: true
 ---
 
@@ -24,7 +24,7 @@ HTTP 的交互流程一般分为四个步骤（一次完整的请求）
 2. 客户端发送求送数据到服务端（遵循 HTTP 协议）；
 3. 服务端处理客户端请求，响应客户端（遵循 HTTP 协议）；
 4. 关闭客户端和服务端的连接（HTTP1.1 后不会立即关闭）。
-
+<!--more-->
 
 ## 3. HTTP的请求格式
 
