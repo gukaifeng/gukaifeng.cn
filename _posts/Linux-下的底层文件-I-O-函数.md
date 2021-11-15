@@ -3,7 +3,7 @@ title: Linux 下的底层文件 I/O 函数
 mathjax: false
 date: 2020-12-31 19:46:02
 updated: 2020-12-31 19:46:02
-tags: [Linux, C, I/O]
+tags: [Linux]
 categories: [技术杂谈]
 toc: true
 ---

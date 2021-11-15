@@ -3,7 +3,7 @@ title: Crossing River（贪心）
 mathjax: true
 date: 2018-09-07 09:59:23
 updated: 2018-09-07 09:59:23
-tags: [POJ,贪心]
+tags: [POJ,贪心算法]
 categories: [算法题解]
 toc: true
 ---

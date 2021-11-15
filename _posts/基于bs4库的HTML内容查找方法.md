@@ -3,7 +3,7 @@ title: 基于bs4库的HTML内容查找方法
 mathjax: false
 date: 2020-03-08 00:50:46
 updated: 2020-03-08 00:50:46
-tags: [bs4, BeautifulSoup, 爬虫]
+tags: [bs4,爬虫]
 categories: [爬虫]
 toc: true
 ---

@@ -3,7 +3,7 @@ title: Linux 下 C 语言网络地址初始化
 mathjax: false
 date: 2021-01-01 19:34:11
 updated: 2021-01-01 19:34:11
-tags: [Socket, TCP/IP, 网络编程]
+tags: [网络编程]
 categories: [网络编程]
 toc: true
 ---

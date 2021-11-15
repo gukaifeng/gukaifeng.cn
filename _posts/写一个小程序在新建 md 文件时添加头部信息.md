@@ -3,7 +3,7 @@ title: 写一个小程序在新建 md 文件时添加头部信息
 date: 2021-09-07 00:05:23
 updated: 2021-09-07 00:05:23
 categories: [技术杂谈]
-tags: [C,C++,Markdown,Blog]
+tags: [Markdown,Blog]
 toc: true
 ---
 

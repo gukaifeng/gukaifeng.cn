@@ -3,7 +3,7 @@ title: Prime Test（Miller-Rabin素数测试+Pollard rho整数分解）
 mathjax: true
 date: 2018-10-07 17:25:39
 updated: 2018-10-07 17:25:39
-tags: [POJ,Miller-Rabin素数测试,Pollard rho整数分解,数论]
+tags: [POJ,素数测试,因数分解,数论]
 categories: [算法题解]
 toc: true
 ---
