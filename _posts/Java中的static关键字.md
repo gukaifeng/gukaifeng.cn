@@ -3,7 +3,7 @@ title: Java中的static关键字
 mathjax: false
 date: 2020-03-16 23:38:51
 updated: 2020-03-16 23:38:51
-tags: [Java,JavaSE]
+tags: [Java]
 categories: [编程语言基础]
 toc: true
 ---

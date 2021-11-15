@@ -3,7 +3,7 @@ title: Java数字工具类
 mathjax: false
 date: 2020-03-19 22:55:03
 updated: 2020-03-19 22:55:03
-tags: [Java,JavaSE]
+tags: [Java]
 categories: [编程语言基础]
 toc: true
 ---

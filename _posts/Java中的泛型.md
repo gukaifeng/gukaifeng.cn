@@ -3,7 +3,7 @@ title: Java中的泛型
 mathjax: false
 date: 2020-03-17 18:49:03
 updated: 2020-03-17 18:49:03
-tags: [Java,JavaSE]
+tags: [Java]
 categories: [编程语言基础]
 toc: true
 ---

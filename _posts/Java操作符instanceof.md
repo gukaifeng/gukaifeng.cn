@@ -3,7 +3,7 @@ title: Java操作符instanceof
 mathjax: false
 date: 2020-03-16 23:33:30
 updated: 2020-03-16 23:33:30
-tags: [Java,JavaSE]
+tags: [Java]
 categories: [编程语言基础]
 toc: true
 ---

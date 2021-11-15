@@ -3,7 +3,7 @@ title: Java中的Inner Class(内部类)
 mathjax: false
 date: 2020-03-16 23:46:54
 updated: 2020-03-16 23:46:54
-tags: [Java,JavaSE]
+tags: [Java]
 categories: [编程语言基础]
 toc: true
 ---

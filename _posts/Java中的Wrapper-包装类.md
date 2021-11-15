@@ -3,7 +3,7 @@ title: Java中的Wrapper(包装类)
 mathjax: false
 date: 2020-03-16 23:35:43
 updated: 2020-03-16 23:35:43
-tags: [Java,JavaSE]
+tags: [Java]
 categories: [编程语言基础]
 toc: true
 ---

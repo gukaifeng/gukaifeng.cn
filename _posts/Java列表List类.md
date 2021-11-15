@@ -3,7 +3,7 @@ title: Java列表List类
 mathjax: false
 date: 2020-03-20 19:04:38
 updated: 2020-03-20 19:04:38
-tags: [Java,JavaSE,JCF,List,ArrayList,LinkedList,Vector,Collection,数据结构,容器]
+tags: [Java,数据结构]
 categories: [编程语言基础]
 toc: true
 ---

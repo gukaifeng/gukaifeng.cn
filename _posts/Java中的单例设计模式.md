@@ -3,7 +3,7 @@ title: Java中的单例设计模式
 mathjax: false
 date: 2020-03-16 23:07:19
 updated: 2020-03-16 23:07:19
-tags: [Java,JavaSE]
+tags: [Java,设计模式]
 categories: [设计模式]
 toc: true
 ---

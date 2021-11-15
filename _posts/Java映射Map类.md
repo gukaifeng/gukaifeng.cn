@@ -3,7 +3,7 @@ title: Java映射Map类
 mathjax: false
 date: 2020-03-20 19:17:22
 updated: 2020-03-20 19:17:22
-tags: [Java,JavaSE,JCF,Map,HashMap,Hashtable,Properties,Collection,数据结构,容器]
+tags: [Java,数据结构]
 categories: [编程语言基础]
 toc: true
 ---

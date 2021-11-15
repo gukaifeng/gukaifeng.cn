@@ -3,7 +3,7 @@ title: Rust -- 双端队列 VecDeque
 date: 2021-10-27 09:12:37
 updated: 2021-10-27 09:12:37
 categories: [编程语言基础]
-tags: [Rust]
+tags: [Rust,数据结构]
 toc: true
 ---
 
