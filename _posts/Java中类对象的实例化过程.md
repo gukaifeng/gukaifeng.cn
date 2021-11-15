@@ -4,9 +4,12 @@ mathjax: false
 date: 2020-03-16 23:24:33
 updated: 2020-03-16 23:24:33
 tags: [Java,JavaSE]
-categories: [编程语言概念]
+categories: [编程语言基础]
 toc: true
 ---
+
+如图：
+<!--more-->
 
 ## 1. 简单类对象的实例化过程
 

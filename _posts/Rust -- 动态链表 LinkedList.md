@@ -2,7 +2,7 @@
 title: Rust -- 动态链表 LinkedList
 date: 2021-10-27 23:10:09
 updated: 2021-10-27 23:10:09
-categories: [编程语言概念]
+categories: [编程语言基础]
 tags: [Rust]
 toc: true
 ---

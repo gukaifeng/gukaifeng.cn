@@ -4,7 +4,7 @@ mathjax: false
 date: 2020-03-15 12:10:29
 updated: 2020-03-15 12:10:29
 tags: [Python]
-categories: [编程语言概念]
+categories: [编程语言基础]
 toc: true
 ---
 
@@ -14,7 +14,7 @@ toc: true
 * 包含`yield`语句的函数是一个生成器；
 * 生成器每次产生一个值（yield语句），函数被冻结，被唤醒后再产生一个值。
 
-
+<!--more-->
 
 生成器一般与循环结构搭配使用，如下面的例子。
 

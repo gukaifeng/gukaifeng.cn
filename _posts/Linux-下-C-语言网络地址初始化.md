@@ -10,7 +10,7 @@ toc: true
 
 
 这里介绍套接字创建过程中常见的网络地址信息初始化方法。
-
+<!--more-->
 ```c
 struct sockaddr_in addr;
 char* serv_ip = "211.217.168.13";   // 声明 ID 地址字符串

@@ -16,7 +16,7 @@ PicGo 的 Github 地址为 https://github.com/Molunerfinn/PicGo
 [点击此处下载 PicGo应用](https://github.com/Molunerfinn/PicGo/releases)
 
 这篇文章不在赘述 PicGo 更多的细节信息，只记录如何使用，关于 PicGo 更多信息，可以参考其 Github。
-
+<!--more-->
 
 ## 创建一个新的 GitHub 仓库
 

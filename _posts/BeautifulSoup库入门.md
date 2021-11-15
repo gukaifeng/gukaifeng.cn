@@ -4,7 +4,7 @@ mathjax: false
 date: 2020-03-07 00:33:44
 updated: 2020-03-07 00:33:44
 tags: [Python,bs4,BeautifulSoup,爬虫]
-categories: [网络爬虫]
+categories: [爬虫]
 toc: true
 ---
 

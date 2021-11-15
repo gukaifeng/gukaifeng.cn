@@ -4,7 +4,7 @@ mathjax: true
 date: 2018-10-25 08:50:22
 updated: 2018-10-25 08:50:22
 tags: [POJ,树状数组]
-categories: [编程语言概念]
+categories: [编程语言基础]
 toc: true
 ---
 

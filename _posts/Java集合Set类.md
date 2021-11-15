@@ -4,7 +4,7 @@ mathjax: false
 date: 2020-03-20 19:17:05
 updated: 2020-03-20 19:17:05
 tags: [Java,JavaSE,JCF,Set,HashSet,TreeSet,LinkedHashSet,Collection,数据结构,容器]
-categories: [编程语言概念]
+categories: [编程语言基础]
 toc: true
 ---
 
@@ -23,7 +23,7 @@ Java中的集合接口Set
 * LinkedHashSet：基于散列函数和双向链表的集合，可排序的，不支持同步。
 
 
-
+<!--more-->
 ## 1. HashSet
 
 HashSet

@@ -4,7 +4,7 @@ mathjax: true
 date: 2020-03-16 20:34:17
 updated: 2020-03-16 20:34:17
 tags: [Java,JavaSE]
-categories: [编程语言概念]
+categories: [编程语言基础]
 toc: true
 ---
 

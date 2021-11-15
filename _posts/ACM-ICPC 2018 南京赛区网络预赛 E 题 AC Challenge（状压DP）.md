@@ -3,7 +3,7 @@ title: ACM-ICPC 2018 南京赛区网络预赛 E 题 AC Challenge（状压DP）
 date: 2018-09-02 07:38:39
 updated: 2018-09-02 07:38:39
 tags: [ACM,动态规划,状态DP,算法]
-categories: [算法题目]
+categories: [算法题解]
 mathjax: true
 toc: true
 ---

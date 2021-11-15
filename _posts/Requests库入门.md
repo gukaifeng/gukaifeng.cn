@@ -4,7 +4,7 @@ mathjax: false
 date: 2020-03-05 22:46:01
 updated: 2020-03-05 22:46:01
 tags: [Python,Requests,爬虫]
-categories: [网络爬虫]
+categories: [爬虫]
 toc: true
 ---
 

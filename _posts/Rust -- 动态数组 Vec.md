@@ -2,7 +2,7 @@
 title: Rust -- 动态数组 Vec
 date: 2021-10-26 23:44:41
 updated: 2021-10-26 23:44:41
-categories: [编程语言概念]
+categories: [编程语言基础]
 tags: [Rust]
 toc: true
 ---

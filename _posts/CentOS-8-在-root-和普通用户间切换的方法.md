@@ -16,3 +16,5 @@ toc: true
 ##  从 root 用户切换到普通用户
 假定一个普通用户名为 "gukaifeng"，
 则在终端中输入 `login -f gukaifeng`，即可切换到普通用户 "gukaifeng"。
+
+<!--more-->

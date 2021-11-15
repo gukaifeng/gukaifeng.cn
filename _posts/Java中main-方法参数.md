@@ -4,7 +4,7 @@ mathjax: false
 date: 2020-03-16 23:54:12
 updated: 2020-03-16 23:54:12
 tags: [Java,JavaSE]
-categories: [编程语言概念]
+categories: [编程语言基础]
 toc: true
 ---
 
@@ -25,3 +25,4 @@ public class HelloWorld {
 $ java ClassName arg1 arg2 arg3 ...
 ```
 
+<!--more-->

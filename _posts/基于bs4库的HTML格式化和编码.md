@@ -4,7 +4,7 @@ mathjax: false
 date: 2020-03-07 09:50:05
 updated: 2020-03-07 09:50:05
 tags: [Python,bs4,BeautifulSoup,爬虫]
-categories: [网络爬虫]
+categories: [爬虫]
 toc: true
 ---
 
@@ -15,7 +15,7 @@ toc: true
 这里面的友好，不只是使HTML内容更容易使人阅读，也使程序能更好地读取和分析。
 
 在bs4库中，提出了一个方法`prettify()`，我们在代码中演示。
-
+<!--more-->
 ```python
 >>> import requests
 >>> from bs4 import BeautifulSoup

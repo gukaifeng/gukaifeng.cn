@@ -4,7 +4,7 @@ mathjax: false
 date: 2020-03-17 18:57:50
 updated: 2020-03-17 18:57:50
 tags: [Java,JavaSE,IO]
-categories: [编程语言概念]
+categories: [编程语言基础]
 toc: true
 ---
 
@@ -13,7 +13,7 @@ toc: true
 File 类能新建、删除、重命名文件和目录，但 File 不能访问文件内容本身。
 
 如果要访问文件内容本身，要用输入/输出流。
-
+<!--more-->
 ```java
 File f = new File("./file/abc.txt");
 

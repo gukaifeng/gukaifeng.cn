@@ -2,7 +2,7 @@
 title: Rust -- 哈希表 HashMap
 date: 2021-10-27 23:07:53
 updated: 2021-10-27 23:07:53
-categories: [编程语言概念]
+categories: [编程语言基础]
 tags: [Rust]
 toc: true
 ---

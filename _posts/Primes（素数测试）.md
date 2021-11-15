@@ -4,7 +4,7 @@ mathjax: true
 date: 2018-10-03 18:07:03
 updated: 2018-10-03 18:07:03
 tags: [HDU,素数测试,数论]
-categories: [算法题目]
+categories: [算法题解]
 toc: true
 ---
 

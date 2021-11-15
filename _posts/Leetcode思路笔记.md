@@ -4,7 +4,7 @@ mathjax: false
 date: 2020-03-25 00:01:20
 updated: 2020-03-25 00:01:20
 tags: [Leetcode]
-categories: [算法题目]
+categories: [算法题解]
 toc: true
 ---
 

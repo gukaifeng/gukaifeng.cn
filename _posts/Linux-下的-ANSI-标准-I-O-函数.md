@@ -19,7 +19,7 @@ FILE * fopen(const char *filename, const char *mode);
 ```
 * filename: 要打开的文件。
 * mode: 打开文件的方式，有一些取值。
-
+<!--more-->
 关于 FILE 的结构，如下：
 ```c
 typedef struct _iobuf {

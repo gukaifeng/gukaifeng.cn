@@ -4,7 +4,7 @@ mathjax: true
 date: 2018-10-24 16:15:06
 updated: 2018-10-24 16:15:06
 tags: [POJ,暴力,线段树]
-categories: [算法题目]
+categories: [算法题解]
 toc: true
 ---
 

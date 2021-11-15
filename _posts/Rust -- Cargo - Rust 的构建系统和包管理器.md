@@ -2,7 +2,7 @@
 title: Rust -- Cargo - Rust 的构建系统和包管理器
 date: 2021-09-09 22:56:34
 updated: 2021-09-09 22:56:34
-categories: [编程语言概念]
+categories: [编程语言基础]
 tags: [Rust]
 toc: true
 ---

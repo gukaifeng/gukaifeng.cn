@@ -24,7 +24,7 @@ Host tencentCloud
 * Host：这里随便写，这只是一个此 SSH 链接的标识。我写的是 tencentCloud。
 * HostName：这里写你的服务器 IP 地址。我写的是我的服务器地址 49.232.2.120。
 * User：这里写要登录的用户。我以 root 用户登录。
-
+<!--more-->
 ## 3. 连接远程服务器
 
 
