@@ -3,7 +3,7 @@ title: BeautifulSoup库入门
 mathjax: false
 date: 2020-03-07 00:33:44
 updated: 2020-03-07 00:33:44
-tags: [BeautifulSoup,爬虫]
+tags: [bs4,爬虫]
 categories: [爬虫]
 toc: true
 ---
