@@ -48,7 +48,7 @@ Scrapy包含3条主要的数据流路径：
 
 　　注：Engine和Spiders、Engine和Downloader之间的数据流通均需要使用中间件。
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/Scrapy%E7%88%AC%E8%99%AB%E6%A1%86%E6%9E%B6%E5%85%A5%E9%97%A8_1.png)
+![](https://gukaifeng.cn/posts/scrapy-pa-chong-kuang-jia-ru-men/Scrapy%E7%88%AC%E8%99%AB%E6%A1%86%E6%9E%B6%E5%85%A5%E9%97%A8_1.png)
 
 
 
@@ -130,7 +130,7 @@ Use "scrapy <command> -h" to see more info about a command
 
 演示HTML页面地址：http://python123.io/ws/demo.html ，文件名称demo.html。
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/Scrapy%E7%88%AC%E8%99%AB%E6%A1%86%E6%9E%B6%E5%85%A5%E9%97%A8_2.png)
+![](https://gukaifeng.cn/posts/scrapy-pa-chong-kuang-jia-ru-men/Scrapy%E7%88%AC%E8%99%AB%E6%A1%86%E6%9E%B6%E5%85%A5%E9%97%A8_2.png)
 
 使用Srapy库首先要产生一个Scrapy爬虫框架，步骤如下：
 
@@ -148,11 +148,11 @@ Use "scrapy <command> -h" to see more info about a command
 
     生成的ScrapyDemo工程目录
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/Scrapy%E7%88%AC%E8%99%AB%E6%A1%86%E6%9E%B6%E5%85%A5%E9%97%A8_3.png)
+![](https://gukaifeng.cn/posts/scrapy-pa-chong-kuang-jia-ru-men/Scrapy%E7%88%AC%E8%99%AB%E6%A1%86%E6%9E%B6%E5%85%A5%E9%97%A8_3.png)
 
     ScrapyDemo/spiders/目录
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/Scrapy%E7%88%AC%E8%99%AB%E6%A1%86%E6%9E%B6%E5%85%A5%E9%97%A8_4.png)
+![](https://gukaifeng.cn/posts/scrapy-pa-chong-kuang-jia-ru-men/Scrapy%E7%88%AC%E8%99%AB%E6%A1%86%E6%9E%B6%E5%85%A5%E9%97%A8_4.png)
 
 2. 在工程中产生一个Scrapy爬虫。
 
@@ -240,7 +240,7 @@ Use "scrapy <command> -h" to see more info about a command
 
 ## 5. Scrapy爬虫的基本使用
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/Scrapy%E7%88%AC%E8%99%AB%E6%A1%86%E6%9E%B6%E5%85%A5%E9%97%A8_5.png)
+![](https://gukaifeng.cn/posts/scrapy-pa-chong-kuang-jia-ru-men/Scrapy%E7%88%AC%E8%99%AB%E6%A1%86%E6%9E%B6%E5%85%A5%E9%97%A8_5.png)
 
 ### 5.1. Scrapy爬虫的使用步骤
 
