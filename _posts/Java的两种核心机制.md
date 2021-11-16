@@ -12,11 +12,11 @@ toc: true
 
 * JVM（Java Virtual Machine，Java虚拟机）
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/Java%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6_1.png)
+![](https://gukaifeng.cn/posts/java-de-liang-chong-he-xin-ji-zhi/Java%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6_1.png)
 
 JVM 内存模型
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/Java%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6_2.png)
+![](https://gukaifeng.cn/posts/java-de-liang-chong-he-xin-ji-zhi/Java%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6_2.png)
 
 ## 2. CC(垃圾收集)
 

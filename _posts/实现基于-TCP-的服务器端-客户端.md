@@ -16,7 +16,7 @@ toc: true
 ### TCP 服务器端的默认函数调用顺序
 
 下图给出了 TCP 服务器端默认的函数调用顺序，绝大部分 TCP 服务器端都按照该顺序调用。
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/%E5%AE%9E%E7%8E%B0%E5%9F%BA%E4%BA%8E-TCP-%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF-%E5%AE%A2%E6%88%B7%E7%AB%AF_1.png)
+![](https://gukaifeng.cn/posts/shi-xian-ji-yu-tcp-de-fu-wu-qi-duan-ke-hu-duan/%E5%AE%9E%E7%8E%B0%E5%9F%BA%E4%BA%8E-TCP-%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF-%E5%AE%A2%E6%88%B7%E7%AB%AF_1.png)
 
 调用 socket 函数创建套接字，声明并初始化地址信息结构体变量，调用 bind 函数向套接字分配地址。这 2 个阶段之前都已讨论过（参见[Linux 下 C 语言网络地址初始化](https://gukaifeng.me/2021/01/01/Linux-%E4%B8%8B-C-%E8%AF%AD%E8%A8%80%E7%BD%91%E7%BB%9C%E5%9C%B0%E5%9D%80%E5%88%9D%E5%A7%8B%E5%8C%96/)），下面讲解之后的几个过程。
 
@@ -36,7 +36,7 @@ int listen(int sock, int backlog);
 * backlog: 连接请求等待队列（Queue）的长度，若为 5，则队列长度为 5，表示最多使 5 个连接请求进入队列。
 
 先解释一下等待连接请求状态的含义和连接请求等待队列。“服务器端处于等待连接请求状态”是指，客户端请求连接时，受理连接前一直使请求处于等待状态。下图给出了这个过程。
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/%E5%AE%9E%E7%8E%B0%E5%9F%BA%E4%BA%8E-TCP-%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF-%E5%AE%A2%E6%88%B7%E7%AB%AF_2.png)
+![](https://gukaifeng.cn/posts/shi-xian-ji-yu-tcp-de-fu-wu-qi-duan-ke-hu-duan/%E5%AE%9E%E7%8E%B0%E5%9F%BA%E4%BA%8E-TCP-%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF-%E5%AE%A2%E6%88%B7%E7%AB%AF_2.png)
 
 由上图可知作为 listen 函数的第一个参数传递的文件描述符套接字的用途。客户端请求连接本身也是从网络中接收到的一种数据，而想要接收就需要套接字。此任务就由服务器端套接字完成。服务器端套接字是请求接收连接请求的一名门卫或一扇门。
 
@@ -61,7 +61,7 @@ int accept(int sock, struct sockaddr* addr, socklen_t* addrlen);
 
 accept 函数受理连接请求等待队列中待处理的客户端连接请求。函数调用成功时，accept 函数内部将产生用于数据 I/O 的套接字，并返回其文件描述符。需要强调的是，套接字是自动创建的，并自动与发起连接请求的客户端建立连接。下图展示了 accept 函数调用过程。
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/%E5%AE%9E%E7%8E%B0%E5%9F%BA%E4%BA%8E-TCP-%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF-%E5%AE%A2%E6%88%B7%E7%AB%AF_3.png)
+![](https://gukaifeng.cn/posts/shi-xian-ji-yu-tcp-de-fu-wu-qi-duan-ke-hu-duan/%E5%AE%9E%E7%8E%B0%E5%9F%BA%E4%BA%8E-TCP-%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF-%E5%AE%A2%E6%88%B7%E7%AB%AF_3.png)
 
 上图展示了“从等待队列中取出 1 个链接请求，创建套接字并完成连接请求”的过程。服务器单独创建的套接字与客户端建立连接后进行数据交换。
 
@@ -144,7 +144,7 @@ void error_handling(char *message)
 
 接下来讲解客户端的实现顺序。这要比服务器端简单许多。因为创建套接字的请求连接就是客户端的全部内容。
 TCP 客户端函数调用顺序如下图。
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/%E5%AE%9E%E7%8E%B0%E5%9F%BA%E4%BA%8E-TCP-%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF-%E5%AE%A2%E6%88%B7%E7%AB%AF_4.png)
+![](https://gukaifeng.cn/posts/shi-xian-ji-yu-tcp-de-fu-wu-qi-duan-ke-hu-duan/%E5%AE%9E%E7%8E%B0%E5%9F%BA%E4%BA%8E-TCP-%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF-%E5%AE%A2%E6%88%B7%E7%AB%AF_4.png)
 
 与服务器端相比，区别就在于“请求连接”，它是创建客户端套接字后向服务器端发起的连接请求。服务器端调用 listen 函数后创建连接请求等待队列，之后客户端即可请求连接。那如何发起连接请求呢？通过调用如下函数完成。
 
@@ -237,6 +237,6 @@ void error_handling(char *message)
 ## 基于 TCP 服务器端/客户端函数调用关系
 
 前面讲解了 TCP 服务器端/客户端的实现顺序，实际上二者并非相互独立，大家应该可以勾勒出他们之间的交互过程，如下图所示。
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/%E5%AE%9E%E7%8E%B0%E5%9F%BA%E4%BA%8E-TCP-%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF-%E5%AE%A2%E6%88%B7%E7%AB%AF_5.png)
+![](https://gukaifeng.cn/posts/shi-xian-ji-yu-tcp-de-fu-wu-qi-duan-ke-hu-duan/%E5%AE%9E%E7%8E%B0%E5%9F%BA%E4%BA%8E-TCP-%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF-%E5%AE%A2%E6%88%B7%E7%AB%AF_5.png)
 
 上图的总结流程如下：服务器端创建套接字后连续调用 bind、listen 函数进入等待状态，客户端通过调用 connect 函数发起连接请求。需要注意的是，客户端只能等到服务器调用 listen 函数后才能调用 connect 函数。同时要清楚，客户端调用 connect 函数前，服务端有可能率先调用 accept 函数。当然，此时服务器端在调用 accept 函数是进入阻塞（blocking）状态，直到客户端调用 connect 函数为止。

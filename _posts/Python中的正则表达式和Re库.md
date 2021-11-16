@@ -344,7 +344,7 @@ regex对象也具有上述的6种方法。
 
 ### 3.1.3. Re库的贪婪匹配和最小匹配
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/Python%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%92%8CRe%E5%BA%93_1.png)
+![](https://gukaifeng.cn/posts/python-zhong-de-zheng-ze-biao-da-shi-he-re-ku/Python%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%92%8CRe%E5%BA%93_1.png)
 
 我们看上面的实例，我们的正则表达式匹配有多个可能的结果。
 
@@ -354,7 +354,7 @@ Re库默认采用**贪婪匹配**，即**输出匹配最长的子串**，即结�
 
 如果想要采用**最小匹配**，即输出匹配最短的子串，即结果为`PYAN`，需要在其中加一个`?`，位置如图。
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/Python%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%92%8CRe%E5%BA%93_2.png)
+![](https://gukaifeng.cn/posts/python-zhong-de-zheng-ze-biao-da-shi-he-re-ku/Python%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%92%8CRe%E5%BA%93_2.png)
 
 当有操作符可以匹配不同长度的时候，我们都可以才其后面加上`?`实现最小匹配。
 
