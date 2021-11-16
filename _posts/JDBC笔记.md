@@ -4,7 +4,7 @@ mathjax: false
 date: 2020-03-17 00:07:23
 updated: 2020-03-17 00:07:23
 tags: [Java]
-categories: [技术杂谈]]
+categories: [技术杂谈]
 toc: true
 ---
 
