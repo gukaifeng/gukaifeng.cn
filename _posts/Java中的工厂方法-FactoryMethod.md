@@ -20,7 +20,7 @@ FactoryMethod 通过面向对象的手法，将所要创建具体对象的创建
 
 * 工厂方法举例
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/Java%E4%B8%AD%E7%9A%84%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95-FactoryMethod_1.png)
+![](https://gukaifeng.cn/posts/java-zhong-de-gong-han-fang-fa-factorymethod/Java%E4%B8%AD%E7%9A%84%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95-FactoryMethod_1.png)
 
     开发人员1：橙色框；
 

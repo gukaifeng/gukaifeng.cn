@@ -35,7 +35,7 @@ JCF: Java collections framework，Java集合框架.
 
 ## 1. JCF层级
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/Java-JCF_1.png)
+![](https://gukaifeng.cn/posts/java-jcf/Java-JCF_1.png)
 
 
 

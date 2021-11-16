@@ -28,7 +28,7 @@ HTTP 的交互流程一般分为四个步骤（一次完整的请求）
 
 ## 3. HTTP的请求格式
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/HTTP%E5%8D%8F%E8%AE%AE_1.png)
+![](https://gukaifeng.cn/posts/http-xie-yi/HTTP%E5%8D%8F%E8%AE%AE_1.png)
 
 ## 4. HTTP的请求方法
 
@@ -50,7 +50,7 @@ GET 和 POST 的区别：
 
 ## 5. HTTP 的响应格式
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/HTTP%E5%8D%8F%E8%AE%AE_2.png)
+![](https://gukaifeng.cn/posts/http-xie-yi/HTTP%E5%8D%8F%E8%AE%AE_2.png)
 
 ## 6. HTTP 状态码
 

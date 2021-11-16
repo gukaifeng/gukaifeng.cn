@@ -14,7 +14,7 @@ toc: true
 
 
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/%E5%9F%BA%E4%BA%8Ebs4%E5%BA%93%E7%9A%84HTML%E5%86%85%E5%AE%B9%E6%9F%A5%E6%89%BE%E6%96%B9%E6%B3%95_1.png)
+![](https://gukaifeng.cn/posts/ji-yu-bs4-ku-de-html-nei-rong-cha-zhao-fang-fa/%E5%9F%BA%E4%BA%8Ebs4%E5%BA%93%E7%9A%84HTML%E5%86%85%E5%AE%B9%E6%9F%A5%E6%89%BE%E6%96%B9%E6%B3%95_1.png)
 
 BeautifulSoup库提供了一个方法`find_all()`，这个方法可以在soup的变量中去查找一些信息。
 

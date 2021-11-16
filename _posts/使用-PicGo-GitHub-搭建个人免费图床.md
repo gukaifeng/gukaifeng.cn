@@ -36,7 +36,7 @@ PicGo 的 Github 地址为 https://github.com/Molunerfinn/PicGo
 
 打开 PicGo 客户端，图床设置 -> GitHub 图床，填写相关信息。
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/%E4%BD%BF%E7%94%A8%20PicGo%20%2B%20GitHub%20%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A_1.png)
+![](https://gukaifeng.cn/posts/shi-yong-picgo-github-da-jian-ge-ren-mian-fei-tu-chuang/%E4%BD%BF%E7%94%A8%20PicGo%20%2B%20GitHub%20%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A_1.png)
 
 * 设定仓库名：填 GitHub 上刚建的那个库，注意从 username 开始写。
 * 设定分支名：一般就写 master。

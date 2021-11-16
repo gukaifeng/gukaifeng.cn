@@ -26,7 +26,7 @@ toc: true
 
     打开 [Apache Tomcat](http://tomcat.apache.org/) 官网，选择你需要的版本的 Core 下 的 tar.gz 进行下载。
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/Tomcat%E5%85%A5%E9%97%A8_1.png)
+![](https://gukaifeng.cn/posts/tomcat-ru-men/Tomcat%E5%85%A5%E9%97%A8_1.png)
 
 2. 解压
 

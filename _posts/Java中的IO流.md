@@ -83,7 +83,7 @@ Java 的 IO 流共涉及 40 多个类，实际上非常规则，都是从 4 个�
 
 IO 流体系如下，只需掌握深色背景部分。
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/Java%E4%B8%AD%E7%9A%84IO%E6%B5%81_1.png)
+![](https://gukaifeng.cn/posts/java-zhong-de-io-liu/Java%E4%B8%AD%E7%9A%84IO%E6%B5%81_1.png)
 
 ## 3. 文件字节流
 

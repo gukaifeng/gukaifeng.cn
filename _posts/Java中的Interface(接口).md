@@ -59,7 +59,7 @@ public interface Runner {
 
 ## 4. 接口的应用举例
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/Java%E4%B8%AD%E7%9A%84Interface(%E6%8E%A5%E5%8F%A3)_1.png)
+![](https://gukaifeng.cn/posts/java-zhong-de-interface-jie-kou/Java%E4%B8%AD%E7%9A%84Interface(%E6%8E%A5%E5%8F%A3)_1.png)
 
 ```java
 public abstract class Person {

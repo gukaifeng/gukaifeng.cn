@@ -67,7 +67,7 @@ Java中boolean类型变量的值不可用像C/C++那样用0和非0代替false/tr
 
 * 自动类型转换：容量小的类型自动转换为容量大的数据类型。有多重类型的数据混合运算时，系统首先自动将所有数据转换成容量最大的那种数据类型，然后再进行计算。
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/Java%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B1.png)
+![](https://gukaifeng.cn/posts/java-zhong-de-shu-ju-lei-xing/Java%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B1.png)
 
 * byte/short/char之间不会相互转换，他们三者在计算时首先转换为int类型。
 

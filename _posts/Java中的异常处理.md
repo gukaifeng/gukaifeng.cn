@@ -34,7 +34,7 @@ Java 程序运行过程中所发生的异常事件可分类两类：
 
 ## 2. 异常类层次
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/Java%E4%B8%AD%E7%9A%84%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86_1.png)
+![](https://gukaifeng.cn/posts/java-zhong-de-yi-chang-chu-li/Java%E4%B8%AD%E7%9A%84%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86_1.png)
 
 
 
