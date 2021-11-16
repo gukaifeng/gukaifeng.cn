@@ -20,15 +20,15 @@ toc: true
 <!--more-->
 注意，一个标签结点的孩子结点不仅包括标签结点，也包括字符串结点，如`'\n'`等。
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/%E5%9F%BA%E4%BA%8Ebs4%E5%BA%93%E7%9A%84HTML%E5%86%85%E5%AE%B9%E9%81%8D%E5%8E%86%E6%96%B9%E6%B3%95_1.png)
+![](https://gukaifeng.cn/posts/ji-yu-bs4-ku-de-html-nei-rong-bian-li-fang-fa/%E5%9F%BA%E4%BA%8Ebs4%E5%BA%93%E7%9A%84HTML%E5%86%85%E5%AE%B9%E9%81%8D%E5%8E%86%E6%96%B9%E6%B3%95_1.png)
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/%E5%9F%BA%E4%BA%8Ebs4%E5%BA%93%E7%9A%84HTML%E5%86%85%E5%AE%B9%E9%81%8D%E5%8E%86%E6%96%B9%E6%B3%95_2.png)
+![](https://gukaifeng.cn/posts/ji-yu-bs4-ku-de-html-nei-rong-bian-li-fang-fa/%E5%9F%BA%E4%BA%8Ebs4%E5%BA%93%E7%9A%84HTML%E5%86%85%E5%AE%B9%E9%81%8D%E5%8E%86%E6%96%B9%E6%B3%95_2.png)
 
 
 
 ## 2. 标签树的三种遍历方法
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/%E5%9F%BA%E4%BA%8Ebs4%E5%BA%93%E7%9A%84HTML%E5%86%85%E5%AE%B9%E9%81%8D%E5%8E%86%E6%96%B9%E6%B3%95_3.png)
+![](https://gukaifeng.cn/posts/ji-yu-bs4-ku-de-html-nei-rong-bian-li-fang-fa/%E5%9F%BA%E4%BA%8Ebs4%E5%BA%93%E7%9A%84HTML%E5%86%85%E5%AE%B9%E9%81%8D%E5%8E%86%E6%96%B9%E6%B3%95_3.png)
 
 ### 2.1. 下行遍历
 
@@ -128,7 +128,7 @@ html
 
 平行遍历发生在同一个父节点下的各节点之间。
 
-![](https://raw.githubusercontent.com/gukaifeng/PicGo/master/img/%E5%9F%BA%E4%BA%8Ebs4%E5%BA%93%E7%9A%84HTML%E5%86%85%E5%AE%B9%E9%81%8D%E5%8E%86%E6%96%B9%E6%B3%95_4.png)
+![](https://gukaifeng.cn/posts/ji-yu-bs4-ku-de-html-nei-rong-bian-li-fang-fa/%E5%9F%BA%E4%BA%8Ebs4%E5%BA%93%E7%9A%84HTML%E5%86%85%E5%AE%B9%E9%81%8D%E5%8E%86%E6%96%B9%E6%B3%95_4.png)
 
 标签树的平行遍历一共包含四个属性，如下。
 
