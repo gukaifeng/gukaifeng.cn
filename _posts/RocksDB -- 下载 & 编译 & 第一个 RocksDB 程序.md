@@ -1,7 +1,7 @@
 ---
 title: RocksDB -- 下载 & 编译 & 第一个 RocksDB 程序
 date: 2021-06-30
-updated: 2021-06-30
+updated: 2021-11-23 15:47:39
 categories: [数据库]
 tags: [数据库, RocksDB]
 toc: true
@@ -25,20 +25,21 @@ Release 页面：https://github.com/facebook/rocksdb/releases 。
 **\* 请不要用 `make` 或 `make all` 来编译 RocksDB，这样编译出的是 debug 版本，性能会远低于 release 版本。**  
 **\* RocksDB 编译不依赖任何第三方库，部分功能所依赖的第三方库是可选的。**
 
-这里使用官方推荐的编译方式 -- 分别编译静态库和动态库。
 
 首先，进入我们 clone 下的或解压 tar.gz 文件出的 RocksDB 目录。
 我这里是 `~/bubu/rocksdb-6.25.3`。
 
+下面两个编译方法二选一即可。
+
 <!--more-->
 
-### 2.1. 编译静态库
+### 2.1. 方法1：编译静态库（官方推荐）
 
 输入命令 `make static_lib`，将开始编译静态库.  
 
 完成后，会在当前目录下创建一个 `librocksdb.a` 静态库文件。
 
-### 2.2. 编译动态库
+### 2.2. 方法2：编译动态库
 
 输入命令 `make shared_lib`，将开始编译静态库.  
 
@@ -53,7 +54,7 @@ Release 页面：https://github.com/facebook/rocksdb/releases 。
 >这里你可能会遇到一个错误：  
 >`/usr/bin/ld: 最后的链结失败: 输出不可表示的节`  
 >解决方法是在编译命令后加上参数 `-no-pie`。  
->若你想知道为何，查看 [CentOS 中编译动态库出错 “/usr/bin/ld: 最后的链结失败: 输出不可表示的节”](https://gukaifeng.cn/archives/48/) 这篇文章。
+>若你想知道为何，查看 [CentOS 中编译动态库出错 “/usr/bin/ld: 最后的链结失败: 输出不可表示的节”](https://gukaifeng.cn/posts/centos-zhong-bian-yi-dong-tai-ku-chu-cuo-usr-bin-ld-zui-hou-de-lian-jie-shi-bai-shu-chu-bu-ke-biao-shi-de-jie/) 这篇文章。
 
 *到这里， RocksDB 编译就完成了。*
 
