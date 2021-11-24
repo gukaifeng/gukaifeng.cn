@@ -8,7 +8,7 @@ tags: [RocksDB,数据库]
 
 
 
-RocksDB Slice 类定义在 [`slice.h`](https://github.com/facebook/rocksdb/blob/main/include/rocksdb/slice.h) 头文件中。
+RocksDB Slice 类定义在 `slice.h` 头文件中。[点此查看 `slice.h`](https://github.com/facebook/rocksdb/blob/main/include/rocksdb/slice.h)。
 
 
 
@@ -36,7 +36,7 @@ size_t size_;
 
 ## 2. Slice 类的方法
 
-Slice 类中的大多方法都直接实现在 `slice.h` 头文件中，部分实现在 [`slice.cc`](https://github.com/facebook/rocksdb/blob/main/util/slice.cc) 源文件中。
+Slice 类中的大多方法都直接实现在 `slice.h` 头文件中，部分实现在 `slice.cc`源文件中。[点此查看 `slice.cc`](https://github.com/facebook/rocksdb/blob/main/util/slice.cc)。
 
 下面按照 `slice.h` 中的顺序，依次介绍其中方法。
 
@@ -97,7 +97,7 @@ std::string_view 是 C++17 中的新特性，就是一个只读的 std::string�
 Slice(const char* s) : data_(s) { size_ = (s == nullptr) ? 0 : strlen(s); }
 ```
 
-这个和上面第 2 个构造函数的唯一区别就是，无需你指定 char 字符串的长度，使用 `strlen()` 函数来计算。
+这个和上面第 2 个构造函数的唯一区别就是，无需你指定 char 字符串的长度，使用 `strlen()` 函数来计算。
 
 6\. 从 SliceParts 创建一个 Slice
 
@@ -125,7 +125,7 @@ Slice::Slice(const SliceParts& parts, std::string* buf) {
 
 -
 
-其中 SliceParts 就是一个 Slice 数组，里面存了很多个 Slice，其定义也在 `slice.h` 中，如下：
+其中 SliceParts 就是一个 Slice 数组，里面存了很多个 Slice，其定义也在 `slice.h` 中，如下：
 
 ```cpp
 struct SliceParts {
@@ -180,7 +180,7 @@ char operator[](size_t n) const {
 }
 ```
 
-使 Slice 可以像普通数组那样通过 `[]` 运算符使用索引访问元素。
+使 Slice 可以像普通数组那样通过 `[]` 运算符使用索引访问元素。
 
 5\. 清空 Slice
 

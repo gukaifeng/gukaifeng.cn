@@ -10,12 +10,13 @@ toc: true
 
 参考链接：https://github.com/facebook/rocksdb/wiki/Rocksdb-BlockBasedTable-Format
 
-
 \- BlockBasedTable 是 RocksDB 默认的表类型。
 \- 在 BlockBasedTable 中，数据被存储到固定大小的块，每个块依次存储数据条目。
 \- 当我们把数据存储到块中时，数据可以被高效的压缩或编码，也就是说，最终存储到块中的数据大小，往往是远小于原始数据大小的。
 \- 当读取一条记录时，我们首先定位这个记录所在的块，然后把这个块读到内存中，最后在这个块中查找要读取的记录。
 \- 为了避免频繁读取一个相同的块，RocksDB 引入了块缓存将加载的块保存在内存中。
+
+<!--more-->
 
 
 ### 文件格式
@@ -68,7 +69,7 @@ magic:            fixed64;      // 0x88e241b785f4cff7 (little-endian)
 
 ### `Index` Block
 
-前面说过，查找一条记录时，先找到存储这条记录的 data block，然后把这个 data block 读到内存，再在块中查找记录。Index Block 就是用来查找这个 data block 的，其是一个二分查找的数据结构。一个文件可能包含一个 index block，或者一系列划分后的 index blocks （参考 [Partitioned Index Filters](https://github.com/facebook/rocksdb/wiki/Partitioned-Index-Filters)）。index block 格式在 [Index Block Format](https://github.com/facebook/rocksdb/wiki/Index-Block-Format) 中。
+前面说过，查找一条记录时，先找到存储这条记录的 data block，然后把这个 data block 读到内存，再在块中查找记录。Index Block 就是用来查找这个 data block 的，其是一个二分查找的数据结构。一个文件可能包含一个 index block，或者一系列划分后的 index blocks （参考 [Partitioned Index Filters](https://github.com/facebook/rocksdb/wiki/Partitioned-Index-Filters)）。index block 格式在 [Index Block Format](https://github.com/facebook/rocksdb/wiki/Index-Block-Format) 中。
 
 
 
@@ -119,7 +120,7 @@ magic:            fixed64;      // 0x88e241b785f4cff7 (little-endian)
  number of data blocks
 ```
 
-RocksDB 还给用户提供了一个 `callback`，用户可以用 ` callback` 获取想要的表的其他属性。参考 `UserDefinedPropertiesCollector`。
+RocksDB 还给用户提供了一个 `callback`，用户可以用 ` callback` 获取想要的表的其他属性。参考 `UserDefinedPropertiesCollector`。
 
 
 
@@ -127,7 +128,7 @@ RocksDB 还给用户提供了一个 `callback`，用户可以用 ` callback` �
 
 这个元块包含了一个字典，用于在压缩/解压缩每个块前准备好压缩库。目的是解决小数据块在使用动态压缩算法时的一个基本问题：字典是在单次读取完块的时候建立的，所以小数据块总是有小且无效的字典。
 
-对于这个问题，RocksDB 中的解放方案是，通过之前读取过的块中数据构建一个字典，再用这个字典初始化压缩库。随后，这个字典会被存储在一个文件级元块中，在解压缩时使用。字典大小的上限可以通过 `CompressionOPtions::max_dict_bytes` 配置，默认是 0，即不会产生或者存储 Compression Dictionary Meta Block。目前支持四种方案： `kZlibCompression`、 `kLZ4Compression`、 `kLZ4HCCompression`  以及 `kZSTDNotFinalCompression`。
+对于这个问题，RocksDB 中的解放方案是，通过之前读取过的块中数据构建一个字典，再用这个字典初始化压缩库。随后，这个字典会被存储在一个文件级元块中，在解压缩时使用。字典大小的上限可以通过 `CompressionOPtions::max_dict_bytes` 配置，默认是 0，即不会产生或者存储 Compression Dictionary Meta Block。目前支持四种方案： `kZlibCompression`、 `kLZ4Compression`、 `kLZ4HCCompression`  以及 `kZSTDNotFinalCompression`。
 
 这个 Compression Dictionary 仅用在最低级的压缩中，数据最大最稳定。为了避免遍历输入数据太多次，这个字典仅包含了子压缩的第一个输出文件中的样本。这个字典会被应用、存储在所有后续输出文件的元块中。要注意下，字典不会被应用或者存储在第一个输出文件中，因为第一个文件完成处理之前，字典的内容还不确定。
 
