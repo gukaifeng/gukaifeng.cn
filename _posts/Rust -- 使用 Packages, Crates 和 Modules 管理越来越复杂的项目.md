@@ -1,7 +1,7 @@
 ---
 title: Rust -- 使用 Packages, Crates 和 Modules 管理越来越复杂的项目
 date: 2021-11-18 22:58:18
-updated: 2021-11-24 02:19:35
+updated: 2021-11-24 23:45:35
 categories: [编程语言基础]
 tags: [Rust]
 toc: true
@@ -26,9 +26,9 @@ Rust 中的一些特性可以使得你更好的管理、组织代码，比如哪
 
 <!--more-->
 
+这里这个 Paths(路径) 我觉得有必要解释一下。Rust 中的路径指的不是文件系统的路径，但与之类似，指的是一些项的路径（比如函数、模块、常量等等）。例如 `mod1::mod2::func()` 就是函数 `func()` 的路径，Rust 会按照 `mod1` -> `mod2` -> `func()` 这个顺序找到 `func()` 这个函数。
 
-
-## 1. Packages 和 Crates
+## 1. Packages(包) 和 Crates
 
 
 
@@ -95,6 +95,12 @@ Cargo 会把 crate root 传递给 rustc 用以实际构建库或二进制项目�
 你可以把多个文件放在 `src/bin/` 目录下，每个 `src/bin/` 下的文件都会被编译成一个独立的二进制 crate，这样一个包就有了多个二进制 crate。 
 
 一个 crate 会将一个作用域内的相关功能放在一起，这样可以方便地在多个项目中共享这些功能。例如，`rand` crate 提供了生成随机数的功能，通过将 `rand` crate 加入到我们项目的作用域中，我们就可以在自己的项目中使用该功能。`rand` crate 提供的所有功能，都可以通过其 crate 的名字 `rand` 来访问。这里这个概念类似其他语言中的命名空间(namespace)，也可以解决命名冲突的问题，如通过 `::` 访问指定 crate 中的内容。
+
+
+
+
+
+## 2. Modules(模块) 和 Paths(路径)
 
 
 
