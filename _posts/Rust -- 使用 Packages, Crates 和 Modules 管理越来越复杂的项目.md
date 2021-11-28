@@ -26,13 +26,13 @@ Rust 中的一些特性可以使得你更好的管理、组织代码，比如哪
 
 <!--more-->
 
-这里这个 Paths(路径) 我觉得有必要解释一下。Rust 中的路径指的不是文件系统的路径，但与之类似，指的是一些项的路径（比如函数、模块、常量等等）。例如 `mod1::mod2::func()` 就是函数 `func()` 的路径，Rust 会按照 `mod1` -> `mod2` -> `func()` 这个顺序找到 `func()` 这个函数。
+这里这个 Paths(路径) 我觉得有必要解释一下。Rust 中的路径指的不是文件系统的路径，但与之类似，指的是一些项的路径（比如函数、模块、常量等等）。例如 `mod1::mod2::func()` 就是函数 `func()` 的路径，Rust 会按照 `mod1` -> `mod2` -> `func()` 这个顺序找到 `func()` 这个函数。
 
 ## 1. Packages(包) 和 Crates
 
 
 
-一个 Crate 是一个二进制文 件或库。
+一个 Crate 是一个二进制文 件或库。
 
 Crate root 是一个源文件，Rust 编译器以 Crate root 为起点，构建你的 crate 的根模块。
 
@@ -90,11 +90,11 @@ Cargo 会把 crate root 传递给 rustc 用以实际构建库或二进制项目�
 
 我们上面的示例中的包，只包含一个 `src/main.rs`，也就说说这个包只含有一个名为 `hello-rust` 的二进制 crate。
 
-如果一个包同时有 `src/main.rs` 和 `src/lib.rs`，则这个包有两个 crate，一个是库 crate 和一个 二进制 crate，且名字都与包相同。
+如果一个包同时有 `src/main.rs` 和 `src/lib.rs`，则这个包有两个 crate，一个是库 crate 和一个 二进制 crate，且名字都与包相同。
 
 你可以把多个文件放在 `src/bin/` 目录下，每个 `src/bin/` 下的文件都会被编译成一个独立的二进制 crate，这样一个包就有了多个二进制 crate。 
 
-一个 crate 会将一个作用域内的相关功能放在一起，这样可以方便地在多个项目中共享这些功能。例如，`rand` crate 提供了生成随机数的功能，通过将 `rand` crate 加入到我们项目的作用域中，我们就可以在自己的项目中使用该功能。`rand` crate 提供的所有功能，都可以通过其 crate 的名字 `rand` 来访问。这里这个概念类似其他语言中的命名空间(namespace)，也可以解决命名冲突的问题，如通过 `::` 访问指定 crate 中的内容。
+一个 crate 会将一个作用域内的相关功能放在一起，这样可以方便地在多个项目中共享这些功能。例如，`rand` crate 提供了生成随机数的功能，通过将 `rand` crate 加入到我们项目的作用域中，我们就可以在自己的项目中使用该功能。`rand` crate 提供的所有功能，都可以通过其 crate 的名字 `rand` 来访问。这里这个概念类似其他语言中的命名空间(namespace)，也可以解决命名冲突的问题，如通过 `::` 访问指定 crate 中的内容。
 
 
 
@@ -102,25 +102,39 @@ Cargo 会把 crate root 传递给 rustc 用以实际构建库或二进制项目�
 
 ## 2. Modules(模块) 和 Paths(路径)
 
+Rust 中的模块和 C++ 中的 namespace 概念有些像，都是把一些内容集中放在一起。
+
+Rust 中的路径的使用，也和 C++ 的 namespace 的使用方法差不多，例如 `use std::thread::Thread;`。
+
+当然，在 Rust 和 C++ 中，上面说的这些概念的区别还是很大的，这里提到 C++ 的 namespace 只是为了便于理解，区别看这里 [Rust "use" vs. C++ "using namespace"](https://stackoverflow.com/questions/29013617/rust-use-vs-c-using-namespace)，这个不是本文重点，这里就不多说了。
+
+-
+
+通常来说，我们编写模块的场景，一般不是产生二进制文件，而是库文件。也就是说，我们需要创建一个库 crate，而不是二进制文件 crate。但是我们之前使用 `cargo new` 命令创建的都是二进制文件 crate，下面我们加个参数 `--lib` 来创建库 crate。
+
+```shell
+cargo new --lib restaurant
+```
+
+和之前的不加 `--lib` 的时候不同，这次生成了 `src/lib。rs` 而不是 `src/main.rs`。
+
+下面，我们开始介绍关于 Rust 中模块和路径的具体内容。
+
+### 2.1. 定义 Modules 来控制作用域和私有性
 
 
-## 2. 定义 Modules 来控制作用域和私有性
 
 
 
 
 
-## 3. 在模块树中引用项目的路径
 
 
 
 
+### 2.2. 在模块树中引用项目的路径
 
-## 4. 使用 `use` 关键字将名称引入作用域
+### 2.3. 使用 `use` 关键字将名称引入作用域
 
-
-
-
-
-## 5. 将模块划分为不同的文件
+### 2.4. 将模块划分为不同的文件
 
