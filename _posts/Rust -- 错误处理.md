@@ -1,7 +1,7 @@
 ---
 title: Rust -- 错误处理
 date: 2021-11-30 22:52:13
-updated: 2021-12-01 00:42:45
+updated: 2021-12-01 09:50:45
 categories: [编程语言基础]
 tags: [Rust]
 toc: true
@@ -21,6 +21,10 @@ Rust 中没有异常概念，而是将错误分成了两个主要类别：
 
 
 下面先介绍不可恢复错误 `panic!`，然后再说如何返回 `Result<T, E>`。然后还会探讨尝试从错误中恢复还是停止执行时的注意事项。
+
+
+
+<!--more-->
 
 ## 1. `panic!` 宏与不可恢复的错误
 
@@ -130,6 +134,10 @@ note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose bac
 
 对于这个场景，我们就要用到 `Result<T, E>`。
 
+
+
+### 2.1. 什么是 `Result<T, E>`
+
 `Result<T, E>` 这是一个枚举类型，其定义如下：
 
 ```rust
@@ -140,4 +148,45 @@ enum Result<T, E> {
 ```
 
 `T` 和 `E` 都是泛型参数。T 代表成功时返回的 Ok 成员中的数据的类型，而 `E` 代表失败时返回的 `Err` 成员中的错误的类型。
+
+`Result<T, E>` 通常作为一个可能出错的方法的返回值类型。如果方法执行成功了，会把成功的结果放在 `T` 中，返回 `Ok(T)`，如果失败了，会把错误信息放在 `E` 中，返回 `Err(E)`。
+
+这里已知标准库中的打开文件函数 `File::open()` 返回值类型是 `Result<T, E>`。  
+这个函数如果执行成功了，`T` 的类型就是 `std::fs::File`，这是一个文件句柄；  
+如果失败了，`E` 的类型是 `std::io::Error`。
+
+然后看一段示例代码，这段代码使用 `match` 表达式处理 `Result<T, E>`：
+
+```rust
+use std::fs::File;
+
+fn main() {
+    let f = File::open("hello.txt");
+
+    let f = match f {
+        Ok(file) => file,
+        Err(error) => {
+            panic!("Problem opening the file: {:?}", error)
+        },
+    };
+}
+```
+
+要注意的是，与 `Option` 枚举一样，`Result` 枚举和其成员也被导入到了 prelude 中，所以就不需要在 `match` 分支中的 `Ok` 和 `Err` 之前指定 `Result::`。
+
+上面的代码中可以看到，如果函数的返回结果是 OK 时，把 OK 中的句柄赋值给 f；如果函数的返回结果是 Error，就执行 `panic!`。
+
+由于我们现在没有 "hello.txt" 文件，所以执行上面的代码，理所应当的报错如下：
+
+```
+thread 'main' panicked at 'Problem opening the file: Os { code: 2, kind: NotFound, message: "No such file or directory" }', src/main.rs:9:13
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+The terminal process "cargo 'run'" terminated with exit code: 101.
+```
+
+错误信息中明确指出文件没找到。
+
+
+
+### 2.2. 匹配不同的错误
 
