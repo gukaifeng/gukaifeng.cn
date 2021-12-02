@@ -174,7 +174,7 @@ fn main() {
 
 要注意的是，与 `Option` 枚举一样，`Result` 枚举和其成员也被导入到了 prelude 中，所以就不需要在 `match` 分支中的 `Ok` 和 `Err` 之前指定 `Result::`。
 
-上面的代码中可以看到，如果函数的返回结果是 OK 时，把 OK 中的句柄赋值给 f；如果函数的返回结果是 Error，就执行 `panic!`。
+上面的代码中可以看到，如果函数的返回结果是 `OK` 时，把 `OK` 中的句柄赋值给 f；如果函数的返回结果是 `Err`，就执行 `panic!`。
 
 由于我们现在没有 "hello.txt" 文件，所以执行上面的代码，理所应当的报错如下：
 
@@ -189,4 +189,231 @@ The terminal process "cargo 'run'" terminated with exit code: 101.
 
 
 ### 2.2. 匹配不同的错误
+
+
+
+#### 2.2.1. 使用 `match` 为不同的结果执行不同的操作
+
+上面打开文件的代码中，只要打开文件失败就会执行 `panic!`。
+
+但是我们并不是什么遇到什么错误都想执行 `panic!`。
+
+就以上面打开文件这个代码来说，我们可能希望，如果错误是文件不存在，那我们就创建一个文件，如果是其他错误或者创建文件仍然失败，再执行 `panic!`。
+
+我们在代码中再增加一个 `match` 来实现这个效果：
+
+```rust
+use std::fs::File;
+use std::io::ErrorKind;
+
+fn main() {
+    let f = File::open("hello.txt");
+
+    let f = match f {
+        Ok(file) => file,
+        Err(error) => match error.kind() {
+            ErrorKind::NotFound => match File::create("hello.txt") {
+                Ok(fc) => fc,
+                Err(e) => panic!("Problem creating the file: {:?}", e),
+            },
+            other_error => panic!("Problem opening the file: {:?}", other_error),
+        },
+    };
+}
+```
+
+现在这段代码中，就可以实现我们想要的效果了：
+
+* 如果文件存在且正确打开了，就返回文件的句柄；
+* 如果是除了文件不存在的其他错误，执行 `panic!`；
+* 如果是文件不存在的错误，就新建一个文件。
+    * 如果新建文件成功了，返回新建文件的句柄；
+    * 如果新建文件遇到错误，执行 `panic!`。
+
+
+
+#### 2.2.2. 使用闭包简化代码
+
+不过我们使用 `match` 分支实现上述的效果是很繁琐的，如果你了解 Rust 中的闭包，则下面这个不使用 `match` 的写法会更简单更清晰：
+
+```rust
+use std::fs::File;
+use std::io::ErrorKind;
+
+fn main() {
+    let f = File::open("hello.txt").unwrap_or_else(|error| {
+        if error.kind() == ErrorKind::NotFound {
+            File::create("hello.txt").unwrap_or_else(|error| {
+                panic!("Problem creating the file: {:?}", error);
+            })
+        } else {
+            panic!("Problem opening the file: {:?}", error);
+        }
+    });
+}
+```
+
+如果你不了解 Rust 中的闭包，可以看 [Rust -- 函数式语言功能]() 中的闭包部分，或查阅相关文档。
+
+不过使用闭包简化这段代码并不是最好的选择，这里只是提供一个思路，也许以后用得到。
+
+要简化上述代码，下面一节的方法更实用一些。
+
+#### 2.2.3. 失败时 panic 的简写: `unwarp()` 和 `expect()`
+
+`Result<T, E>` 类型定义了很多辅助方法来处理各种情况，`unwrap()` 和 `expect()` 便是其中之二。
+
+`unwrap()` 和 `expect()` 用起来就和使用了 `match` 的类似。
+
+* 如果 `Result<T, E>` 值是 `Ok`，那么 `unwarp()` 和 `expect()` 就会返回 `T`；
+* 如果 `Result<T, E>` 值是 `Err`，那么 `unwarp()` 和 `expect()` 就会执行 `panic!`。
+
+`unwrap()` 和 `expect()` 的区别是，`expect()` 可以自己指定 `panic!` 中的信息，而 `unwrap()` 不可以。
+
+下面看一段 `unwrap()` 的示例代码：
+
+```rust
+use std::fs::File;
+
+fn main() {
+    let f = File::open("hello.txt").unwrap();
+}
+```
+
+假定要打开的文件不存在，运行会输出错误信息如下：
+
+```
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: Os { code: 2, kind: NotFound, message: "No such file or directory" }', src/main.rs:4:37
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+The terminal process "cargo 'run'" terminated with exit code: 101.
+```
+
+下面看一段 `expect()` 的示例代码：
+
+```rust
+use std::fs::File;
+
+fn main() {
+    let f = File::open("hello.txt").expect("Failed to open hello.txt");
+}
+```
+
+假定要打开的文件不存在，运行会输出错误信息如下：
+
+```
+thread 'main' panicked at 'Failed to open hello.txt: Os { code: 2, kind: NotFound, message: "No such file or directory" }', src/main.rs:4:37
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+The terminal process "cargo 'run'" terminated with exit code: 101.
+```
+
+看出区别了没？
+
+使用了 `expect()` 的错误信息以我们指定的文本 "Failed to open hello.txt" 开始，我们将会更容易找到代码中的错误信息来自何处。如果在多处使用 `unwrap`，则需要花更多的时间来分析到底是哪一个 `unwrap` 造成了 panic，因为所有的 `unwrap` 调用都打印相同的信息。
+
+### 2.3. 传播错误
+
+
+
+#### 2.3.1. 如何传播错误
+
+我们上面的代码中，都是在出错的位置执行 `panic!` 的。
+
+但是在一些场景下，在出错位置可能无法判断是应该解决错误，还是 `panic!`。
+
+例如，有其他人调用你写的代码，你的代码出错了（前提是可恢复错误 `Result<T, E>`），但此时你无法预知调用你代码的人想要做什么，也就无法判断是应该解决错误，还是 `panic!`。
+
+这种情况下，我们可以在代码中将此错误向上传递，把错误的处理交给调用者。这个叫做**传播(Propagating)**错误。
+
+我们看示例代码，这段代码从文件中读取信息：
+
+```rust
+use std::io;
+use std::io::Read;
+use std::fs::File;
+
+fn read_username_from_file() -> Result<String, io::Error> {
+    let f = File::open("hello.txt");
+
+    let mut f = match f {
+        Ok(file) => file,
+        Err(e) => return Err(e),
+    };
+
+    let mut s = String::new();
+
+    match f.read_to_string(&mut s) {
+        Ok(_) => Ok(s),
+        Err(e) => Err(e),
+    }
+}
+```
+
+上面的代码中，有两个 `match` 表达式， 第一个表达式是打开文件的分支，第二个表达式是读取内容的分支。
+
+在第一个 `match` 表达式中，可以看到，如果打开文件成功了，就会返回句柄给 f，如果失败了，则显式调用 `return`，将错误返回给调用者，中止执行函数。
+
+在第二个 `match` 表达式中也是类似的，如果读取内容成功了，就返回读取到的内容给调用者，否则返回错误给调用者。由于这个 `match` 是整个函数最后的表达式，所以无需显式调用 `return`。
+
+
+
+#### 2.3.2. 传播错误的简写：`?` 运算符
+
+Rust 中提供了一个运算符 `?` 用以简化传播错误的实现。
+
+下面的示例代码使用了 `？` 运算符，其功能与上面的完全相同。
+
+```rust
+use std::io;
+use std::io::Read;
+use std::fs::File;
+
+fn read_username_from_file() -> Result<String, io::Error> {
+    let mut f = File::open("hello.txt")?;
+    let mut s = String::new();
+    f.read_to_string(&mut s)?;
+    Ok(s)
+}
+```
+
+在第 6 行末尾，我们加了一个 `?`，这个的作用是，如果前面表达式（这个表达式返回值类型是 `Result<T, E>`）的值是 `OK`，`?` 就会返回其中的 `T`，如果前面的表达式的值是 `Err`，那么 `?` 就会将其返回给调用者，这个返回类似执行了 `return`，会中止函数，返回错误给调用者。
+
+第 8 行同理，如果读取内容成功了，`?` 会返回 `Ok(_)`（`read_to_string()` 执行成功的话里面的 `T` 就是 `_`），如果出错了，就会返回错误给调用者，中止函数。我们这里没有用变量来接收 `Ok(_)`，因为这里什么也没有，读取的内容是存在 `s` 里面的，所以函数最后返回 `Ok(s)`。
+
+
+
+上面的代码还可以进一步简化，功能完全一样，使用链式调用的方法：
+
+```rust
+use std::io;
+use std::io::Read;
+use std::fs::File;
+
+fn read_username_from_file() -> Result<String, io::Error> {
+    let mut s = String::new();
+  	File::open("hello.txt")?.read_to_string(&mut s)?;
+    Ok(s)
+}
+```
+
+这样写省去了一个变量 f，因为我们确实不需要它了。这是一个与众不同且更符合工程学(ergonomic)的写法。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 3. 如何决定是否 `panic!`
 
