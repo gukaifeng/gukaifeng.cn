@@ -68,7 +68,7 @@ The terminal process "cargo 'run'" failed to launch (exit code: 101).
 
 
 
-上面信息中还有一个 note，告诉我们在运行程序是设置环境变量 `RUST_BACKTRACE=1` （其实只要等于一个非 0 值都可以∫）可以显示回溯，也就是调用栈信息。
+上面信息中还有一个 note，告诉我们在运行程序是设置环境变量 `RUST_BACKTRACE=1` （其实只要等于一个非 0 值都可以∫）可以显示回溯，也就是调用栈信息。
 
 我们上面的示例太简单了，我们换一个稍微复杂点的示例：
 
@@ -116,7 +116,7 @@ note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose bac
 
 此信息最后一行有说，使用环境变量 `RUST_BACKTRACE=full` 可以显示更多的（冗长的）调用栈信息，感兴趣的小伙伴可以自己试试，这里就不做演示了，`RUST_BACKTRACE=1` 足矣。
 
-另外 `RUST_BACKTRACE=1` 这种环境变量，主要是在 debug 模式中使用的，在 release 模式下，可能得不到什么有效信息。
+另外 `RUST_BACKTRACE=1` 这种环境变量，主要是在 debug 模式中使用的，在 release 模式下，可能得不到什么有效信息。
 
 虽然我们自己编写的代码中没有调用 `panic!`，但是在上面的调用栈信息中还是可以看到触发了 panic，这也就是说明 panic 不一定发生在我们编写的代码中。
 
@@ -270,7 +270,7 @@ fn main() {
 
 `unwrap()` 和 `expect()` 的区别是，`expect()` 可以自己指定 `panic!` 中的信息，而 `unwrap()` 不可以。
 
-下面看一段 `unwrap()` 的示例代码：
+下面看一段 `unwrap()` 的示例代码：
 
 ```rust
 use std::fs::File;
@@ -308,7 +308,7 @@ The terminal process "cargo 'run'" terminated with exit code: 101.
 
 看出区别了没？
 
-使用了 `expect()` 的错误信息以我们指定的文本 "Failed to open hello.txt" 开始，我们将会更容易找到代码中的错误信息来自何处。如果在多处使用 `unwrap`，则需要花更多的时间来分析到底是哪一个 `unwrap` 造成了 panic，因为所有的 `unwrap` 调用都打印相同的信息。
+使用了 `expect()` 的错误信息以我们指定的文本 "Failed to open hello.txt" 开始，我们将会更容易找到代码中的错误信息来自何处。如果在多处使用 `unwrap`，则需要花更多的时间来分析到底是哪一个 `unwrap` 造成了 panic，因为所有的 `unwrap` 调用都打印相同的信息。
 
 ### 2.3. 传播错误
 
@@ -354,7 +354,11 @@ fn read_username_from_file() -> Result<String, io::Error> {
 
 在第二个 `match` 表达式中也是类似的，如果读取内容成功了，就返回读取到的内容给调用者，否则返回错误给调用者。由于这个 `match` 是整个函数最后的表达式，所以无需显式调用 `return`。
 
-
+> `?` 与 `match` 表达式做的事还是有些不同的：
+>
+> `?` 运算符所使用的错误值被传递给了 `from` 函数，它定义于标准库的 `From` trait 中，其用来将错误从一种类型转换为另一种类型。
+>
+> 当 `?` 运算符调用 `from` 函数时，收到的错误类型被转换为由当前函数返回类型所指定的错误类型。这在当函数返回单个错误类型来代表所有可能失败的方式时很有用，即使其可能会因很多种原因失败。只要每一个错误类型都实现了 `from` 函数来定义如何将自身转换为返回的错误类型，`?` 运算符会自动处理这些转换。
 
 #### 2.3.2. 传播错误的简写：`?` 运算符
 
@@ -375,7 +379,7 @@ fn read_username_from_file() -> Result<String, io::Error> {
 }
 ```
 
-在第 6 行末尾，我们加了一个 `?`，这个的作用是，如果前面表达式（这个表达式返回值类型是 `Result<T, E>`）的值是 `OK`，`?` 就会返回其中的 `T`，如果前面的表达式的值是 `Err`，那么 `?` 就会将其返回给调用者，这个返回类似执行了 `return`，会中止函数，返回错误给调用者。
+在第 6 行末尾，我们加了一个 `?`，这个的作用是，如果前面表达式（这个表达式返回值类型是 `Result<T, E>`）的值是 `OK`，`?` 就会返回其中的 `T`，如果前面的表达式的值是 `Err`，那么 `?` 就会将其返回给调用者，这个返回类似执行了 `return`，会中止函数，返回错误给调用者。
 
 第 8 行同理，如果读取内容成功了，`?` 会返回 `Ok(_)`（`read_to_string()` 执行成功的话里面的 `T` 就是 `_`），如果出错了，就会返回错误给调用者，中止函数。我们这里没有用变量来接收 `Ok(_)`，因为这里什么也没有，读取的内容是存在 `s` 里面的，所以函数最后返回 `Ok(s)`。
 
@@ -401,9 +405,104 @@ fn read_username_from_file() -> Result<String, io::Error> {
 
 
 
+#### 2.3.3. `?` 使用场景
+
+我们知道，`main()` 函数的默认返回值是 `()`。
+
+让我们看看在 `main()` 函数中使用 `?` 运算符会发生什么：
+
+```rust
+use std::fs::File;
+
+fn main() {
+    let f = File::open("hello.txt")?;
+}
+```
+
+会出错，错误信息如下：
+
+```
+error[E0277]: the `?` operator can only be used in a function that returns `Result` or `Option` (or another type that implements `FromResidual`)
+   --> src/main.rs:5:36
+    |
+4   | / fn main() {
+5   | |     let f = File::open("hello.txt")?;
+    | |                                    ^ cannot use the `?` operator in a function that returns `()`
+6   | | }
+    | |_- this function should return `Result` or `Option` to accept `?`
+    |
+    = help: the trait `FromResidual<Result<Infallible, std::io::Error>>` is not implemented for `()`
+note: required by `from_residual`
+   --> /home/gukaifeng/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/ops/try_trait.rs:339:5
+    |
+339 |     fn from_residual(residual: R) -> Self;
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `hello-rust` due to previous error
+The terminal process "cargo 'run'" terminated with exit code: 101.
+```
 
 
 
+错误信息的一开始就说了，`?` 运算符只能用于返回值类型为 `Result` 或 `Option` 或其他实现了 `FromResidual` 的函数。
+
+我们的 `main()` 现在的返回值是 `()`，这不符合使用 `?` 的条件。
+
+当你期望在不返回 `Result` 的函数中调用其他返回 `Result` 的函数时使用 `?` 的话，有两种方法解决这个问题：
+
+1. 将函数返回值类型修改为 `Result<T, E>`，如果没有其它限制阻止你这么做的话；
+2. 通过合适的方法（例如使用 `match` 或另一个 `Result`）来处理 `Result<T, E>`。
+
+
+
+第 2 中方法在我们之前的一些示例中已经有所演示了，我们这里看一下第 1 种方法：
+
+```rust
+use std::error::Error;
+use std::fs::File;
+
+fn main() -> Result<(), Box<dyn Error>> {
+    let f = File::open("hello.txt")?;
+
+    Ok(())
+}
+```
+
+我们这里修改了 `main()` 的返回值类型。
+
+**`main()` 函数是比较特殊的，支持的返回值类型，除了 `()` 就只有 `Result<T, E>` 了。**
+
+现在代码就可以正常编译通过了。
+
+> `Box<dyn Error>` 被称为 “trait 对象”（“trait object”）。
+>
+> 这里不去讲解它，目前你可以把其简单地理解为，在 `main()` 中使用 `?`，`main()` 允许返回的任何类型的错误。
+>
+> 
+
+
+
+#### 2.3.4. 扩展
+
+其实上面的功能，Rust 中还有一个更简单的写法，只是这个写法会脱离我们学习的相关内容的初衷（因为这个写法都给实现好了）。不过这里还是给出这个写法：
+
+```rust
+use std::io;
+use std::fs;
+
+fn read_username_from_file() -> Result<String, io::Error> {
+    fs::read_to_string("hello.txt")
+}
+```
+
+这个写法和之前的区别就是，用一个方法 `fs::read_to_string()` 解决了所有问题。
+
+因为打开文件，然后读取文件，这两个操作一起使用的频率实在是太高了，所以 Rust 标准库中提供了 `std::fs::read_to_string()` 这个方法（我们之前用的 `read_to_string()` 方法虽然和这个名字一样，但那个是文件句柄里的方法）。
+
+`std::fs::read_to_string()` 就是把打开文件和读取文件两个操作打包在一起了，我们用着会更方便一些。
+
+这个写法和之前的写法功能上完全相同！
 
 
 
