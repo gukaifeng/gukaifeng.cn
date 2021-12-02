@@ -479,7 +479,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 >
 > 这里不去讲解它，目前你可以把其简单地理解为，在 `main()` 中使用 `?`，`main()` 允许返回的任何类型的错误。
 >
-> 
+> 如果你不了解 trait，可以查看 [Rust -- 泛型、trait 与生命周期](https://gukaifeng.cn/posts/rust-fan-xing-trait-yu-sheng-ming-zhou-qi/) 这篇文章，或查阅相关文档。
 
 
 
@@ -510,9 +510,14 @@ fn read_username_from_file() -> Result<String, io::Error> {
 
 
 
+## 3. 总结
 
 
 
+Rust 的错误处理功能被设计为帮助你编写更加健壮的代码。
 
-## 3. 如何决定是否 `panic!`
+`panic!` 宏代表一个程序无法处理的状态，并停止执行而不是使用无效或不正确的值继续处理。
 
+Rust 类型系统的 `Result` 枚举代表操作可能会在一种可以恢复的情况下失败。可以使用 `Result` 来告诉代码调用者他需要处理潜在的成功或失败。
+
+在适当的场景使用 `panic!` 和 `Result` 将会使你的代码在面对不可避免的错误时显得更加可靠。
