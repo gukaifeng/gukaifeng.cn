@@ -165,17 +165,17 @@ fn main() {
 
 我们看下图，Rust 中的 `String` 由 3 部分组成，一种指向存储字符串内容的指针 `ptr`、一个 `len` 和 一个 `capacity`。**左图中的内容存在栈上，右图中的内容存在堆上（`String` 中存储的数据在堆上）。**
 
-<img src="https://gukaifeng.cn/usr/uploads/technology/2021/09/Rust--ownership_01.svg" style="width:300px;" />
+<img src="https://gukaifeng.cn/posts/rust-suo-you-quan-ownership/Rust--ownership_01.svg" style="width:300px;" />
 
 和很多一样，我们 `s2 = s1` 进行的是类似**浅拷贝**的操作，即只拷贝了左图中的 `ptr`、`len` 和 `capacity`。现在左图的信息有两份，即 `s1` 和 `s2`，但右图中的内容还是只有一份，`s1` 和 `s2` 在共用同一块堆上的数据，两个指针指向同一块内存空间，如下图。
 
-<img src="https://gukaifeng.cn/usr/uploads/technology/2021/09/Rust--ownership_02.svg" style="width:300px;" />
+<img src="https://gukaifeng.cn/posts/rust-suo-you-quan-ownership/Rust--ownership_02.svg" style="width:300px;" />
 
 如果是**深拷贝**的话，那应该是对右图中的内容也拷贝一份（在堆中分配一块同样大的空间，然后拷贝数据过来），结果应该如下图这样。
 
 
 
-<img src="https://gukaifeng.cn/usr/uploads/technology/2021/09/Rust--ownership_03.svg" style="width:300px;" />
+<img src="https://gukaifeng.cn/posts/rust-suo-you-quan-ownership/Rust--ownership_03.svg" style="width:300px;" />
 
 如果 Rust 执行了深拷贝，那么当右图中的内容（即堆中数据）很大的情况下，`s2 = s1` 这个语句执行的代价可能是巨大的。
 
@@ -226,7 +226,7 @@ For more information about this error, try `rustc --explain E0382`.
 在上面的代码中，实际发生的事应该是  
 Rust 拷贝（类似浅拷贝）了一份 `s1`，即 `s2`，然后 `s2` 实际占有了 `s1` 的 `ptr` 指针所指向的内存空间，`s1` 之后失效。只有当 `s2` 离开作用域时，其使用的堆内存才会被释放。
 
-<img src="https://gukaifeng.cn/usr/uploads/technology/2021/09/Rust--ownership_04.svg" style="width:300px;" />
+<img src="https://gukaifeng.cn/posts/rust-suo-you-quan-ownership/Rust--ownership_04.svg" style="width:300px;" />
 
 
 
@@ -260,7 +260,7 @@ s1 = hello, s2 = hello
 这段代码真正实现了图中的结果。  
 但当我们实际这样做的时候，还是要提醒自己，当堆中的数据过大的时候，这个操作的代价可能是很大的。
 
-<img src="https://gukaifeng.cn/usr/uploads/technology/2021/09/Rust--ownership_03.svg" style="width:300px;" />
+<img src="https://gukaifeng.cn/posts/rust-suo-you-quan-ownership/Rust--ownership_03.svg" style="width:300px;" />
 
 
 
@@ -450,7 +450,7 @@ The length of 'hello' is 5.
 
 **这里 `&` 符号代表引用(references)**，它可以让你的引用一些值，而无需获取其所有权。
 
-<img src="https://gukaifeng.cn/usr/uploads/technology/2021/09/Rust--ownership_05.svg" style="width:300px;" />
+<img src="https://gukaifeng.cn/posts/rust-suo-you-quan-ownership/Rust--ownership_05.svg" style="width:300px;" />
 
 我们可以这样理解，变量 `s` 中实际存储的只是一个指向 `s1` 的指针，而不是像一个普通 `String` 类型那样存储指向堆中数据指针、`len`、`capacity` 等信息。然后我们在通过 `s` 来使用变量 `s1` 的值时，可以直接把 `s` 当成 `s1` 本身来用，和 `s1` 用法完全相同（仅仅是看起来相同哈~）。
 
@@ -867,7 +867,7 @@ let world = &s[6..11];
 
 下图展示了一个示例。
 
-<img src="https://gukaifeng.cn/usr/uploads/technology/2021/09/Rust--ownership_06.svg" style="width:300px;" />
+<img src="https://gukaifeng.cn/posts/rust-suo-you-quan-ownership/Rust--ownership_06.svg" style="width:300px;" />
 
 对于 Rust 的 `..` range 语法，如果想要从第一个索引 0 开始，可以不写两个点号之前的值。如下两个语句是相同的：
 
