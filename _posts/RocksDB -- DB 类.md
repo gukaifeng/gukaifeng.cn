@@ -7,7 +7,9 @@ tags: [RocksDB,数据库]
 toc: true
 ---
 
-
+> DB 类中提供的方法较多，牵扯到的旁支内容也多，所以这篇文章需要一定时间才能完成。
+>
+> 目前是未完成的状态，随时更新，完成以后这段文字就会删除。
 
 ## 1. 什么是 DB 类
 
@@ -1140,7 +1142,7 @@ DB 类内定义了一些描述数据库属性的常量，均定义在 DB 类内�
 
 下面获取属性值的方法，依赖于具体的实现类，这里只说函数声明。
 
-获取属性值时，使用的名称是形如 "rocksdb.stats" 这样的那个，不是变量名啥的，也不是带 k 的常量名。在定义代码的注释中有一一对应的关系。
+获取属性值时，使用的名称是形如 "rocksdb.stats" 这样的那个，不是变量名啥的，也不是带 k 的常量名。在定义代码的注释中有一一对应的关系。
 
 #### 18.2.1. 从指定列族中获取一个属性值 
 
@@ -1232,5 +1234,428 @@ virtual Status ResetStats() {
 
 
 
-## 20. 
+## 20. 获取粗略的统计数据
+
+在说下面的方法之前，有必要先说一个枚举类型 `SizeApproximationFlags`，其定义如下：
+
+```cpp
+enum SizeApproximationFlags : uint8_t {
+  NONE = 0,
+  INCLUDE_MEMTABLES = 1 << 0,
+  INCLUDE_FILES = 1 << 1
+};
+```
+
+这个枚举起到一个标注作用，用来指定，统计大小的时候，是否包含 memtables 或 files。
+
+memtables 中记录了最近的写操作，但是这些操作还没有实际应用到磁盘中。files 指的就是已经序列化到磁盘中的数据。
+
+要注意的是，枚举中的只是用位运算表示的，虽然其结果与 0、1、2 相同，但有更多的含义。
+
+这个枚举类型在作为标注使用的时候，是可以多选的，memtable 和 files 可以同时选择，这也呼应了枚举值的位运算写法。
+
+简单的说，枚举值类型为 `uint8_t`，也就是说，这个标注以一个 `uint8_t` 类型的值传递给某些方法，这个值的二进制最后一位是 1，表示包含 memtables，倒数第二位是 1，表示包含 files，如果后两位都是 1，则同时包含 memtables 和 files，如果同时为 0 则都不包括。
+
+-
+
+下面的方法中，还有两个之前没说过的参数类型，一个是 `SizeApproximationOptions`，一个是 `Range`。
+
+`SizeApproximationOptions` 和刚说过的 `SizeApproximationFlags` 有点像，定义在 `option.h` 中，只用在下面估计数据大小的方法中。
+
+```cpp
+struct SizeApproximationOptions {
+  bool include_memtabtles = false;
+  bool include_files = true;
+  double files_size_error_margin = -1.0;
+};
+```
+
+* `include_memtabtles`: 统计大小是否包含 memtables，默认为 false。
+* `include_files`: 统计大小是否包含 files，默认为 true。
+* `files_size_error_margin`: 精度设置。例如其值为 0.1，那么误差范围是 10%，如果其值为负数，则尽可能做到最精确，但性能会低一些。
+
+`include_memtabtles` 和 `include_files` 必须至少有一个为 true，不然没得东西统计了。
+
+-
+
+`Range` 比较简单，其定义也在 `db.h` 中，其中只有一个起始 key，一个终点 key。
+
+由于数据库中的 key 是有序的，所以 `Range` 可以表示一个范围的 key。
+
+```cpp
+struct Range {
+  Slice start;
+  Slice limit;
+
+  Range() {}
+  Range(const Slice& s, const Slice& l) : start(s), limit(l) {}
+};
+```
+
+同样在 `db.h` 中还有一个 `RangePtr`，虽然这里没用到，但是顺便说一下：
+
+```rust
+struct RangePtr {
+  const Slice* start;
+  const Slice* limit;
+
+  RangePtr() : start(nullptr), limit(nullptr) {}
+  RangePtr(const Slice* s, const Slice* l) : start(s), limit(l) {}
+};
+```
+
+`RangePtr` 和 `Range` 没有什么本质区别，作用一样，只是 RangePtr 中存的是 key 的指针。
+
+
+
+### 20.1. 获取一个指定列族中多个 key 范围的数据大小
+
+```cpp
+virtual Status GetApproximateSizes(const SizeApproximationOptions& options,
+                                   ColumnFamilyHandle* column_family,
+                                   const Range* ranges, int n,
+                                   uint64_t* sizes) = 0;
+```
+
+* `options`: 计算选项，这个类型刚在上面说过；
+* `column_family`: 指定列族的句柄；
+* `ranges`: 计算 key 的范围。注意这个是一个 C 语言风格的数组，也就说可以有多个范围；
+* `n`: `ranges` 的长度，即计算 key 的范围的的个数；
+* `sizes`: 用来存储计算结果。这也是个 C 语言风格的数组，其长度为 `n`，sizes[i] 中存储 key 范围 `ranges[i]` 中的数据大小（0 <= i <= n-1）。
+
+
+
+这个方法是最完备的。
+
+这是一个纯虚函数，具体实现依赖于具体的实现类。
+
+
+
+### 20.2. 获取一个指定列族中多个 key 范围的数据大小（简化版）
+
+```cpp
+virtual Status GetApproximateSizes(ColumnFamilyHandle* column_family,
+                                   const Range* ranges, int n,
+                                   uint64_t* sizes,
+                                   uint8_t include_flags = INCLUDE_FILES) {
+  SizeApproximationOptions options;
+  options.include_memtabtles =
+    (include_flags & SizeApproximationFlags::INCLUDE_MEMTABLES) != 0;
+  options.include_files =
+    (include_flags & SizeApproximationFlags::INCLUDE_FILES) != 0;
+  return GetApproximateSizes(options, column_family, ranges, n, sizes);
+}
+```
+
+这个方法是上一个方法的简化版，删除了参数 `const SizeApproximationOptions& options`，换成了 `uint8_t include_flags = INCLUDE_FILES`。
+
+* `include_flags`: 用于标注计算是否包含 memtables 或 files。这个类型刚刚在上面说过，这里就不多说了。只需要注意，其值不可以为 0，也就是枚举值 None，否则没得东西了。
+
+这个方法和上一个方法的区别，其实就是使用选项类 `SizeApproximationOptions` 还是枚举类 `SizeApproximationFlags` 的区别。这个方法使用了后者，相比前者，缺少了一个精度的设定（即使用默认精度 `-1.0`，表示尽可能做到最精确），但是用起来更加简单了。
+
+
+
+### 20.3. 获取默认列族中多个 key 范围的数据大小（简化版）
+
+```cpp
+virtual Status GetApproximateSizes(const Range* ranges, int n,
+                                   uint64_t* sizes,
+                                   uint8_t include_flags = INCLUDE_FILES) {
+  return GetApproximateSizes(DefaultColumnFamily(), ranges, n, sizes,
+                             include_flags);
+}
+```
+
+这个方法和 20.2 的方法没什么区别，看实现也知道，就是从指定列族换成了默认列族，其他都一样。
+
+
+
+### 20.4. 获取指定列族的 memtables 统计数据
+
+```cpp
+virtual void GetApproximateMemTableStats(ColumnFamilyHandle* column_family,
+                                         const Range& range,
+                                         uint64_t* const count,
+                                         uint64_t* const size) = 0;
+```
+
+这是一个纯虚函数，具体实现依赖于具体的实现类。
+
+这个方法其实相当于之前几个方法的一个子集，但是又多了一样统计。
+
+之前的方法通过选项来选择要统计哪些数据或设定精度，而这个方法就是只统计 memtables 的数据，且没有精度设定；
+
+之前的方法可以统计一个列族中多个 key 范围的数据，这个方法就只有一个范围；
+
+这个方法额外统计了 memtables 中的条目数量。
+
+* `column_family`: 指定列族的句柄；
+* `range`: 要统计的 key 范围。注意这个是引用，不是之前的数组，只有一个范围！
+* `count`: 这个方法会把 memtables 中的条目数量存在这里；
+* `size`: 这个方法会把 memtables 中的大致大小存在这里（粗略估计，和前几个方法一样）。
+
+还有要注意的是这个 `count` 和 `size` 的类型，你传入的应该是一个**已经有分配空间的指针**，这个方法不会给一个分配空间的指针分配空间，如果你传入的指针还没有分配空间，会导致段错误。
+
+另外这个方法没有返回值，可以认为其一定会成功。
+
+### 20.5. 获取默认列族的 memtables 统计数据
+
+```cpp
+virtual void GetApproximateMemTableStats(const Range& range,
+                                         uint64_t* const count,
+                                         uint64_t* const size) {
+  GetApproximateMemTableStats(DefaultColumnFamily(), range, count, size);
+}
+```
+
+这个方法跟 20.4 的没有什么区别，就是从指定列族换成了默认列族，其他都一样。
+
+
+
+### 20.6. 已弃用的版本
+
+下面的这两个获取粗略统计数据的方法已经弃用了，不建议使用，这里就不多说了。
+
+如果你还是感兴趣，可以自己看看，源代码就在之前的几个方法下面，[也可以看这里](https://github.com/facebook/rocksdb/blob/v6.25.3/include/rocksdb/db.h#L1123-L1140)。
+
+```cpp
+// Deprecated versions of GetApproximateSizes
+ROCKSDB_DEPRECATED_FUNC virtual void GetApproximateSizes(
+  const Range* range, int n, uint64_t* sizes, bool include_memtable) {
+  uint8_t include_flags = SizeApproximationFlags::INCLUDE_FILES;
+  if (include_memtable) {
+    include_flags |= SizeApproximationFlags::INCLUDE_MEMTABLES;
+  }
+  GetApproximateSizes(DefaultColumnFamily(), range, n, sizes, include_flags);
+}
+ROCKSDB_DEPRECATED_FUNC virtual void GetApproximateSizes(
+  ColumnFamilyHandle* column_family, const Range* range, int n,
+  uint64_t* sizes, bool include_memtable) {
+  uint8_t include_flags = SizeApproximationFlags::INCLUDE_FILES;
+  if (include_memtable) {
+    include_flags |= SizeApproximationFlags::INCLUDE_MEMTABLES;
+  }
+  GetApproximateSizes(column_family, range, n, sizes, include_flags);
+}
+```
+
+### 
+
+
+
+## 21. 压缩
+
+### 21.1. 压缩一个范围的数据
+
+#### 21.1.1. 压缩指定列族一个 key 范围的数据
+
+```cpp
+virtual Status CompactRange(const CompactRangeOptions& options,
+                            ColumnFamilyHandle* column_family,
+                            const Slice* begin, const Slice* end) = 0;
+```
+
+这是一个纯虚函数，具体实现依赖于具体的实现类。
+
+* `CompactRangeOptions`: 压缩选项；
+* `column_family`: 指定列族的句柄；
+* `begin`: 起点 key；
+* `end`: 终点 key。
+
+
+
+压缩 key 范围为 [`begin`, `end`] 的数据，实际压缩的可能是这个范围的超集。
+
+特别是，被删除的和被覆盖的 key 会被忽略，key 可能会被重新排列，以降低访问数据需要的操作成本。
+
+如果 `begin` 是 nullptr，则 key 范围是 `end` 之前的全部；  
+如果 `end` 是 nullptr，则 key 范围是 `begin` 之后的全部；  
+如果 `begin` 和 end 都是 nullptr，则 key 的范围是整个列族。
+
+这个方法会阻塞，直到操作成功完成、失败或中止(`Status::Incomplete`)（关于中止这个情况，可以了解一下 `DisableManualCompaction()` 这个方法，这个方法将在  介绍）。
+
+> 注意，在整个数据库被压缩之后，所有数据都被下推到有数据的最后一级 level。
+>
+> 如果压缩后的总数据大小减少，那么该 level 可能不适合于承载所有文件。
+>
+> 在这种情况下，客户端可以设置选项 `Change_level` 设置为 true，将文件移回能够保存数据集的最小级别或给定级别（由非负 `options.target_level` 指定）。
+
+**这个方法应该只由理解底层实现的用户调用。**
+
+#### 21.1.2. 压缩默认列族一个 key 范围的数据
+
+```cpp
+virtual Status CompactRange(const CompactRangeOptions& options,
+                            const Slice* begin, const Slice* end) {
+  return CompactRange(options, DefaultColumnFamily(), begin, end);
+}
+```
+
+这个方法和上一个没什么区别，就是从指定列族换成了默认列族，其他都一样。
+
+#### 21.1.3. 已弃用的版本
+
+下面的这两个方法已经弃用了，不建议使用，这里就不多说了。
+
+如果你还是感兴趣，可以自己看看，源代码就在前两个方法下面，[也可以看这里](https://github.com/facebook/rocksdb/blob/v6.25.3/include/rocksdb/db.h#L1169-L1188)。
+
+```cpp
+ROCKSDB_DEPRECATED_FUNC virtual Status CompactRange(
+  ColumnFamilyHandle* column_family, const Slice* begin, const Slice* end,
+  bool change_level = false, int target_level = -1,
+  uint32_t target_path_id = 0) {
+  CompactRangeOptions options;
+  options.change_level = change_level;
+  options.target_level = target_level;
+  options.target_path_id = target_path_id;
+  return CompactRange(options, column_family, begin, end);
+}
+
+ROCKSDB_DEPRECATED_FUNC virtual Status CompactRange(
+  const Slice* begin, const Slice* end, bool change_level = false,
+  int target_level = -1, uint32_t target_path_id = 0) {
+  CompactRangeOptions options;
+  options.change_level = change_level;
+  options.target_level = target_level;
+  options.target_path_id = target_path_id;
+  return CompactRange(options, DefaultColumnFamily(), begin, end);
+}
+```
+
+
+
+### 21.2. 压缩文件
+
+`CompactFiles()` 输入一个由文件号指定的文件列表，并将其压缩到指定的 level。与 `CompactRange()` 相比，一个小小的区别是 `CompactFiles()` 使用 CURRENT 线程执行压缩作业，因此不被认为是一个“后台”作业。
+
+
+
+#### 21.2.1. 指定列族
+
+```cpp
+virtual Status CompactFiles(
+  const CompactionOptions& compact_options,
+  ColumnFamilyHandle* column_family,
+  const std::vector<std::string>& input_file_names, const int output_level,
+  const int output_path_id = -1,
+  std::vector<std::string>* const output_file_names = nullptr,
+  CompactionJobInfo* compaction_job_info = nullptr) = 0;
+```
+
+* `compact_options`: 压缩选项；
+* `column_family`: 指定列族的句柄；
+* `input_file_names`: 输入的文件列表；
+* `output_level`: 指定的压缩 level；
+* `output_path_id`:
+* `output_file_names`:
+* `compaction_job_info`:
+
+
+
+#### 21.2.2. 默认列族
+
+```cpp
+virtual Status CompactFiles(
+  const CompactionOptions& compact_options,
+  const std::vector<std::string>& input_file_names, const int output_level,
+  const int output_path_id = -1,
+  std::vector<std::string>* const output_file_names = nullptr,
+  CompactionJobInfo* compaction_job_info = nullptr) {
+  return CompactFiles(compact_options, DefaultColumnFamily(),
+                      input_file_names, output_level, output_path_id,
+                      output_file_names, compaction_job_info);
+```
+
+
+
+
+
+
+
+## 22. 选项
+
+下面无论是设定选项，还是获取选项，都依赖于具体的实现类。
+
+所以这里只给出声明，具体实现类如何实现不是本文要讲的。
+
+### 22.1. 设定选项值
+
+
+
+我们之前用的 `Options` 和 `DBOptions` 都是在打开数据库的时候传递给 DB 对象的。
+
+下面几个方法可以让我们在数据库已经打开后，修改选项值。
+
+
+
+#### 22.1.1. 设定指定列族的一个选项值
+
+```cpp
+virtual Status SetOptions(
+  ColumnFamilyHandle* /*column_family*/,
+  const std::unordered_map<std::string, std::string>& /*new_options*/) {
+  return Status::NotSupported("Not implemented");
+}
+```
+
+
+
+#### 22.1.2. 设定默认列族的一个选项值
+
+```cpp
+virtual Status SetOptions(
+  const std::unordered_map<std::string, std::string>& new_options) {
+  return SetOptions(DefaultColumnFamily(), new_options);
+}
+```
+
+
+
+#### 22.1.3. 设定 `DBOptions` 的一个选项值
+
+```cpp
+virtual Status SetDBOptions(
+  const std::unordered_map<std::string, std::string>& new_options) = 0;
+```
+
+
+
+### 22.2. 获取选项值
+
+下面几个方法的作用都很简单，一看就知道，我就不说了。
+
+不过这几个方法有一段注释我还没有很好的理解：
+
+```cpp
+// Get DB Options that we use.  During the process of opening the
+// column family, the options provided when calling DB::Open() or
+// DB::CreateColumnFamily() will have been "sanitized" and transformed
+// in an implementation-defined manner.
+```
+
+等我理解了我再回来更新这里，如果我忘了，邮件或者评论区踢我一下。
+
+#### 22.2.1. 获取指定列族的 `Options`
+
+```cpp
+  virtual Options GetOptions(ColumnFamilyHandle* column_family) const = 0;
+```
+
+
+
+#### 22.2.2. 获取默认列族的 `Options`
+
+```cpp
+  virtual Options GetOptions() const {
+    return GetOptions(DefaultColumnFamily());
+  }
+```
+
+
+
+#### 22.2.3. 获取 `DBOptions`
+
+```cpp
+virtual DBOptions GetDBOptions() const = 0;
+```
 
