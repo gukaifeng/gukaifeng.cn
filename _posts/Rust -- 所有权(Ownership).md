@@ -842,7 +842,7 @@ fn second_word(s: &String) -> (usize, usize) {
 
 幸运的是，Rust 为这个问题提供了一个解决方法：字符串分片(string slices)。
 
-### 
+
 
 ### 3.1. 字符串分片(String Slices)
 
