@@ -394,7 +394,7 @@ use std::fs::File;
 
 fn read_username_from_file() -> Result<String, io::Error> {
     let mut s = String::new();
-  	File::open("hello.txt")?.read_to_string(&mut s)?;
+    File::open("hello.txt")?.read_to_string(&mut s)?;
     Ok(s)
 }
 ```
@@ -479,7 +479,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 >
 > 这里不去讲解它，目前你可以把其简单地理解为，在 `main()` 中使用 `?`，`main()` 允许返回的任何类型的错误。
 >
-> 如果你不了解 trait，可以查看 [Rust -- 泛型、trait 与生命周期](https://gukaifeng.cn/posts/rust-fan-xing-trait-yu-sheng-ming-zhou-qi/) 这篇文章，或查阅相关文档。
+> 如果你不了解 trait，可以查看 [Rust -- 泛型、trait 与生命周期](https://gukaifeng.cn/posts/rust-fan-xing-trait-yu-sheng-ming-zhou-qi/) 这篇文章，或查阅相关文档。
 
 
 
