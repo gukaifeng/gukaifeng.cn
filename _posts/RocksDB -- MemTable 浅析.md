@@ -21,7 +21,7 @@ memtable 同时服务于读和写 —— 新的写总是插入数据到 memtable
 
 一个后台线程将**不可变的 memtable** 的内容 flush 到一个 SST 文件中，然后可以销毁这个 memtable。
 
-
+<!--more-->
 
 memtable是 RocksDB 架构中非常重要的一部分。  
 关于 RocksDB 的架构，查看这里 [RocksDB -- 高级架构](https://gukaifeng.cn/posts/rocksdb-gao-ji-jia-gou/)。
@@ -56,7 +56,7 @@ memtable是 RocksDB 架构中非常重要的一部分。
 
 1. 在一次写操作后，memtable 大小超过了 `ColumnFamilyOptions::write_buffer_size`。
 
-2. 所有列族的 memtable 总大小超过 `DBOptions::db_write_buffer_size`，或者 `DBOptions::write_buffer_manager` 中设定的大小时会进行 flush。在这种情况下，最大的 memtable 将被 flush。
+2. 所有列族的 memtable 总大小超过 `DBOptions::db_write_buffer_size`，或者 `DBOptions::write_buffer_manager` 中设定的大小时会进行 flush。在这种情况下，最大的 memtable 将被 flush。
 3. 总 WAL 文件大小超过 `DBOptions::max_total_wal_size`。在这个场景中，包含最旧数据的 memtable 将被flush，以便清除包含该 memtable 数据的 WAL 文件。
 
 因此，可以在 memtable 满之前刷新它。这就是生成的 SST 文件比相应的 memtable 要小的原因之一。
@@ -83,7 +83,7 @@ memtable 的默认实现是基于跳表(SkipList)的。
 
 如果不支持对 memtable 的并发插入，多个线程对 RocksDB 的并发写操作将依次应用于 memtable。
 
-并发 memtable 插入在默认情况下是启用的，可以通过 `DBOptions::allow_concurrent_memtable_write` 选项关闭，尽管只有基于 skiplist 的 memtable 支持该特性。
+并发 memtable 插入在默认情况下是启用的，可以通过 `DBOptions::allow_concurrent_memtable_write` 选项关闭，尽管只有基于 skiplist 的 memtable 支持该特性。
 
 > 这里额外说一下另一个特性：就地更新
 >
