@@ -81,7 +81,9 @@ memtable 的默认实现是基于跳表(SkipList)的。
 
 
 
+如果不支持对 memtable 的并发插入，多个线程对 RocksDB 的并发写操作将依次应用于 memtable。
 
+并发 memtable 插入在默认情况下是启用的，可以通过 `DBOptions::allow_concurrent_memtable_write` 选项关闭，尽管只有基于 skiplist 的 memtable 支持该特性。
 
 > 这里额外说一下另一个特性：就地更新
 >
@@ -95,7 +97,7 @@ memtable 的默认实现是基于跳表(SkipList)的。
 
 
 
-
+这个地方官方 wiki 也只有个标题（似乎是忘了更），我也先只写个标题吧。。。
 
 
 
@@ -103,15 +105,15 @@ memtable 的默认实现是基于跳表(SkipList)的。
 
 ### 4.2. 几种 memtable 实现的比较
 
-| MemTable 实现                | SkipList                                 | HashSkipList                                                 | HashLinkList                                                 | Vector                                                       |
-| ---------------------------- | ---------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| 优化场景                     | General                                  | Range query within a specific key prefix                     | Range query within a specific key prefix and there are only a small number of rows for each prefix | Random write heavy workload                                  |
-| 索引类型                     | binary search                            | hash + binary search                                         | hash + linear search                                         | linear search                                                |
-| 是否支持完全有序的全 db 扫描 | naturally                                | very costly (copy and sort to create a temporary totally-ordered view) | very costly (copy and sort to create a temporary totally-ordered view) | very costly (copy and sort to create a temporary totally-ordered view) |
-| Memory Overhead              | Average (~1.33 pointers per entry)       | High (Hash Buckets + Skip List Metadata for non-empty buckets + multiple pointers per entry) | Lower (Hash buckets + pointer per entry)                     | Low (pre-allocated space at the end of vector)               |
-| MemTable Flush               | Fast with constant extra memory          | Slow with high temporary memory usage                        | Slow with high temporary memory usage                        | Slow with constant extra memory                              |
-| 并发插入                     | 支持                                     | 不支持                                                       | 不支持                                                       | 不支持                                                       |
-| 带提示的插入                 | 支持（仅在没有启动并发插入的场景下支持） | 不支持                                                       | 不支持                                                       | 不支持                                                       |
+| MemTable 实现                | SkipList                                 | HashSkipList                                                 | HashLinkList                                           | Vector                                                 |
+| ---------------------------- | ---------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------ | ------------------------------------------------------ |
+| 优化场景                     | 通用                                     | 特定 key 前缀的范围查找                                      | 特定 key 前缀的范围查找，每个前缀只有少量行            | 随机写入（繁重的工作量）                               |
+| 索引类型                     | 二分查找                                 | 哈希 + 二分查找                                              | 哈希 + 线性搜索                                        | 线性搜索                                               |
+| 是否支持完全有序的全 db 扫描 | 原生支持                                 | 支持但代价极高（复制和排序以创建临时的完全有序的视图）       | 支持但代价极高（复制和排序以创建临时的完全有序的视图） | 支持但代价极高（复制和排序以创建临时的完全有序的视图） |
+| 内存开销                     | 中等（大约每个条目 1.33 个指针）         | 高（哈希 bucket + 非空 bucket 跳过列表元数据 + 每个条目的多个指针） | 较低（每个条目的哈希 bucket + 指针）                   | 低（Vector 末尾的预分配空间）                          |
+| MemTable Flush               | 快速，仅使用常量大小的额外内存           | 速度慢，临时内存占用率高                                     | 速度慢，临时内存占用率高                               | 速度慢，仅使用常量大小的额外内存                       |
+| 并发插入                     | 支持                                     | 不支持                                                       | 不支持                                                 | 不支持                                                 |
+| 带提示的插入                 | 支持（仅在没有启动并发插入的场景下支持） | 不支持                                                       | 不支持                                                 | 不支持                                                 |
 
 
 
