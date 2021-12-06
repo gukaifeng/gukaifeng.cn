@@ -89,7 +89,9 @@ memtable 的默认实现是基于跳表(SkipList)的。
 >
 > 可以通过切换 `bool inplace_update_support` 标志来启用就地更新。
 >
-> 然而，该标志默认设置为 false，因为这种线程安全的就地更新支持与并发的 memtable 写入不兼容。注意，`bool allow_concurrent_memtable_write` 默认设置为 true。
+> 然而，该标志默认设置为 false，因为这种线程安全的就地更新支持与并发的 memtable 写入不兼容。
+>
+> 注意，`bool allow_concurrent_memtable_write` 默认设置为 true。
 
 
 
