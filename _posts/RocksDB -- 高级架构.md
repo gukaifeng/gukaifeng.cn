@@ -32,7 +32,6 @@ flush 操作将把不可变的 memtable flush 到一个存储介质上的 sstfil
 
 ![](/posts/rocksdb-gao-ji-jia-gou/RocksDB--gao-ji-jia-gou_1.png)
 
-
-## 参考资料
+**参考资料**
 
 https://github.com/facebook/rocksdb/wiki/RocksDB-Overview
