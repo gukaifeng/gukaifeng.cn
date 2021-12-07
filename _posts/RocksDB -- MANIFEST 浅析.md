@@ -33,6 +33,8 @@ MANIFEST 中采用版本编辑记录(**Version Edit Records**)。
 
 
 
+
+
 ## 2. 相关术语
 
 * `MANIFEST`: RocksDB 状态变化的事务日志。
@@ -67,7 +69,9 @@ CURRENT = 指向最新的 manifest log 文件的指针
 MANIFEST-<seq no> = 包含一个 RocksDB 状态的快照，以及后续的修改记录
 ```
 
+-
 
+MANIFEST 也是 RocksDB 架构的重要一环，如果你还不了解 RocksDB 的架构，可以看看这个：[RocksDB -- 高级架构](https://gukaifeng.cn/posts/rocksdb-gao-ji-jia-gou/)。
 
 
 
