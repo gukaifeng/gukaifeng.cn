@@ -11,7 +11,7 @@ toc: true
 
 ## 1. 什么是 WAL
 
-
+WAL(Write Ahead Log) 顾名思义，写前日志。
 
 每次对 RocksDB 的更新都被写入两个地方：
 
@@ -24,9 +24,11 @@ toc: true
 
 在默认配置中，RocksDB 通过在每个用户写入后 flush WAL 来保证进程崩溃的一致性。
 
+当 RocksDB 干净地关闭时，所有未提交的数据都在关闭之前提交，因此始终保证一致性。当 RocksDB 进程被杀死或机器重新启动时，RocksDB 需要将自己恢复到一致的状态。
+
 <!--more-->
 
-WAL(Write Ahead Log) 是 RocksDB 架构中重要的一部分，如果你还不了解 RocksDB 的架构，可以查看 [RocksDB -- 高级架构](https://gukaifeng.cn/posts/rocksdb-gao-ji-jia-gou/) 这篇文章。
+WAL 是 RocksDB 架构中重要的一部分，如果你还不了解 RocksDB 的架构，可以查看 [RocksDB -- 高级架构](https://gukaifeng.cn/posts/rocksdb-gao-ji-jia-gou/) 这篇文章。
 
 
 
@@ -145,3 +147,81 @@ Writer 提供了将日志记录追加到日志文件的抽象。特定存储介�
 
 
 
+## 6. WAL 的恢复模式
+
+
+
+一个重要的恢复操作是在 WAL 中**重放(replay)**未提交的记录。不同的 WAL 恢复模式定义了 WAL 重放的行为。
+
+WAL 恢复模式共计有 4 种，其定义在 `option.h` 头文件中，[点此查看](https://github.com/facebook/rocksdb/blob/v6.25.3/include/rocksdb/options.h#L323-L360)。
+
+下面分别简单介绍一下 4 中恢复模式。
+
+
+
+1. `kTolerateCorruptedTailRecords`: 在这个模式下，WAL 重放将忽略在日志尾部发现的任何错误。其原因是，在不干净的关闭中，日志尾部可能会有不完整的写操作。这是一种启发式模式，系统无法区分日志尾部的损坏和未完成的写入。任何其他 IO 错误，将被认为是数据损坏。这种模式对大多数应用程序来说都是可以接受的，因为它提供了在非正常关闭后启动 RocksDB 和一致性之间的合理权衡。
+2. `kAbsoluteConsistency`: 在这个模式下，任何在 WAL 重放过程中的 IO 错误都被认为是数据损坏。这种模式非常适合那些不能丢失甚至单个记录的应用程序，或有其他方法恢复未提交数据的应用程序。
+3. `kPointInTimeRecovery`: 在这个模式下，WAL 重放在遇到 IO 错误后停止。系统恢复到与当前时间一致的时间点。这对于具有副本的系统非常理想。来自另一个副本的数据可以用于重放系统恢复到的“时间点”。(这是 RocksDB v6.6 版本以后的默认值。注：本站关于 RocksDB 的文章，无特别说明，均依据 v6.25.3。)
+4. `kSkipAnyCorruptedRecords`: 在这个模式下，读取日志时遇到的任何 IO 错误都将被忽略，系统将试图恢复尽可能多的数据，这是灾难恢复的理想选择。
+
+
+
+
+
+## 7. WAL 性能表现
+
+### 7.1. non-sync 模式
+
+当 `WriteOptions.sync = false` (默认值)，表示不将 WAL 写入同步到磁盘。除非操作系统认为它必须 flush 数据(例如，太多脏页面)，用户不需要等待任何 I/O 来写。
+
+如果用户甚至想要减少 CPU 由于写入操作系统页面缓存而带来的延迟，可以选择 `Options.manual_wal_flush = true`。有了这个选项，WAL 写操作甚至不会 flush 到文件系统页面缓存中，而是保存在 RocksDB 中。用户需要调用 `DB::FlushWAL()` 来让缓冲条目进入文件系统。
+
+用户可以通过调用 `DB::SyncWAL()` 强制 fsync WAL 文件。该函数不会阻塞在其他线程中执行的写操作。
+
+在这种模式下，WAL 写入不是崩溃安全的。
+
+
+
+### 7.2. sync 模式
+
+当 `WriteOptions.sync = true`，在返回给用户之前对 WAL 文件进行 fsync。
+
+
+
+### 7.3. 组提交(Group Commit)
+
+和大多数依赖日志的程序一样，RocksDB 也支持组提交来提高 WAL 写吞吐量和写放大。
+
+RocksDB 的组提交是用一种简单的方式实现的：当不同的线程同时写同一个数据库时，所有有资格合并的未完成的写操作将被合并到一起，通过一个 fsync 向 WAL 写入一次。这样，同样数量的 I/O 可以完成更多的写操作。
+
+
+
+具有不同写选项的写操作可能会取消组合的资格。
+
+最大的组大小是 1MB。RocksDB 不会尝试通过主动延迟写操作来增加组大小。
+
+
+
+
+
+### 7.4. 每次写的 I/O 次数
+
+如果 `Options.recycle_log_file_num = false` (默认值)。RocksDB 总是为新的 WAL 段创建新文件。
+
+每次 WAL 写都会改变数据和文件的大小，所以每次 fsync 都会生成至少两个 I/O，一个用于数据，一个用于元数据。
+
+注意，RocksDB 调用 `fallocate()` 来为文件预留足够的空间，但它并不阻止 fsync 中的元数据 I/O。
+
+
+
+ `Options.recycle_log_file_num = true` 将保留一个 WAL 文件池并尝试重用它们。当写入现有日志文件时，从大小为 0 开始使用随机写入。在写入到达文件末尾之前，文件大小不会改变，因此可能会避免元数据的 I/O (也取决于文件系统挂载选项)。假设大多数 WAL 文件具有相似的大小，那么元数据所需的 I/O 将是最小的。
+
+
+
+### 7.5. 写放大
+
+请注意，对于某些用例，同步的 WAL 可能引入非常大的的写放大。
+
+当写操作很小时（因为可能需要更新完整的块/页），即使写操作非常小，我们也可能会有两次 4KB 的写操作（一次用于数据，一次用于元数据）。
+
+如果 write 仅为 40 字节，则更新 8KB，则写入放大值为 8KB/40B~= 200。它可以很容易地比 LSM-tree 的写放大功能还要大。
