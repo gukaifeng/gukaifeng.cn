@@ -25,7 +25,7 @@ toc: true
 
 -
 
-RocksDB 的架构体系上图已经很清楚了，这里简单说下上面提到的几个概念：
+这里简单说下上面提到的几个概念：
 
 memtable 是一个内存中的数据结构，RocksDB 先将数据库写操作写入 memtable，然后再 flush memtable 中的内容到 SST 文件中。
 
@@ -35,11 +35,11 @@ WAL(Write Ahead Log) 顾名思义，是一个写前日志。写操作除了会�
 
 MANIFEST 是 RocksDB 存储其状态改变的事务日志文件中，RocksDB 重启时，会通过 MANIFEST 中的内容，将 RocksDB 恢复到最后已知的一致性状态。
 
-如果你对这些结构尚不了解，建议搭配下面几篇文章一同阅读本文，不然一些概念会比较模糊。
+如果你对这些结构尚不了解，建议搭配下面几篇文章一同查看 RocksDB 架构图，不然一些概念会比较模糊。
 
 * [RocksDB -- MemTable 浅析](https://gukaifeng.cn/posts/rocksdb-memtable-qian-xi/)
 * [RocksDB -- WAL(Write Ahead Log) 浅析](https://gukaifeng.cn/posts/rocksdb-wal-write-ahead-log-qian-xi/)
 * [RocksDB -- MANIFEST 浅析](https://gukaifeng.cn/posts/rocksdb-manifest-qian-xi/)
 
-至于 SST 文件，没什么好说的，就是存储最终数据的，你可以看看其默认的格式分析 [RocksDB -- Block-based Table 浅析](#)。
+至于 SST 文件，没什么好说的，就是存储最终数据的，你可以看看其默认的存储格式分析 [RocksDB -- Block-based Table 浅析](https://gukaifeng.cn/posts/rocksdb-block-based-table-qian-xi/)。
 
