@@ -1,15 +1,17 @@
 ---
 title: Rust -- 所有权(Ownership)
 date: 2021-09-13 21:57:16
-updated: 2021-09-13 21:57:16
+updated: 2021-12-07 22:07:16
 categories: [编程语言基础]
 tags: [Rust]
 toc: true
 ---
 
-**所有权(Ownership)**是 Rust 最独特的特性，它使 Rust 能够在不需要垃圾回收器(Garbage collector)的情况下保证内存安全。  
-因此，理解 Rust 中的所有权如何工作是非常重要的。  
-这篇文章里，我们将介绍 Rust 中的所有权以及几个相关特性：**借用(Borrowing)**、**切片(Slice)**以及 **Rust 如何在内存中放置数据**。
+**所有权(Ownership)** 是 Rust 最独特的特性，它使 Rust 能够在不需要垃圾回收器(Garbage collector)的情况下保证内存安全。
+
+因此，理解 Rust 中的所有权如何工作是非常重要的。
+
+这篇文章里，我们将介绍 Rust 中的所有权以及几个相关特性：**借用(Borrowing)**、**切片(Slice)**以及 Rust 如何在内存中放置数据。
 
 <!--more-->
 
@@ -742,7 +744,7 @@ fn no_dangle() -> String {
 
 
 
-
+关于引用，还有一个重要的概念 —— **生命周期**，我将在 [Rust -- 泛型、trait 与生命周期](https://gukaifeng.cn/posts/rust-fan-xing-trait-yu-sheng-ming-zhou-qi/#3-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F-lifetime) 这篇文章来介绍。
 
 接下来，我们将研究一种不同类型的引用：**切片(Slice)**。
 
