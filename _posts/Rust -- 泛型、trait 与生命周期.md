@@ -1059,7 +1059,7 @@ fn main() {
 }
 ```
 
-这段代码无法编译通过，这是因为，我们在使用 `result` 时，`string2` 已经失效了，**即便 `result` 是 `strings1` 的引用！**这就是我们之前 longest 限制的返回值生命周期的作用。
+这段代码无法编译通过，这是因为，我们在使用 `result` 时，`string2` 已经失效了，**即便 `result` 是 `strings1` 的引用！**这就是我们之前 `longest()` 函数限制的返回值生命周期的作用。
 
 
 
@@ -1067,11 +1067,292 @@ fn main() {
 
 
 
+指定生命周期参数的正确方式依赖函数实现的具体功能。
 
+例如，如果将 `longest()` 函数的实现修改为总是返回第一个参数而不是最长的字符串 slice，就不需要为参数 `y` 指定一个生命周期。如下代码将能够编译：
+
+```rust
+fn longest<'a>(x: &'a str, y: &str) -> &'a str {
+    x
+}
+
+// fn main() { ... }
+```
+
+在这个例子中，我们为参数 `x` 和返回值指定了生命周期参数 `'a`，不过没有为参数 `y` 指定，因为 `y` 的生命周期与参数 `x` 和返回值的生命周期没有任何关系。
+
+当从函数返回一个引用，返回值的生命周期参数需要与一个参数的生命周期参数相匹配。如果返回的引用**没有**指向任何一个参数，那么唯一的可能就是它指向一个函数内部创建的值，返回值将会是一个悬垂引用，因为它将会在函数结束时离开作用域。尝试考虑这个并不能编译的 `longest` 函数实现：
+
+```rust
+fn longest<'a>(x: &str, y: &str) -> &'a str {
+    let result = String::from("really long string");
+    result.as_str()
+}
+
+// fn main() { ... }
+```
+
+即便我们为返回值指定了生命周期参数 `'a`，这个实现却编译失败了，因为返回值的生命周期与参数完全没有关联。这里是会出现的错误信息：
+
+```text
+error[E0515]: cannot return value referencing local variable `result`
+ --> src/main.rs:3:5
+  |
+3 |     result.as_str()
+  |     ------^^^^^^^^^
+  |     |
+  |     returns a value referencing data owned by the current function
+  |     `result` is borrowed here
+
+For more information about this error, try `rustc --explain E0515`.
+```
+
+出现的问题是 `result` 在 `longest()` 函数的结尾将离开作用域，而我们尝试从函数返回一个 `result` 的引用。
+
+我们无法指定生命周期参数来改变悬垂引用，而且 Rust 也不允许我们创建一个悬垂引用。
+
+在这种情况，最好的解决方案是返回一个有所有权的数据类型而不是一个引用，这样函数调用者就需要负责清理这个值了。
+
+综上，生命周期语法是用于将函数的多个参数与其返回值的生命周期进行关联的。一旦他们形成了某种关联，Rust 就有了足够的信息来允许内存安全的操作，并阻止会产生悬垂指针亦或是违反内存安全的行为。
 
 ### 3.7. 结构体定义中的生命周期注解
+
+我曾经在 [Rust -- 结构体](https://gukaifeng.cn/posts/rust-jie-gou-ti/) 这篇文章介绍过 Rust 中的结构体。
+
+但是在那篇文章中，结构体中的成员都是具有所有权的，我们这里要定义包含引用的结构体。
+
+定义包含引用的结构体，就需要为结构体中每一个引用添加生命周期注解。
+
+我们看下面的示例：
+
+```rust
+struct ImportantExcerpt<'a> {
+    part: &'a str,
+}
+
+fn main() {
+    let novel = String::from("Call me Ishmael. Some years ago...");
+    let first_sentence = novel.split('.')
+        .next()
+        .expect("Could not find a '.'");
+    let i = ImportantExcerpt { part: first_sentence };
+}
+```
+
+我们结合之前在函数声明中的生命周期注解的学习经验，应该不难理解，结构体中的两个 `'a` 注解意味着 `ImportantExcerpt` 的实例不能比其 `part` 字段中的引用存在的更久。
+
+这里的 `main()` 函数创建了一个 `ImportantExcerpt` 的实例，它存放了变量 `novel` 所拥有的 `String` 的第一个句子的引用。`novel` 的数据在 `ImportantExcerpt` 实例创建之前就存在，直到 `ImportantExcerpt` 离开作用域之后 `novel` 都不会离开作用域，所以 `ImportantExcerpt` 实例中的引用是有效的。
 
 
 
 ### 3.8. 生命周期省略(Lifetime Elision)
 
+我们看一段代码，这段代码曾在 [Rust -- 所有权(Ownership)](https://gukaifeng.cn/posts/rust-suo-you-quan-ownership/) 出现过。
+
+```rust
+fn first_word(s: &str) -> &str {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &s[0..i];
+        }
+    }
+
+    &s[..]
+}
+```
+
+按我们之前说的，这段代码应当有生命周期注解（因为其参数和返回值都是引用），否则会编译失败。
+
+不过这段代码确实是可以编译通过的！
+
+这段代码能编译通过，是由于一些历史原因。在早期的 Rust 版本中，这个代码确实是不能通过编译的，在那时，这个函数的声明必须是下面这样的：
+
+```rust
+fn first_word<'a>(s: &'a str) -> &'a str {
+```
+
+后来，在编写了很多 Rust 代码之后，Rust 团队发现在一些特定的情况下，程序员总是在写一模一样的生命周期注解，这些场景是可预测的，并且遵循几个明确的模式。随后，Rust 团队就把这些模式编码进了 Rust 编译器中。如此一来，在这些情况下，即便不写生命周期注解，Rust 的借用检查器也能推断出生命周期。
+
+回到上面的代码，只有一个参数，只有一个返回值，都是引用，那么这个返回值引用的生命周期，一定是与参数引用的声明周期一样的，没有其他可能。这是一个确定的模式，是可以推断出来的，所以这个函数的声明就可以不写明参数引用和返回值引用的生命周期了。
+
+被编码进 Rust 引用分析的模式，被称为 **生命周期省略规则(lifetime elision rules)**。这不是程序员需要遵循的规则，而是一些特定场景。当代码符合这些特定场景时，Rust 就不要求程序员明确指定相关引用的生命周期。当代码不适用任何一条规则时，Rust 不会推断引用的生命周期，这时就强制要求程序员明确指定。
+
+-
+
+函数或方法的参数的生命周期被称为**输入生命周期(input lifetimes)**，而返回值的生命周期被称为**输出生命周期(output lifetimes)**。
+
+Rust 编译器采用三条规则来判断引用何时不需要明确的注解。第一条规则适用于输入生命周期，后两条规则适用于输出生命周期。如果编译器检查完这三条规则后仍然存在没有计算出生命周期的引用，编译器将会停止并生成错误。这些规则适用于 `fn` 定义，以及 `impl` 块。
+
+1. 每一个是引用的参数都有它自己的生命周期参数。换句话说就是，有一个引用参数的函数有一个生命周期参数：`fn foo<'a>(x: &'a i32)`，有两个引用参数的函数有两个不同的生命周期参数，`fn foo<'a, 'b>(x: &'a i32, y: &'b i32)`，依此类推。
+2. 如果只有一个输入生命周期参数，那么它被赋予所有输出生命周期参数：`fn foo<'a>(x: &'a i32) -> &'a i32`。
+3. 如果方法有多个输入生命周期参数并且其中一个参数是 `&self` 或 `&mut self`，说明是个对象的方法(method)，那么所有输出生命周期参数被赋予 `self` 的生命周期。
+
+
+
+可能上面的描述不是很容易理解，下面以一开始示例的函数声明，来演示这三条规则：
+
+```rust
+fn first_word(s: &str) -> &str {
+```
+
+此时这是一个没有任何声明周期注解的函数声明。
+
+1. Rust 依据第一条规则（每一个是引用的参数都有它自己的生命周期参数）为这个方法中的每一个参数引用添加其自己的生命周期注解。之后，在 Rust 编译器的视角里，函数声明变成了像下面这样：
+
+    ```rust
+    fn first_word<'a>(s: &'a str) -> &str {
+    ```
+
+2. 随后，Rust 依据第二条规则（如果只有一个输入生命周期参数，那么它被赋予所有输出生命周期参数）为函数返回值引用添加生命周期注解，然后如下：
+
+    ```rust
+    fn first_word<'a>(s: &'a str) -> &'a str {
+    ```
+
+3. 由于我们的函数参数中没有 `self`，所以不适用第三条。
+
+
+
+现在，Rust 对最初的函数声明应用了三条规则以后，函数声明最终变成了下面这样：
+
+```rust
+fn first_word<'a>(s: &'a str) -> &'a str {
+```
+
+现在，是不是生命周期注解就是很完整的了呢？也就是说，Rust 推断出了参数引用和返回值引用的生命周期，所以我们就不用手动写了。
+
+
+
+我们再看看最初写过的 `longest()` 方法，其在没有添加生命周期注解时，函数声明如下：
+
+```rust
+fn longest(x: &str, y: &str) -> &str {
+```
+
+我们应用第一条规则后，函数声明如下：
+
+```rust
+fn longest<'a, 'b>(x: &'a str, y: &'b str) -> &str {
+```
+
+显然，这就是最终的函数声明了，因为第二和第三条规则都不适用。
+
+显然，Rust 没有推断出 `longest()` 这个函数返回值引用的生命周期，所以需要我们明确指定。
+
+因为第三条规则真正能够适用的就只有方法声明，所以现在就让我们看看这种情况中的生命周期，并看看为什么这条规则使得我们经常不需要在方法声明中中标注生命周期。
+
+
+
+### 3.9. 方法定义中的生命周期注解
+
+为带有生命周期的结构体实现方法，语法类似为带有泛型类型的结构体实现方法（毕竟生命周期就是一个特殊的泛型）。
+
+定义方法时，在哪里声明和使用生命周期参数取决于它们是否与结构字段或方法参数和返回值相关。
+
+定义方法时，结构体字段的生命周期必须总是在 `impl` 关键字之后声明，并在结构体名称之后被使用，因为这些生命周期是结构体类型的一部分。
+
+我们下面看一个应用了第三条规则的示例：
+
+```rust
+struct ImportantExcerpt<'a> {
+    part: &'a str,
+}
+
+impl<'a> ImportantExcerpt<'a> {
+    fn announce_and_return_part(&self, announcement: &str) -> &str {
+        println!("Attention please: {}", announcement);
+        self.part
+    }
+}
+```
+
+有两个输入生命周期，因此 Rust 应用第一个生命周期省略规则，并赋予 `&self` 和 `announcement` 各自的生命周期。然后，因为其中一个参数是 `&self`，返回类型获得 `&self` 的生存期。到这里，所有引用的生存期都已经计算出来了！
+
+
+
+### 3.10. 静态生命周期
+
+这里有一种特殊的生命周期值得讨论：`'static`，其生命周期能够存活于整个程序期间。
+
+例如，所有的字符串字面值都拥有 `'static` 生命周期，我们也可以选择像下面这样显式标注出来：
+
+```rust
+let s: &'static str = "I have a static lifetime.";
+```
+
+这句代码与下面不写 `'static` 的等价：
+
+```rust
+let s: &str = "I have a static lifetime.";
+```
+
+
+
+这个字符串的文本被直接储存在程序的二进制文件中，而这个文件总是可用的。因此所有的字符串字面值都是 `'static` 的。
+
+下面看一个使用到了静态生命周期的示例代码：
+
+```rust
+fn rtn_str(s: &str) -> &str {
+    s
+}
+
+fn main() {
+    let s;
+    {
+        let s_static: &'static str = "I have a static lifetime.";
+        s = rtn_str(s_static);
+    }
+    
+    println!("{}", s);
+}
+```
+
+代码输出：
+
+```
+I have a static lifetime.
+```
+
+当上面的代码执行到第 10 行时，`s_static` 变量就没了，但是字符串字面值还在，因为其具有静态生命周期，我们依然可以通过 `s` 来访问这个字符串字面值。
+
+
+
+你可能在错误信息的帮助文本中见过使用 `'static` 生命周期的建议，不过将引用指定为 `'static` 之前，思考一下这个引用是否真的在整个程序的生命周期里都有效。你也许要考虑是否希望它存在得这么久。
+
+大部分情况，代码中的问题是由于你尝试创建一个悬垂引用或者可用的生命周期不匹配，你应该解决这些问题而不是指定一个 `'static` 的生命周期。
+
+
+
+
+
+## 4. 结合泛型类型参数、trait bounds 和生命周期
+
+前面几节说完了泛型类型、trait 和生命周期。
+
+这里，让我们试一下在同一函数中使用泛型类型参数、trait bounds 和生命周期语法！
+
+看下面的代码：
+
+```rust
+use std::fmt::Display;
+
+fn longest_with_an_announcement<'a, T>(x: &'a str, y: &'a str, ann: T) -> &'a str
+    where T: Display
+{
+    println!("Announcement! {}", ann);
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+```
+
+这个一个返回两个字符串 slice 中较长者的 `longest()` 函数.
+
+不过带有一个额外的参数 `ann`。`ann` 的类型是泛型 `T`，它可以被放入任何实现了 `where` 从句中指定的 `Display` trait 的类型。这个额外的参数会在函数比较字符串 slice 的长度之前被打印出来，这也就是为什么 `Display` trait bound 是必须的。
+
+因为生命周期也是泛型，所以生命周期参数 `'a` 和泛型类型参数 `T` 都位于函数名后的同一尖括号列表中。
