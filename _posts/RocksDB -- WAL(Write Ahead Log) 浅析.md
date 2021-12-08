@@ -24,6 +24,8 @@ toc: true
 
 在默认配置中，RocksDB 通过在每个用户写入后 flush WAL 来保证进程崩溃的一致性。
 
+<!--more-->
+
 WAL(Write Ahead Log) 是 RocksDB 架构中重要的一部分，如果你还不了解 RocksDB 的架构，可以查看 [RocksDB -- 高级架构](https://gukaifeng.cn/posts/rocksdb-gao-ji-jia-gou/) 这篇文章。
 
 
@@ -139,5 +141,7 @@ Writer 提供了将日志记录追加到日志文件的抽象。特定存储介�
 
 ## 5. WAL 文件格式
 
-这篇文章主要讲 WAL 文件是什么，关于具体的记录格式，查看 [Write Ahead Log File Format](https://github.com/facebook/rocksdb/wiki/Write-Ahead-Log-File-Format)。
+这篇文章主要讲 WAL 文件是什么，关于具体的记录格式分析，查看 [RocksDB -- WAL 记录格式](https://gukaifeng.cn/posts/rocksdb-wal-ji-lu-ge-shi/) 这篇文章。
+
+
 

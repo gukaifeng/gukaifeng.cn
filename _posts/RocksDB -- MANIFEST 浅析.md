@@ -81,8 +81,6 @@ RocksDB 提供了工具 ldb，其代码位于 RocksDB 源码中的 tools 目录�
 
 我们可以使用 ldb 工具查看 manifest log 文件中的具体内容。
 
-
-
 ### 4.1. 编译 ldb
 
 在 rocksdb 源码根目录下（不是 tools 目录），执行下面的命令：
@@ -104,7 +102,7 @@ ldb 是编译为 debug 版本还是 release 版本要看你的 rocksdb 是编译
 使用 ldb 查看 manifest log 的方法如下：
 
 ```shell
-/path/to/ldb manifest_dump --path="manifest_log_path"
+/path/to/ldb manifest_dump --path="manifest_log_path"
 ```
 
 例如：
@@ -191,6 +189,8 @@ next_file_number 6 last_sequence 0  prev_log_number 0 max_column_family 0 min_lo
 
 
 ### 4.3. 示例
+
+> 下面演示的示例是非常非常简单的，修改 RocksDB 的操作多种多样，不同操作的 MANIFEST 记录格式也不一样。关于 MANIFEST 记录格式的分析，请查看 [RocksDB -- MANIFEST 记录格式](https://gukaifeng.cn/posts/rocksdb-manifest-ji-lu-ge-shi/) 这篇文章。
 
 下面我们执行一段简易的代码，然后查看其生成的 manifest log。
 
@@ -334,4 +334,3 @@ next_file_number 12 last_sequence 3  prev_log_number 0 max_column_family 0 min_l
 
 这里已经可以看到我们之前写入的大致信息了。
 
-当然这个是非常非常简单的，修改 RocksDB 的操作多种多样，我们可以在 [rocksdb/wiki/MANIFEST](https://github.com/facebook/rocksdb/wiki/MANIFEST) 关于记录格式更详细的介绍。
