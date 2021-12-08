@@ -1,7 +1,7 @@
 ---
-title: Rust -- 泛型、trait 与生命周期
+9title: Rust -- 泛型、trait 与生命周期
 date: 2021-12-02 18:15:09
-updated: 2021-12-02 18:15:09
+updated: 2021-12-08 09:36:20
 categories: [编程语言基础]
 tags: [Rust]
 toc: true
@@ -13,7 +13,7 @@ toc: true
 
 **trait** 是 Rust 的一个特性，这使你可以以一个通用的方式定义行为。trait 可以与泛型结合，将泛型限制为拥有特定行为的类型，而不是任意类型。
 
-**生命周期(lifetimes)**也是 Rust 中的一个特性，生命周期其实就是各种泛型，这些泛型为编译器提供引用之间如何相互关联的信息。Rust 的生命周期允许我们在许多情况下借用值，同时仍然允许编译器检查引用是否有效。
+**生命周期(lifetimes)**也是 Rust 中的一个特性，生命周期其实就是一个泛型，这个泛型为编译器提供引用之间如何相互关联的信息。Rust 的生命周期允许我们在许多情况下借用值，同时仍然允许编译器检查引用是否有效。
 
 上面对泛型、trait 和生命周期的介绍可能不是很好理解，简单有个印象就好，我们在下面通过例子详细来说。
 
@@ -703,7 +703,7 @@ For more information about an error, try `rustc --explain E0507`.
 
 这是一个关于所有权问题的错误。
 
-我们知道，Rust 中在编译时具有已知大小的类型完全存储在栈上，且 `i32`、`char` 这样的类型已经实现好了 Copy 这个 trait，所以可以实现拷贝，而不影响原来变量，也就是创建一个拷贝。关于这里不了解的同学可以看 [Rust -- 所有权(Ownership)](https://gukaifeng.cn/posts/rust-suo-you-quan-ownership/#1-3-%E5%86%85%E5%AD%98%E4%B8%8E%E5%88%86%E9%85%8D)。
+我们知道，Rust 中 `i32`、`char` 这样的类型已经实现好了 Copy 这个 trait，所以可以实现拷贝，而不影响原来变量。关于这里不了解的同学可以看 [Rust -- 所有权(Ownership)](https://gukaifeng.cn/posts/rust-suo-you-quan-ownership/#1-3-%E5%86%85%E5%AD%98%E4%B8%8E%E5%88%86%E9%85%8D)。
 
 但是 Rust 不知道 T 类型是实现了 Copy trait 的，也就有了上面的错误信息，我们现在要做的，就是告诉 Rust，我们传入的参数 T 的类型，是实现了 Copy trait 的。
 
@@ -776,5 +776,302 @@ fn main() {
 
 这样的代码和之前加了 Copy 的输出是一样的，只是执行过程不同了（没有创建拷贝，使用的一直都是引用）。
 
+当然，还有一些其他的改法也可以使程序达到期望中的效果，这里就不多说了。
+
+
+
 ## 3. 生命周期(lifetime)
+
+
+
+### 3.1. 什么是生命周期
+
+我之前在 [Rust -- 所有权(Ownership)](https://gukaifeng.cn/posts/rust-suo-you-quan-ownership/) 这篇文章中有写过关于 Rust 中的所有权、引用与借用的相关概念。不过，还有一个与之相关的重要概念没有说，也就是这节要说的生命周期。
+
+Rust 中每一个引用都有其生命周期，也就是引用保持有效的作用域。
+
+大部分时候生命周期是隐含的，并且是很容易推断出来的，就像大部分时候类型也是可以推断出来的一样。
+
+类型推断中，如果有多种可能性，我们就必须指明具体的类型。同样的，各个引用的生命周期之间，也存在以一些不同的方式相关联的情况，Rust 无法推断其生命周期（即作用域范围），这时候，我们就必须具体指明这些引用的生命周期，以保证运行时实际使用的引用绝对是有效的。
+
+生命周期是 Rust 语言最与众不同的功能。这篇文章不可能涉及生命周期的全部内容，但是会说说那些最常用的功能。
+
+
+
+### 3.2. 借用检查器
+
+我们先看一段错误的代码：
+
+```rust
+fn main() {
+    let r;
+    {
+        let x = 5;
+        r = &x;
+    }
+    println!("r: {}", r);
+}
+```
+
+注：第 2 行的 `r` 是没有初值的，在给其赋予初值前使用将导致编译错误，Rust 不允许空值。
+
+这段代码中，`x` 在离开作用域后，其使用的内存空间被释放，而此时 `r` 还在其作用域内，成了一个悬垂引用，在第 7 行使用一个悬垂引用，将导致编译错误：
+
+```
+error[E0597]: `x` does not live long enough
+ --> src/main.rs:6:13
+  |
+6 |         r = &x;
+  |             ^^ borrowed value does not live long enough
+7 |     }
+  |     - `x` dropped here while still borrowed
+8 | 
+9 |     println!("r: {}", r);
+  |                       - borrow later used here
+
+For more information about this error, try `rustc --explain E0597`.
+```
+
+**生命周期的主要目标是避免悬垂引用，因为悬垂引用会导致程序引用了非预期引用的数据。**
+
+那么，Rust 是如何检查 `r` 是一个悬垂引用的呢？更宽泛的说，Rust 是如何检查引用是否有效呢？这得益于**借用检查器(borrow checker)**。
+
+还是那段代码，下面的这个在注释中标记了 `r` 和 `x` 的生命周期，即作用域范围，`r` 的生命周期是 `'a`，`x` 的生命周期是 `'b`。
+
+```rust
+fn main() {
+    let r;                // ---------+-- 'a
+    {                     //          |
+        let x = 5;        // -+-- 'b  |
+        r = &x;           //  |       |
+    }                     // -+       |
+    println!("r: {}", r); //          |
+}                         // ---------+
+```
+
+同样的功能，我们看一段正确的代码，同样使用注释标注 `r` 和 `x` 的生命周期：
+
+```rust
+fn main() {
+{
+    let x = 5;            // ----------+-- 'b
+                          //           |
+    let r = &x;           // --+-- 'a  |
+                          //   |       |
+    println!("r: {}", r); //   |       |
+                          // --+       |
+}                         // ----------+
+```
+
+`r` 的生命周期是 `'a` ，`x` 的生命周期是 `'b`。
+
+我们可以看到，`'b` 比 `'a` 大，这就意味着 `r` 可以引用 `x`，Rust 知道在 `r` 有效时，`x` 一定是有效的。
+
+
+
+### 3.3. 函数中的泛型生命周期
+
+假设我们要实现一个函数，这个函数比较两个字符串哪个更长，并将更长的那个以返回值返回。假定函数名为 `longest()`，我们看下面的代码：
+
+```rust
+fn main() {
+    let string1 = String::from("abcd");
+    let string2 = "xyz";
+
+    let result = longest(string1.as_str(), string2);
+    println!("The longest string is {}", result);
+}
+```
+
+那么我们该如何实现 `longest()` 这个函数呢？
+
+首先，我们应该使这个函数接收的参数为字符串 slice 的引用，因为我们不希望这个函数获得参数的所有权。
+
+在上面的调用方法前提下，我们实现一下 `longest()` 方法：
+
+```rust
+fn longest(x: &str, y: &str) -> &str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+
+fn main() {
+    let string1 = String::from("abcd");
+    let string2 = "xyz";
+
+    let result = longest(string1.as_str(), string2);
+    println!("The longest string is {}", result);
+}
+```
+
+看起来没什么问题，但事实上这段代码是无法编译通过的。
+
+我们尝试编译，看看错误信息：
+
+```
+error[E0106]: missing lifetime specifier
+ --> src/main.rs:1:33
+  |
+1 | fn longest(x: &str, y: &str) -> &str {
+  |               ----     ----     ^ expected named lifetime parameter
+  |
+  = help: this function's return type contains a borrowed value, but the signature does not say whether it is borrowed from `x` or `y`
+help: consider introducing a named lifetime parameter
+  |
+1 | fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+  |           ++++     ++          ++          ++
+
+For more information about this error, try `rustc --explain E0106`.
+```
+
+错误信息的大意是，这个函数返回了一个借来的值，但是返回值类型信息中没有指名到底是借的 `x` 还是借的 `y`。
+
+事实上，不仅 Rust 不知道，我们自己也不知道，因为我们也不知道函数中是 if 代码块被执行，还是 else 代码块被执行。
+
+至于为什么要纠结这个呢，简单来说，对于一个函数参数而言，`x` 和 `y` 可能具有不同的生命周期，Rust 不知道返回值借的是 `x` 还是 `y`，也就无法准确判断返回值的生命周期，所以编译报错，让我们指定返回值的生命周期。
+
+为了修复这个错误，我们将增加泛型生命周期参数来定义引用间的关系，以便借用检查器可以进行分析。
+
+### 3.4. 生命周期注解语法
+
+**生命周期注解并不改变任何引用的生命周期的长短。**
+
+与在函数声明中指定了泛型类型参数后，就可以接受任何类型参数一样，当指定了泛型生命周期后，函数也能接受任何生命周期的引用。
+
+生命周期注解描述了多个引用的生命周期相互的关系，而不影响他们生命周期。
+
+生命周期注解有着一个不太常见的语法：生命周期参数名称必须以单引号 `'` 开头，其名称通常全是小写，类似于泛型其名称非常短。`'a` 是大多数人默认使用的名称。
+
+生命周期参数注解位于引用的 `&` 之后，并有一个空格来将引用类型与生命周期注解分隔开。
+
+这里有一些例子：我们有一个没有生命周期参数的 `i32` 的引用，一个有叫做 `'a` 的生命周期参数的 `i32` 的引用，和一个生命周期也是 `'a` 的 `i32` 的可变引用：
+
+```rust
+&i32        // 引用
+&'a i32     // 带有显式生命周期的引用
+&'a mut i32 // 带有显式生命周期的可变引用
+```
+
+单个的生命周期注解本身没有多少意义，因为生命周期注解告诉 Rust 多个引用的泛型生命周期参数如何相互联系的。
+
+例如如果函数有一个生命周期 `'a` 的 `i32` 的引用的参数 `first`，还有另一个同样是生命周期 `'a` 的 `i32` 的引用的参数 `second`。这两个生命周期注解意味着引用 `first` 和 `second` 必须与这泛型生命周期存在得一样久。
+
+
+
+
+
+### 3.5. 函数声明中的生命周期注解
+
+我们现在给之前的 `longest()` 函数添加声明周期注解：
+
+```rust
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+
+fn main() {
+    let string1 = String::from("abcd");
+    let string2 = "xyz";
+
+    let result = longest(string1.as_str(), string2);
+    println!("The longest string is {}", result);
+}
+```
+
+注意，与普通的泛型不同，生命周期泛型不需要在调用时再传一次。例如第 13 行调用 `longest()` 时没有再写 ``<'a>`
+
+现在这个代码就可以正确编译以及正确执行了！
+
+这段代码可能不是很好理解，这是 Rust 中比较难的一个地方，我们这里详细解释一下。
+
+我们看函数声明：
+
+```rust
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+```
+
+在函数名 longest后面的这个 `<'a>` 中的 `'a` 是一个泛型，就和我们之前常用的泛型 `T` 类似，这里的 `'a` 表示的是生命周期泛型。
+
+然后我们在参数和返回值里，都加上了 `'a`，这样做的含义是，**`x` 引用、`y` 引用和返回值引用具有相同的生命周期！**
+
+**再次注意，生命周期注解，不会改变任何引用的生命周期，这只是告诉 Rust 引用的生命周期之间的关系！**
+
+也就是说，在上面 `longest()` 函数中，`x` 和 `y` 必须同时有效，生命周期 `'a` 可以理解为使得 `x` 和 `y` 同时有效的生命周期，也就是 `x` 和 `y` 生命周期较小的那个，也就是 `x` 和 `y` 生命周期的交集部分！
+
+返回值引用其实就是借走了 `x`（if 代码块）或者借走了 `y`（else 代码块），对返回值引用添加生命周期注解 `‘a`，就保证了这个返回值引用的生命周期是参数 `x` 和 `y` 的生命周期交集部分。
+
+-
+
+无论函数最终执行的是 if 代码块还是 else 代码块，返回值的生命周期都是 `'a`。
+
+假设 `x` 和 `y` 的生命周期不同，`x` 的生命周期大于 `y` 的生命周期，即 `'a` 与 `y` 的生命周期等长。此时，即便执行的是 if 代码块，返回的是 `x` 的借用，当离开 `’a` 的范围时，`x` 可能还是有效的，但是返回值那个引用，已经失效了！
+
+我们修改 main() 函数代码，演示一下上刚刚说的结论：
+
+```rust
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+
+fn main() {
+    let string1 = String::from("long string is long");
+
+    {
+        let string2 = String::from("xyz");
+        let result = longest(string1.as_str(), string2.as_str());
+        println!("The longest string is {}", result);
+    }
+}
+```
+
+这段代码可以正确运行，因为使用 `result` 时，`string1` 和 `string2` 都仍然有效。
+
+现在看一段不能通过编译的代码：
+
+```rust
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+
+fn main() {
+    let string1 = String::from("long string is long");
+    let result;
+    {
+        let string2 = String::from("xyz");
+        result = longest(string1.as_str(), string2.as_str());
+    }
+    println!("The longest string is {}", result);
+}
+```
+
+这段代码无法编译通过，这是因为，我们在使用 `result` 时，`string2` 已经失效了，**即便 `result` 是 `strings1` 的引用！**这就是我们之前 longest 限制的返回值生命周期的作用。
+
+
+
+### 3.6. 深入理解生命周期
+
+
+
+
+
+### 3.7. 结构体定义中的生命周期注解
+
+
+
+### 3.8. 生命周期省略(Lifetime Elision)
 
