@@ -63,7 +63,7 @@ size:           varint64
 * `offset`: 在文件中的偏移，类型是 varint64；
 * `size`: 大小，类型是 varint64。
 
-我们这里不介绍什么是 varint，有关 varint64 格式的说明，可以看看这里 [什么是 Varint 编码](#)。
+我们这里不介绍什么是 varint，有关 varint64 格式的说明，可以看看这里 [什么是 Varint 编码](https://gukaifeng.cn/posts/shi-me-shi-varint-bian-ma/)。
 
 `BlockHandles` 用来描述一个 block 的位置和大小，通过其中的 `offset` 可以找到一个 block 的开始位置，再结合 `size`，就确定了一个 block 的开始和结束位置。
 
@@ -115,7 +115,7 @@ meta block 即元块，元块是用于某种功能的块，
 
 1\. `Full filter`: 应用于整个 SST 文件的过滤器。
 
-2\. `Partitioned Filter`: `Full filter` 被划分为多个块。添加一个顶级索引块来将键映射到相应的过滤分区。查看 [RocksDB -- Partitioned Index Filters 浅析](#) 这篇文章了解更多内容。
+2\. `Partitioned Filter`: `Full filter` 被划分为多个块。添加一个顶级索引块来将键映射到相应的过滤分区。查看 [RocksDB -- Partitioned Index Filters 浅析](https://gukaifeng.cn/posts/rocksdb-partitioned-index-filters-qian-xi/) 这篇文章了解更多内容。
 
 3\. `Block-based filter`: 已弃用。这里不说了，有兴趣的可以自己去看看官方 wiki 或者看看源码。
 
@@ -127,9 +127,9 @@ meta block 即元块，元块是用于某种功能的块，
 
 index block 是一种二进制搜索数据结构。
 
-一个 SST 文件可能包含一个 index block，或者一列分区索引块(partitioned index blocks)。关于分区索引快，查看 [RocksDB -- Partitioned Index Filters 浅析](#) 这篇文章。
+一个 SST 文件可能包含一个 index block，或者一列分区索引块(partitioned index blocks)。关于分区索引快，查看 [RocksDB -- Partitioned Index Filters 浅析](https://gukaifeng.cn/posts/rocksdb-partitioned-index-filters-qian-xi/) 这篇文章。
 
-index block 的格式，查看 [RocksDB -- Index Block 格式](#) 这篇文章。
+index block 的格式，查看 [RocksDB -- Index Block 格式](https://gukaifeng.cn/posts/rocksdb-index-block-ge-shi/) 这篇文章。
 
 
 
