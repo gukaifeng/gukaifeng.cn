@@ -3,7 +3,7 @@ title: C/C++ strftime() 与 strptime() -- 时间与字符串的转化
 date: 2021-09-07 00:05:23
 updated: 2021-09-07 00:05:23
 categories: [技术杂谈]
-tags: [C,CPP]
+tags: [C,Cpp]
 toc: true
 ---
 
