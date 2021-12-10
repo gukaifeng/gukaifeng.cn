@@ -1,7 +1,7 @@
 ---
 title: Rust -- 编写自动化测试
 date: 2021-12-09 18:11:11
-updated: 2021-12-09 18:11:11
+updated: 2021-12-10 16:40:50
 categories: [编程语言基础]
 tags: [Rust]
 toc: true
@@ -35,7 +35,11 @@ Rust 的类型系统在此问题上下了很大的功夫，不过这仍然不可
 
 ### 1.1. 简单的测试
 
-我们先新建一个库 crate，然后在 `src/lib.rs` 中写入下面的代码：
+我们先新建一个**库 crate**，然后在 `src/lib.rs` 中写入下面的代码：
+
+> 关于下面代码中的 `#[cfg(test)]`，我们在本文 3.1.1 中再说，我们先只关注剩下的部分。
+
+在要测试的方法前，要加一个 `#[test]` 注解。
 
 ```rust
 #[cfg(test)]
@@ -252,7 +256,7 @@ test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; 
 
 `should_panic` 可以添加一个参数 `expected`，指定你期望的 panic 信息，如果程序发生了 panic，但是 panic 信息和你期望的不一样，测试一样不会通过！
 
-我们看下面的代码，注意 参数`expected` 的写法（在 `should_panic`  后面的括号里）：
+我们看下面的代码，注意 参数`expected` 的写法（在 `should_panic`  后面的括号里）：
 
 ```rust
 #[cfg(test)]
@@ -359,7 +363,7 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 
 ## 2. 控制测试的运行
 
-与使用 `cargo run` 会编译代码，然后运行生成的二进制文件一样，`cargo test` 在测试模式下编译代码并运行生成的测试二进制文件。
+与使用 `cargo run` 会编译代码，然后运行生成的二进制文件一样，`cargo test` 在测试模式下编译代码并运行生成的测试二进制文件。
 
 默认情况下，Rust 中使用 `cargo test`，会
 
@@ -455,7 +459,7 @@ error: test failed, to rerun pass '--lib'
 
 通过的测试什么也没有输出，失败的测试则打印出了全部的标准输出。
 
-第 7 行 `---- tests::this_test_will_fail stdout ----` 写明了下面的内容是失败的测试的标准输出内容。
+第 7 行 `---- tests::this_test_will_fail stdout ----` 写明了下面的内容是失败的测试的标准输出内容。
 
 如果你希望也能看到通过的测试的输出内容，可以使用 `--nocapture` 参数。
 
@@ -546,7 +550,7 @@ error: test failed, to rerun pass '--lib'
 
 
 
-### 2.3. 运行指定的测试
+### 2.3. 运行指定的测试/过滤测试
 
 
 
@@ -611,7 +615,7 @@ test keyword_tests::one_hundred ... ok
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
 ```
 
-当然你也可以考虑写完整的函数名，例如 `cargo test one_hundred`，这结果是一样的。
+当然你也可以考虑写完整的函数名，例如 `cargo test one_hundred`，这结果是一样的。
 
 -
 
@@ -638,11 +642,54 @@ test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 
 
 
-### 2.4. 过滤测试
+### 2.4. 忽略测试
 
+有时候，有一些测试，我们暂时不想让其执行。比如暂时不需要测试的，或者测试耗时很长的。
 
+我们上面说过了指定测试哪些部分，这里说下如何忽略某些部分。
 
-### 2.5. 忽略测试
+忽略要在 `#[test]` 下再加一个注解 `#[ignore]`。我们看一下示例代码：
+
+```rust
+pub fn add_two(a: i32) -> i32 {
+    a + 2
+}
+#[cfg(test)]
+mod keyword_tests {
+    use super::*;
+
+    #[test]
+    #[ignore]
+    fn add_two_and_two() {
+        assert_eq!(4, add_two(2));
+    }
+
+    #[test]
+    fn add_three_and_two() {
+        assert_eq!(5, add_two(3));
+    }
+
+    #[test]
+    fn one_hundred() {
+        assert_eq!(102, add_two(100));
+    }
+}
+```
+
+我们给之前的测试代码中的 `add_two_and_two()` 添加了 `#[ignore]` 注解。
+
+执行 `cargo test`，得到如下信息：
+
+```
+running 3 tests
+test keyword_tests::add_two_and_two ... ignored
+test keyword_tests::add_three_and_two ... ok
+test keyword_tests::one_hundred ... ok
+
+test result: ok. 2 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+```
+
+可以看到，我们忽略的 `add_two_and_two()` 测试后面的状态是 `ignored`，而正常执行的测试是 `ok`。
 
 
 
@@ -651,4 +698,368 @@ test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 
 
 ## 3. 测试的组织结构
+
+测试是一个复杂的概念，而且不同的开发者也采用不同的技术和组织。
+
+Rust 社区倾向于根据测试的两个主要分类来考虑问题：**单元测试(unit tests)**与**集成测试(integration tests)**。
+
+单元测试倾向于更小而更集中，在隔离的环境中一次测试一个模块，或者是测试私有接口。
+
+而集成测试对于你的库来说则完全是外部的。它们与其他外部代码一样，通过相同的方式使用你的代码，只测试公有接口而且每个测试都有可能会测试多个模块。
+
+为了保证你的库能够按照你的预期运行，从独立和整体的角度编写这两类测试都是非常重要的。
+
+
+
+### 3.1. 单元测试
+
+单元测试的目的是在与其他部分隔离的环境中测试每一个单元的代码，以便于快速而准确的某个单元的代码功能是否符合预期。
+
+单元测试与他们要测试的代码共同存放在位于 `src/` 目录下相同的文件中。
+
+规范是在每个文件中创建包含测试函数的 `tests` 模块，并使用 `cfg(test)` 标注模块。
+
+
+
+#### 3.1.1. 测试模块和 `#[cfg(test)]`
+
+
+
+测试模块的 `#[cfg(test)]` 注解告诉 Rust 只在执行 `cargo test` 时才编译和运行测试代码，而在运行 `cargo build` 时不这么做。
+
+这在只希望构建库的时候可以节省编译时间，并且因为它们并没有包含测试，所以能减少编译产生的文件的大小。
+
+与之对应的集成测试因为位于另一个文件夹，所以它们并不需要 `#[cfg(test)]` 注解。然而单元测试位于与源码相同的文件中，所以你需要使用 `#[cfg(test)]` 来指定他们不应该被包含进编译结果中。
+
+
+
+想想我们每次使用 `cargo new peoject_name --lib` 创建一个新的库 crate 时，`src/lib.rs` 中的默认内容：
+
+```rust
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn it_works() {
+        let result = 2 + 2;
+        assert_eq!(result, 4);
+    }
+}
+```
+
+上述代码就是自动生成的测试模块。
+
+`cfg` 属性代表 configuration ，它告诉 Rust 其之后的项只应该被包含进特定配置选项中。
+
+在这个例子中，配置选项是 `test`，即 Rust 所提供的用于编译和运行测试的配置选项。
+
+通过使用 `cfg` 属性，Cargo 只会在我们主动使用 `cargo test` 运行测试时才编译测试代码。这包括测试模块中可能存在的帮助函数，以及标注为 `#[test]` 的函数。
+
+
+
+#### 3.1.2. 测试私有函数
+
+测试社区中一直存在关于是否应该对私有函数直接进行测试的论战，而在其他语言中想要测试私有函数是一件困难的，甚至是不可能的事。不过无论你坚持哪种测试意识形态，Rust 的私有性规则确实允许你测试私有函数。
+
+看下面带有私有函数 `internal_adder()` 的代码，其位于 `src/lib.rs` 中：
+
+```rust
+pub fn add_two(a: i32) -> i32 {
+    internal_adder(a, 2)
+}
+
+fn internal_adder(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn internal() {
+        assert_eq!(4, internal_adder(2, 2));
+    }
+}
+```
+
+
+
+注意 `internal_adder` 函数没有被标记为 `pub`。
+
+测试只是 Rust 代码，而 `tests` 模块只是另一个模块。
+
+在这个测试中，我们使用 `super::*` 将测试模块的父模块的所有项引入 `tests` 模块，然后测试可以调用 `internal_adder()`。
+
+由于 `internal_adder()` 是私有的，所以我们只能在上面代码中那样引用它，外部代码是不可以引用这个函数的。
+
+执行 `cargo test` 输出如下：
+
+```
+running 1 test
+test tests::internal ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests adder
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+```
+
+这里我们先忽略第 6 行以后的文档测试部分。
+
+如果你认为不应该测试私有函数，那么Rust 中没有任何东西会强迫你这样做。
+
+
+
+### 3.2. 集成测试
+
+在 Rust 中，集成测试对于你需要测试的库来说完全是外部的。
+
+集成测试代码同其他使用库的代码一样使用库文件，也就是说只能调用一部分库中的公有 API 。
+
+集成测试的目的是测试库的多个部分能否一起正常工作。
+
+一些单独能正确运行的代码单元集成在一起也可能会出现问题，所以集成测试的覆盖率也是很重要的。
+
+为了创建集成测试，你需要先创建一个 `tests` 目录。
+
+
+
+
+
+#### 3.2.1. `tests` 目录
+
+为了编写集成测试，需要在项目根目录创建一个 `tests/` 目录，与 `src/` 同级。
+
+Cargo 知道如何去寻找这个目录中的集成测试文件。
+
+接着可以随意在这个目录中创建任意多的测试文件，Cargo 会将每一个文件当作单独的 crate 来编译。
+
+让我们来创建一个集成测试。
+
+-
+
+我们新建一个名为 `adder` 的库 crate。
+
+然后在 src/lib.rs 中写入以下代码：
+
+```rust
+pub fn add_two(a: i32) -> i32 {
+    internal_adder(a, 2)
+}
+
+fn internal_adder(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn internal() {
+        assert_eq!(4, internal_adder(2, 2));
+    }
+}
+```
+
+然后在 `src/` 同级新建一个 `tests/` 目录，然后在里面新建一个 rs 文件 `integration_test.rs`，并在其中写入以下内容：
+
+
+
+```rust
+use adder;
+
+#[test]
+fn it_adds_two() {
+    assert_eq!(4, adder::add_two(2));
+}
+```
+
+
+
+与单元测试不同，我们需要在文件顶部添加 `use adder`。这是因为每一个 `tests` 目录中的测试文件都是完全独立的 crate，所以需要在每一个文件中导入库。
+
+并不需要将 `tests/integration_test.rs` 中的任何代码标注为 `#[cfg(test)]`。 `tests/` 文件夹在 Cargo 中是一个特殊的文件夹， Cargo 只会在运行 `cargo test` 时编译这个目录中的文件。
+
+现在就运行 `cargo test` 试试：
+
+输出如下：
+
+```
+running 1 test
+test tests::internal ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/integration_test.rs (target/debug/deps/integration_test-9734655cde68cce7)
+
+running 1 test
+test it_adds_two ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests adder
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+```
+
+现在的输出可以分为三个部分，从上到下依次是：单元测试、集成测试和文档测试。
+
+每个测试部分都有单独的结果显示，与单独的摘要信息。
+
+同样的，我们这里不看文档测试，即 13 行即以后，这不是本文的重点。
+
+单元测试部分和我们在 3.1.2 中的是一模一样的，这里就不说了。
+
+集成测试部分，以第 6 行 `Running tests/integration_test.rs (target/debug/deps/integration_test-9734655cde68cce7)`（最后的哈希值可能不同）开头。接下来每一行是一个集成测试中的测试函数，以及一个位于 `Doc-tests adder` 之前的集成测试摘要行。
+
+我们仍然可以通过指定测试函数的名称作为 `cargo test` 的参数来运行特定集成测试。也可以使用 `cargo test` 的 `--test` 后跟文件的名称来运行某个特定集成测试文件中的所有测试：
+
+```shell
+cargo test --test integration_test
+```
+
+输出如下：
+
+```
+running 1 test
+test it_adds_two ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+```
+
+
+
+#### 3.2.2. 集成测试中的子模块
+
+上面说过，`tests/` 目录下的每一个 rs 文件都会被视为一个独立的 crate。
+
+但是还有一个场景，假设我们有一个很多个测试文件都要用到的模块，这该怎么办呢？
+
+假设我们有一个 `common.rs` 文件，里面包含了多个 `tests/` 目录中的文件都要使用的模块。如果我们把 `common.rs` 放在 `tests/` 目录下，即 `tests/common.rs`，那么这个 `common.rs` 也会被当做一个独立的 crate 并进行测试。
+
+我们试一试，继续上一节的代码，我们在创建 `tests/common.rs` 文件，并在其中写入下面的内容：
+
+```rust
+pub fn setup() {
+    // 编写特定库测试所需的代码
+}
+```
+
+`tests/common.rs` 中只有一个 `setup()` 函数，并且什么都没有做。
+
+然后修改 `tests/integration_test.rs` 中的代码，以调用我们 `common` 模块中的 `setup()` 函数，如下：
+
+```rust
+use adder;
+
+mod common;
+
+#[test]
+fn it_adds_two() {
+    common::setup();
+    assert_eq!(4, adder::add_two(2));
+}
+```
+
+当我们执行 `cargo test` 时，输出如下：
+
+```rust
+running 1 test
+test tests::internal ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/common.rs (target/debug/deps/common-b6fd2edab982658c)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/integration_test.rs (target/debug/deps/integration_test-9734655cde68cce7)
+
+running 1 test
+test it_adds_two ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests adder
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+```
+
+可以看到，虽然测试都通过了，`tests/integration_test.rs` 中也正确调用了我们 `common` 模块中的 `setop()` 函数，但 `tests/common.rs` 被作为一个单独的 crate 进行测试了，第 8 行（0 个测试是因为这里面没有测试函数），这不是我们想要的。
+
+> 虽然 `tests/common.rs` 被作为一个单独的 crate 进行测试了，但是其中的模块，我们是可以在 `tests/` 目录下的其他测试文件中使用的。
+>
+> 我们想要的是，即可以让其他测试文件使用模块，又不让模块文件被被拿去进行测试。
+
+-
+
+对于我们的这种需求，Rust 有严格的规范。
+
+我们需要让其他 `tests/` 目录下的测试源文件可以访问我们 `common.rs` 中的 `setup()` 方法，那么
+
+我们必须把 `setup()` 放在 `tests/common/mod.rs` 中，必须是这样的位置！
+
+`tests/common/mod.rs` 中间的 `common` 表示模块名字，`mod.rs` 中写模块的内容。
+
+我们现在删除之前的 `tests/common.rs`，新建 `tests/common/mod.rs` 并在其中写入 `setup()` 的定义：
+
+```rust
+pub fn setup() {
+    // 编写特定库测试所需的代码
+}
+```
+
+-
+
+无需修改 `tests/integration_test.rs`。
+
+现在，我们可以在 `tests/integration_test.rs` 中调用我们 `commom` 模块中的 `setup()` 函数了：
+
+```
+running 1 test
+test tests::internal ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/integration_test.rs (target/debug/deps/integration_test-9734655cde68cce7)
+
+running 1 test
+test it_adds_two ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests adder
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+```
+
+一切正常！并且没有把模块 `common` 的内容加入测试。
+
+
+
+
+
+
+
+#### 3.2.3. 二进制 crate 的集成测试
+
+如果项目是二进制 crate 并且只包含 `src/main.rs` 而没有 `src/lib.rs`，这样就不可能在 `tests/` 目录创建集成测试并使用 `extern crate` 导入 `src/main.rs` 中定义的函数。
+
+只有库 crate 才会向其他 crate 暴露了可供调用和使用的函数。二进制 crate 只意在单独运行。
+
+为什么 Rust 二进制项目的结构明确采用 `src/main.rs` 调用 `src/lib.rs` 中的逻辑的方式？因为通过这种结构，集成测试就可以通过 `extern crate` 测试库 crate 中的主要功能了，而如果这些重要的功能没有问题的话，`src/main.rs` 中的少量代码也就会正常工作且不需要测试。
+
+
 
