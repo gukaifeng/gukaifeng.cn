@@ -11,7 +11,9 @@ toc: true
 
 传送门: [MapReduce 论文原文](https://storage.googleapis.com/pub-tools-public-publication-data/pdf/16cb30b4b92fd4989b8619a61752a2387c6dd474.pdf)
 
+> 这里需要一个前置知识，你需要先了解一下函数式语言中的 map 和 reduce，因为 MapReduce 就是借鉴了函数式语言中的 map 和 reduce 的思想，如果你不了解这个，后面理解起来可能会有些困难。
 
+> 这篇文章不是教学，是我自己的笔记，也许对你有用，也许只有我自己看得懂 =。= ！
 
 
 
@@ -19,15 +21,7 @@ toc: true
 
 
 
-
-
 MapReduce 是一个编程模型，是一个为了处理与生成大数据集的相关实现。用户指定一个 `map` 函数，处理一个 key/value 键值对，以生成一系列中间 key/value 对，用户再指定一个 `reduce` 函数，合并与所有同一中间 key 的所有中间 value。很多真实世界的任务都可以以这个模型表达出来，论文中就要说这件事。
-
-> 以我的理解来简单地说：MapReduce 编程模型就是把一个大的问题划分成很多小的问题，小的问题放在不同的机器上求解，然后再汇总到一起，就是最终我们要的结果。
->
-> map 就是处理小问题的函数，reduce 就是用来汇总结果的函数。
->
-> 例如 2.1 中会给出一个示例，要求在大量文章中统计每个单词出现次数。对于一个特定的单词来说，map 就是在单个文章统计其出现的次数，reduce 就是把 map 算出的这个单词在每个文章中出现的次数加起来，就是这个单词最终的计数。
 
 
 
@@ -266,15 +260,39 @@ MapReduce 接口可能有非常多种不同的实现，选择正确的实现依�
 
 
 
-*Map* 调用通过自动地划分输入数据为一组 *M 个部分*分布在多个机器上，这些输入部分可以在不同的机器上并行处理。*Reduce* 调用分布式的，其通过使用划分函数（例如 hash(key) mod R）划分中间 key 空间为 R 个部分来实现，R 的值和划分函数都是由用户指定的。
+*Map* 调用通过自动地划分输入数据为一组 *M 个 split* 分布在多个机器上，这些输入 split 可以在不同的机器上并行处理。*Reduce* 调用分布式的，其通过使用划分函数（例如 *hash(key) mod R*）划分中间 key 空间为 R 个 piece 来实现，R 的值和划分函数都是由用户指定的。
 
 下图展示了在我们的实现中，一个 MapReduce 操作的总体流程。
 
 ![Figure 1: Execution overview](https://gukaifeng.cn/posts/mapreduce-lun-wen-yue-du-bi-ji/MapReduce_Figure_1.png)
 
-当我们的程序调用 MapReduce 函数时，会依次发生下面的事（图中的编号标签与下面的序号相对应）：
+当我们的程序调用 *MapReduce* 函数时，会依次发生下面的事（图中的编号标签与下面的序号相对应）：
 
-1. 
+1. 用户程序中的 MapReduce 库先把输入文件划分为 M 个 split，每个 split 的大小一般是 16-64 MB（用户可以通过一个可选的参数控制）。然后 MapReduce 在一个机器集群上启动很多个程序的副本。
+2. 这些程序的副本中有一个是特殊的，叫做 master。master 给其他的 workers 分配工作。一共有 *M* 个 map 任务和 *R* 和 reduce 任务要分配，master 挑选出闲置的 workers，给每个闲置的 worker 指派一个 map 任务或 reduce 任务。
+3. 一个被指派了 map 任务的 worker 读对应的输入 split 的内容。其从输入数据中解析出 key/value 对，然后将每个 key/value 对传递给用户定义的 *Map* 函数，由 *Map* 函数生成的中间 key/value 对被缓存在内存中。
+4. 内存中缓存的中间 key/value 对会被周期性的写入本地磁盘，并且会被划分函数划分为 *R* 个部分。然后这些中间 key/value 在磁盘上的位置会被传递回 master，master 再把这些位置信息传递给 reduce workers。
+5. 当一个 reduce worker 收到了 master 提供的这些中间 key/value 对在磁盘上的位置信息，其就会使用远程过程调用，从 map workers 的本地磁盘中读取缓存的中间 key/value 对数据。当一个 reduce worker 读完了全部的中间数据，就会对这些中间数据按 key 排序，这样同一个 key 的所有数据就都放在了一起。排序是很有必要的，因为会有很多不同的 keys 映射到同一个 reduce 任务中。如果中间数据太大，无法全部放入内存，就会使用外部排序。
+6. reduce worker 遍历排序好的中间数据，将遇到的每个不同的中间 key 与与之对应的中间 values 集合传递给用户定义的 *Reduce* 函数。*Reduce* 函数的输出被附加到一个这个 reduce 分块的最终输出文件中。
+7. 当全部的 map 任务和 reduce 任务全部完成后，master 会唤起用户程序。此时，用户程序中的 *MapReduce* 调用结束，将继续执行用户程序中后面的代码。
+
+
+
+当所有的操作全部成功完成时，mapreduce 执行的输出是可用的，且被划分进 *R* 个输出文件（每有一个 reduce 任务，就会有一个输出文件，文件名由用户指定）。
+
+一般来说，用户不需要组合这 *R* 个输出文件为一个。用户常常会把这些输出文件作为输入传递给另一个 MapReduce 调用，或者在另一个分布式应用（可以处理划分进多个文件的输入的分布式应用）中使用这些输出文件。
+
+
+
+
+
+### 3.2. Master 数据结构
+
+
+
+### 3.3. 容错
+
+
 
 
 
