@@ -9,7 +9,7 @@ toc: true
 
 
 
-[MapReduce 论文原文](https://storage.googleapis.com/pub-tools-public-publication-data/pdf/16cb30b4b92fd4989b8619a61752a2387c6dd474.pdf)
+传送门: [MapReduce 论文原文](https://storage.googleapis.com/pub-tools-public-publication-data/pdf/16cb30b4b92fd4989b8619a61752a2387c6dd474.pdf)
 
 
 
@@ -248,6 +248,13 @@ MapReduce 接口可能有非常多种不同的实现，选择正确的实现依�
 
 这里要描述的是一种针对 Google 广泛使用的计算环境的实现：**使用交换式以太网连接到一起的大型商用 PC 集群。**
 
+这个环境有以下特征：
+
+1. 机器一般是双处理器的（两个 x86 处理器），运行 Linux 系统。每个机器 2-4 GB 内存。
+2. 使用商业网络硬件，在机器层面，一般有 100Mb/s 或 1Gb/s，但在整体二分带宽中平均要少得多。
+3. 一个集群包含数百数千个机器，因此有某个或某些机器故障是很常见的。
+4. 由直接连接到单个机器上的廉价的 IDE 磁盘提供存储。一个内部开发的分布式文件系统用于管理这些存在磁盘上的数据，这个分布式文件系统使用复制以在不可靠的硬件上保证可用性和可靠性。
+5. 用户提交作业给调度系统。每个作业包含一组任务，调度程序将作业映射到集群中一组可用的机器上。
 
 
 
@@ -255,8 +262,19 @@ MapReduce 接口可能有非常多种不同的实现，选择正确的实现依�
 
 
 
+### 3.1. 执行过程总览
 
 
+
+*Map* 调用通过自动地划分输入数据为一组 *M 个部分*分布在多个机器上，这些输入部分可以在不同的机器上并行处理。*Reduce* 调用分布式的，其通过使用划分函数（例如 hash(key) mod R）划分中间 key 空间为 R 个部分来实现，R 的值和划分函数都是由用户指定的。
+
+下图展示了在我们的实现中，一个 MapReduce 操作的总体流程。
+
+![Figure 1: Execution overview](https://gukaifeng.cn/posts/mapreduce-lun-wen-yue-du-bi-ji/MapReduce_Figure_1.png)
+
+当我们的程序调用 MapReduce 函数时，会依次发生下面的事（图中的编号标签与下面的序号相对应）：
+
+1. 
 
 
 
