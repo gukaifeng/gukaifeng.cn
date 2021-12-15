@@ -290,9 +290,29 @@ MapReduce 接口可能有非常多种不同的实现，选择正确的实现依�
 
 
 
+master 中维护了几个数据结构。对于每个 map 任务和 reduce 任务，master 中存储了其状态（*空闲*、*处理中*，或*已完成*），还有 worker 机器（非空闲的）的标识。
+
+master 是从 map 任务向 reduce 任务传递中间文件区域位置的管道，因此，对于每个已完成的 map 任务，master 要存储由这个 map 任务生成的 *R* 个中间文件区域的位置和大小。当 map 任务完成时，master 接收到中间文件区域的位置和大小更新信息，这些信息会逐步推送给正在处理 reduce 任务的 worker。
+
+
+
+
+
 ### 3.3. 容错
 
 
+
+因为 MapReduce 库是被设计用来在数百或数千台机器上帮助处理非常大量的数据的，所以这个库必须能优雅地容忍机器的故障。
+
+
+
+**Worker 故障**
+
+Master 会周期的 ping 每个 worker，如果在一定时间内没有收到某个 worker 的应答，master 就会把这个 worker 标记为故障。任何由这个故障的 worker 完成的 map 任务都会被重设为初始的*空闲*状态（未开始处理的状态），这样就可以由其他 worker 来重新调度。同样的，当一个 worker 发生故障时，任何正在由此 worker 处理的 map 和 task 任务都会重设回初始*空闲*状态，然后可以被其他 worker 重新调度。
+
+
+
+由故障的 worker 已经完成的 map 任务之所以也要重新执行，是因为这些 map 任务的输出是存在故障机器的本地磁盘上的，机器已经故障了，本地磁盘的里的东西也拿不出来了。而已由故障机器完成的 reduce 的任务就不需要重新执行，因为这些 reduce 任务的输出是存在全局文件系统(GFS)中的。（关于 GFS，有论文 [The Google File System](https://storage.googleapis.com/pub-tools-public-publication-data/pdf/035fc972c796d33122033a0614bc94cff1527999.pdf)，或许你也可以看看我的 [GFS 论文阅读笔记](#)。）
 
 
 
