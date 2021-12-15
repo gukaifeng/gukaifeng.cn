@@ -312,7 +312,9 @@ Master 会周期的 ping 每个 worker，如果在一定时间内没有收到某
 
 
 
-由故障的 worker 已经完成的 map 任务之所以也要重新执行，是因为这些 map 任务的输出是存在故障机器的本地磁盘上的，机器已经故障了，本地磁盘的里的东西也拿不出来了。而已由故障机器完成的 reduce 的任务就不需要重新执行，因为这些 reduce 任务的输出是存在全局文件系统(GFS)中的。（关于 GFS，有论文 [The Google File System](https://storage.googleapis.com/pub-tools-public-publication-data/pdf/035fc972c796d33122033a0614bc94cff1527999.pdf)，或许你也可以看看我的 [GFS 论文阅读笔记](#)。）
+由故障的 worker 已经完成的 map 任务之所以也要重新执行，是因为这些 map 任务的输出是存在故障机器的本地磁盘上的，机器已经故障了，本地磁盘的里的东西也拿不出来了。而已由故障机器完成的 reduce 的任务就不需要重新执行，因为这些 reduce 任务的输出是存在全局文件系统(GFS)中的。（关于 GFS，有论文 [The Google File System](https://storage.googleapis.com/pub-tools-public-publication-data/pdf/035fc972c796d33122033a0614bc94cff1527999.pdf)，或许你也可以看看我的 [GFS 论文阅读笔记](https://gukaifeng.cn/posts/gfs-lun-wen-yue-du-bi-ji/)。）
+
+
 
 
 
