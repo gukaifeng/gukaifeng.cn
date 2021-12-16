@@ -559,9 +559,11 @@ Y 轴是扫描输入文件的速率。这个速率随着越来越多的机器被
 
 ### 5.3. Sort
 
+*sort* 程序排序 $10^{10}$ 个 100 字节的记录（总共约 1TB 的数据）。这个程序是模仿 TeraSort 基准测试的。
 
+这个排序程序包含不超过 50 行的用户代码。一个三行的 *Map* 函数从文本行中提取一个 10 字节的排序 key，然后 emit 这个排序 key 和原始的文本行作为中间 key/value 对。
 
-
+![Figure 3: Data transfer rates over time for different executions of the sore program](https://gukaifeng.cn/posts/mapreduce-lun-wen-yue-du-bi-ji/MapReduce_Figure_3.png)
 
 ### 5.4. 候补任务的影响
 
