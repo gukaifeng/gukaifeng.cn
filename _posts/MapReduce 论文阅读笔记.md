@@ -561,7 +561,12 @@ Y 轴是扫描输入文件的速率。这个速率随着越来越多的机器被
 
 *sort* 程序排序 $10^{10}$ 个 100 字节的记录（总共约 1TB 的数据）。这个程序是模仿 TeraSort 基准测试的。
 
-这个排序程序包含不超过 50 行的用户代码。一个三行的 *Map* 函数从文本行中提取一个 10 字节的排序 key，然后 emit 这个排序 key 和原始的文本行作为中间 key/value 对。
+这个排序程序包含不超过 50 行的用户代码。一个三行的 *Map* 函数从文本行中提取一个 10 字节的排序 key，然后 emit 这个排序 key 和原始的文本行作为中间 key/value 对。我们使用内置的 *Identity* 函数作为 *Reduce* 运算符。
+此函数传递未修改过的中间键 key/value 对作为输出 key/value 对。 最终排序的输出被写入一组 2 路复制的 GFS 文件（即，有 2 TB 被写入作为程序的输出）。
+
+在计算开始之前，我们把输出数据划分为 64MB 大小的块（$M=1500$），把排序后的输出划分进 4000 个文件中（$R=4000$）。划分函数使用 key 开头的一些字节来把其划分进 R 个块中的一个。
+
+我们这个基准测试的划分函数是已经知道 key 的分布的。在一个通用的排序程序中，我们会添加一个预传递 MapReduce 操作，这个预传递操作会收集 key 的样本然后使用样本中 key 的分布信息来计算最终排序传递的划分点。
 
 ![Figure 3: Data transfer rates over time for different executions of the sore program](https://gukaifeng.cn/posts/mapreduce-lun-wen-yue-du-bi-ji/MapReduce_Figure_3.png)
 
