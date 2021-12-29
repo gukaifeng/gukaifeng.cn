@@ -81,6 +81,12 @@ hierarchically adv. 分层次地
 
 invaluable adj. 无价的，极为宝贵的
 
+flaky adj. 薄片的，不稳定的，脆弱的
+
+lease 出租，租用
+
+orphan n. 孤儿 v. 使成为孤儿 adj. 孤儿的
+
 ### 2.1. 假想
 
 GFS 在设计的时候有一些假想，即预期要实现的目标。
@@ -116,5 +122,13 @@ Snapshot 和 record append 会在后面进一步讨论。
 
 ### 2.3. 架构
 
+一个 GFS 集群包含单个 *master* 和多个 *chunkservers*，允许多个 *client* 访问。如 Figure 1 所示。
+
 ![Figure 1: GFS Architecture](https://gukaifeng.cn/posts/gfs-lun-wen-yue-du-bi-ji/GFS_Figure_1.png)
+
+每个 master 或 chunkserver 一般都是一个商品 Linux 机器中运行着的一个用户级服务进程。在同一个机器上同时运行一个 chunkserver 和一个 client 是很容易，但前提是机器资源允许，并且你可以接受运行不稳定的应用程序代码导致的更低的可靠性。
+
+GFS 系统中的文件会被划分为固定大小的 chunks。每个 chunk 使用一个不可变的、全局唯一的 64 位 chunk 句柄来标识，这个 chunk 句柄是在 chunk 创建时由 master 指定的。Chunkservers 在本地磁盘中以 Linux 文件的形式存储 chunks，并读取或写入有 chunk 句柄和字节范围指定的块数据。为了可靠性，每个 chunk 都在多个 chunkservers 上有复制。默认是 3 个复制，但用户可以文件命名空间的不同部分指定不同的复制级别。
+
+master 维护所有文件系统元数据，包括命名空间、访问控制信息、从文件到 chunk 的映射以及 chunks 当前的位置。master 也会控制系统范围内的活动，比如 chunk 租用管理，孤儿 chunks 的垃圾回收，以及在 chunkservers 之间迁移 chunks。master 会定期在 HeartBeat 消息中与每个 chunkservers 通信，以给 chunkservers 指令并收集其状态信息。
 
