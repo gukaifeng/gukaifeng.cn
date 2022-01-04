@@ -21,7 +21,8 @@ tags: [Python]
 3. 比较 new_size 和 target_size；
 4. 如果 new_size <= target_size，结束。否则重复 2 - 4。
 
-
+同时我们还需要设定一个最大压缩次数，或者等价的概念，  
+因为有可能我们的图片无法压缩至目标大小。
 
 ---
 
