@@ -21,9 +21,14 @@ $$
 $$
 即有
 $$
-new\_width = width \times new\_height \div height \\
+new\_width = width \times new\_height \div height
+$$
+
+$$
 new\_height = height \times new\_width \div width
 $$
+
+
 
 ---
 
@@ -57,4 +62,5 @@ new_img.save(new_img_path)  # 保存缩放后的图片
 
 上面这种方式，是无损的，如果你想要的就是无损的缩放，那么 ok。
 
-但是如果你想要图片小一点，就需要压缩一下图片，看 [Python 压缩图片大小（非尺寸）]()。
+但是如果你想要图片小一点，就需要再压缩一下图片（即先按本文改尺寸，再压缩），看 [Python 压缩图片大小（非尺寸）](https://www.gukaifeng.cn/posts/python-ya-suo-tu-pian-da-xiao-fei-chi-cun/)。
+
