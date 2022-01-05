@@ -21,11 +21,11 @@ $$
 $$
 即有
 $$
-new\_width = width \times new\_height \div height
+new \_ width = width \times new\_height \div height
 $$
 
 $$
-new\_height = height \times new\_width \div width
+{new}\_{height} = height \times new\_width \div width
 $$
 
 
