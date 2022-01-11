@@ -20,7 +20,103 @@ Go 语言提供了关于 json 的标准库包 `encoding/json`。
 
 ## 1. 编码
 
+编码分为两步：
 
+1. 创建一个新的 json 文件；
+2. 将数据结构中的内容按格式写入 json 文件。
+
+第二步的写入，首先要使用 json.NewEncoder() 创建一个编码器，其参数是我们新创建的 json 文件指针。然后编码要使用编码器中的 `Encode()` 方法，其参数是我们要编码进 json 的内容。
+
+我们看代码：
+
+```go
+package main
+
+import (
+	"encoding/json"
+	"log"
+	"os"
+)
+
+type RepoArr struct {
+	Repo1 string
+	Repo2 string
+	Repo3 string
+}
+
+type Config struct {
+	Name   string
+	Blog   string
+	Repo   RepoArr
+	StrArr []string
+}
+
+func main() {
+	jsonPath := "./myinfo.json"
+
+	info := []Config{{"gukaifeng", "https://gukaifeng.cn", RepoArr{"git@github.com:gukaifeng/hexo.git", "git@github.com:gukaifeng/hexo.git_2", "git@github.com:gukaifeng/hexo.git_3"}, []string{}},
+		{"gukaifeng2", "https://gukaifeng.cn2", RepoArr{"git@github.com:gukaifeng/hexo.git2", "git@github.com:gukaifeng/hexo.git2_2", "git@github.com:gukaifeng/hexo.git2_3"}, []string{"string-test-1", "string-test-2"}}}
+
+	jsonFile, err := os.Create(jsonPath) // 创建 json 文件
+	if err != nil {
+		log.Printf("create json file %v error [ %v ]", jsonPath, err)
+		return
+	}
+	defer jsonFile.Close()
+
+	encode := json.NewEncoder(jsonFile) // 创建编码器
+	err = encode.Encode(info)           // 编码
+	if err != nil {
+		log.Printf("encode error [ %v ]", err)
+		return
+	}
+}
+
+```
+
+我们执行代码后，会在 go 程序同级目录发现一个新的 `myinfo.json` 文件，其内容如下：
+
+```json
+[{"Name":"gukaifeng","Blog":"https://gukaifeng.cn","Repo":{"Repo1":"git@github.com:gukaifeng/hexo.git","Repo2":"git@github.com:gukaifeng/hexo.git_2","Repo3":"git@github.com:gukaifeng/hexo.git_3"},"StrArr":[]},{"Name":"gukaifeng2","Blog":"https://gukaifeng.cn2","Repo":{"Repo1":"git@github.com:gukaifeng/hexo.git2","Repo2":"git@github.com:gukaifeng/hexo.git2_2","Repo3":"git@github.com:gukaifeng/hexo.git2_3"},"StrArr":["string-test-1","string-test-2"]}]
+```
+
+我们的程序将 json 写成了一行，这不影响解析等操作，不过我们看着费劲。
+
+格式化一下（你可以使用任意编辑器进行格式化操作），如下：
+
+```json
+[
+    {
+        "Name": "gukaifeng",
+        "Blog": "https://gukaifeng.cn",
+        "Repo": {
+            "Repo1": "git@github.com:gukaifeng/hexo.git",
+            "Repo2": "git@github.com:gukaifeng/hexo.git_2",
+            "Repo3": "git@github.com:gukaifeng/hexo.git_3"
+        },
+        "StrArr": []
+    },
+    {
+        "Name": "gukaifeng2",
+        "Blog": "https://gukaifeng.cn2",
+        "Repo": {
+            "Repo1": "git@github.com:gukaifeng/hexo.git2",
+            "Repo2": "git@github.com:gukaifeng/hexo.git2_2",
+            "Repo3": "git@github.com:gukaifeng/hexo.git2_3"
+        },
+        "StrArr": [
+            "string-test-1",
+            "string-test-2"
+        ]
+    }
+]
+```
+
+
+
+上面的示例中包含了 json 中的各种情况的项的示例，按需使用就好。
+
+我们可以发现，go 写入的 json，key 与 value 是和我们的写入数据结构体中的成员名与其值相对应的！
 
 
 
@@ -28,14 +124,14 @@ Go 语言提供了关于 json 的标准库包 `encoding/json`。
 
 ## 2. 解码
 
-解码分两步：
+同样的，解码也是分两步：
 
 1. 打开待解码的 json 文件；
-2. 使用 json 包提供的方法解码 json 文件。
+2. 使用 json 包提供的方法解码 json 文件到数据结构中。
 
+第 2 步的解码首先要使用 `json.NewDecoder()` 创建一个解码器，其参数是我们打开的 json 文件指针。然后解码要使用解码器中的 `Decode()` 方法，其参数是将要存储解码信息的数据结构对象。
 
-
-
+我们下面通过具体例子来解释。
 
 ### 2.1. 只有一组 json 项
 
@@ -167,7 +263,7 @@ type Config struct { // 这里成员的顺序与 json 文件中的顺序不一�
 func main() {
 	jsonPath := "./myinfo.json"
 
-	jsonFile, err := os.Open(jsonPath)
+	jsonFile, err := os.Open(jsonPath) // 打开 json 文件
 	if err != nil {
 		log.Printf("open json file %v error [ %v ]", jsonPath, err)
 		return
@@ -175,8 +271,8 @@ func main() {
 	defer jsonFile.Close()
 
 	var conf []Config
-	decoder := json.NewDecoder(jsonFile)
-	err = decoder.Decode(&conf)
+	decoder := json.NewDecoder(jsonFile) // 创建 json 解码器
+	err = decoder.Decode(&conf)          // 解码 json 文件
 	if err != nil {
 		log.Printf("decode error [ %v ]", err)
 		return
