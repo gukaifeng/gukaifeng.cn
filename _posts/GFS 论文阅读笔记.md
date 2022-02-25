@@ -132,7 +132,7 @@ GFS 中文件在目录中以层次结构组织，通过路径名区分。
 
 GFS 支持常用操作以创建(create)、删除(delete)、打开(open)、关闭(close)、读(read)和写(write)文件。
 
-此外，GFS 中还有 *snapshot* 和 *recore append* 操作。Snapshot 以一个很低的开销创建一个文件的或者一个目录树的拷贝。Record append 允许多个客户端并发地追加写入同一个文件，且确保每个客户端的写入操作都是原子的。Record append 对实现多路合并结果、生产者消费者队列很有用，因为很多客户端可以同时追加写入，而不需要额外的锁。Google 发现在构建大型分布式应用时，这些类型的文件是非常有用的。
+此外，GFS 中还有 *snapshot* 和 *record append* 操作。Snapshot 以一个很低的开销创建一个文件的或者一个目录树的拷贝。Record append 允许多个客户端并发地追加写入同一个文件，且确保每个客户端的写入操作都是原子的。Record append 对实现多路合并结果、生产者消费者队列很有用，因为很多客户端可以同时追加写入，而不需要额外的锁。Google 发现在构建大型分布式应用时，这些类型的文件是非常有用的。
 
 Snapshot 和 record append 会在后面进一步讨论。
 
