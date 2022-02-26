@@ -123,6 +123,16 @@ or so 左右（eg: in a minute or so，在 1 分钟左右）
 
 catastrophe n. 灾难
 
+interference n. 干预
+
+interspersed adj. 点缀的，散置的
+
+mingle v. 混合
+
+fragment n. 碎片，片段
+
+distinguish v. 区别，辨别
+
 ### 2.1. 假想（目标）
 
 GFS 在设计的时候有一些假想，即预期要实现的目标。
@@ -280,9 +290,26 @@ GFS 有一个宽松的一致性模型，很好地支持我们的高度分布式�
 
 ![Table 1: File Region State After Mutation](https://gukaifeng.cn/posts/gfs-lun-wen-yue-du-bi-ji/GFS_Table_1.png)
 
-如果所有的客户端总是读相同的数据（无关读的是哪个副本），那这个文件域是一致的。
+* 对于一个文件域，如果所有的客户端总是看到相同的数据（不论看的是哪个副本），那这个文件域是一致的 *consistent*。
 
+* 对于一个文件域，在文件数据修改后，如果这个修改是一致的，并且客户端将看到这个修改写入的全部内容，那么这个文件域就是 *defined*。
 
+（个人理解：对于一个文件域，只要所有客户端看到的数据都是一样的，那这个域就是 consistent 的。在 consistent 的前提下，如果所有修改都已经被写入，就是 defined 的。consistent 是 defined 的子集。即 defined 的一定是 consistent 的，但 consistent 的不一定是 defined 的（上表中的 Recored Append 在后面单独说）。）
+
+当一个修改成功，且没有受到并发写者的干预（即串行的修改），那么受影响的域是 *defined* 的（且含义一致）：即所有的客户端将总是能看到这个修改写入了什么。
+
+并发的成功的修改使得受影响的域是 *undefined* 但 *consistent*：即所有的客户端看到的数据是一样的，但这并不意味着每个修改都已经被写入。一般来说，写入的内容由多个修改的混合片段组成。
+
+一个失败的修改会使得文件域 inconsistent（因此也是 undefined）：不同的客户端在不同的时间可能看到不同的数据。我们在下面描述我们的应用程序如何辨别 defined 的域和 undefined 的域。另外，应用程序不需要进一步区分不同种类的 undefined 的区域。
+
+数据修改可能是 *write* 或 *record appends*。
+
+* *write* 使数据被写入在一个由应用程序指定的文件偏移处。
+* *record append* 使数据（即 *record*）被**原子地**的追加至少一次（即便是并发修改），但数据写入的文件偏移由 GFS 选择（详见 3.3）。
+
+作为对比，一个普通的 append 仅仅是一个在客户端认为是当前文件末尾的偏移处的 write。
+
+偏移会被返回给客户端，并且偏移标志着包含写入 record 的 *defined* 的区域的开始。此外，GFS 可能会在期间插入填充或 record 的复制，填充或 record 的复制占据的域被认为是 *inconsistent* 的，并且比用户数据的总量而言微不足道。
 
 #### 2.7.2. 对应用程序的影响
 
