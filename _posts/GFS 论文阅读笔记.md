@@ -147,11 +147,17 @@ perspective n. 视角，看法  adj. 透视的
 
 keep ... from ... 阻止
 
-lease v. 租赁
+lease v. 租约
 
 grant v. 授予，同意，承认
 
+piggybacked v. 驮运，附带
 
+revoke v. 撤回，撤销
+
+decouple v. 使分离
+
+consecutive adj. 连续的，不间断的
 
 ### 2.1. 假想（目标）
 
@@ -367,9 +373,25 @@ Google 设计 GFS 系统交互要最小化在所有的操作中对 master 的涉
 
 
 
-### 3.1. 租赁和修改顺序
+### 3.1. 租约和修改顺序
 
-像 write 或 append 的修改操作是会改变 chunk 的内容或者元数据的。每次修改都会应用在 chunk 的所有副本上。我们使用租赁来维护一个在副本之间一致的修改顺序。master 授予一个 chunk 租约给副本之一，我们称这个副本为 *primary*。Primary 为所有修改挑选一个顺序给 chunk。当应用修改时，所有的副本都遵循这个顺序。因此，全局修改顺序定义为，先由 master
+
+
+像 write 或 append 的修改操作是会改变 chunk 的内容或者元数据的。每次修改都会应用在 chunk 的所有副本上。我们使用租约来维护一个在副本之间一致的修改顺序。master 授予一个 chunk 租约给副本之一，我们称这个副本为 *primary*。Primary 为所有修改挑选一个顺序给 chunk。当应用修改时，所有的副本都遵循这个顺序。<font color=red>(这里不太确定，回头再来确认）</font>因此，全局修改顺序先由 master 选择的租约授予顺序定义，在租期内由 priamry 指定的序列号定义。
+
+租约机制是设计用来最小化 master 的管理开销的。一个租约有一个初始的 60s 的超时时间。然而，只要 chunk 被修改，primary 就可以向 master 请求延时，并且通常会收到延时的许可，并且这不限制次数。这些扩展请求与授权是附带在 master 和所有 chunkservers 之间交换的常规的心跳(*HeartBeat*)信息中的。master 有时可能会尝试在一个租约到期前将其撤销（例如，master 想用禁用一个正在重命名的文件上的修改）。即便 master 与一个 primary 失去了联系，master 也可以在旧的租约到期后安全地向另一个副本授予租约。
+
+在 Figure 2 中，我们通过列出 write 控制流描述了这个过程，并且用数字标记了步骤顺序。
+
+![Figure 2: Write Control and Data Flow](https://gukaifeng.cn/posts/gfs-lun-wen-yue-du-bi-ji/GFS_Figure_2.png)
+
+1. 客户端向 master 询问，哪个 chunkserver 持有要访问的 chunk 当前的租约，以及其他副本的位置。如果目前没有任何一个 chunkserver 持有要访问的 chunk 的租约，master 就会选择一个副本，授予一个租约（没有在图上显示出）。
+2. master 向客户端回复 primary 的标识和其他副本（图中 *secondary* 标记，所有除了 primary 的副本都是 secondary）的位置。客户端缓存这个数据，用于将来的修改操作。只有当 primary 变得不可达，或副本不再持有租约时，客户端才需要再次联系 master。
+3. 客户端把数据推送给所有的副本，客户端可以以任意的顺序推送。每个 chunkserver 将会在一个内部的 LRU buffer 缓存这些数据，直到这些数据被使用或老化。通过将数据流与控制流解耦，我们可以通过基于网络拓扑调度昂贵的数据流来提高性能，而不管哪个 chunkserver 是 primary 的。我们会在 3.2 进一步讨论这一点。
+4. 一旦所有的副本都应答收到了数据，客户端就向 primary 发送一个 write 请求。这个请求标识了早前推送给所有副本的数据。primary 给其收到的所有修改指定连续的序列号，由于这些修改可能来自多个客户端，所有进行编号是有必要的。primary 按着序号的顺序将修改应用到自己的本地状态。
+5. primary 把 write 请求传递给所有的 secondary 副本，每个 secondary 副本以由 primary 指定的同样的序列号顺序应用修改。
+6. 向 primary 回复的所有 secondary，表明他们已经完成了操作。
+7. primary 回复客户端。在任何副本上遇到的任何错误都会报告给客户端。在有错误的情况中，write 可能已经在 primary 和部分 secondary 中成功了。（如果是 primary 这里失败了，那么其就不会指定序列号，也不会向 secondary 传递命令。）客户端请求就会被认为已经失败，已经修改完的域就会处于一个  *inconsistent* 的状态。我们的客户端代码通过重试失败的修改来处理这种错误，即将在步骤 3 到 7 进行几次尝试，如果仍然没有成功，就会退回到 write 的开始处进行重试。
 
 
 
