@@ -1,7 +1,7 @@
 ---
 title: GFS 论文阅读笔记
 date: 2021-12-28 23:31:39
-updated: 2021-12-28 23:31:39
+updated: 2022-02-27 23:31:39
 categories: [论文阅读笔记]
 tags: [GFS,论文,分布式]
 toc: true
@@ -148,6 +148,10 @@ perspective n. 视角，看法  adj. 透视的
 keep ... from ... 阻止
 
 lease v. 租赁
+
+grant v. 授予，同意，承认
+
+
 
 ### 2.1. 假想（目标）
 
@@ -365,7 +369,7 @@ Google 设计 GFS 系统交互要最小化在所有的操作中对 master 的涉
 
 ### 3.1. 租赁和修改顺序
 
-
+像 write 或 append 的修改操作是会改变 chunk 的内容或者元数据的。每次修改都会应用在 chunk 的所有副本上。我们使用租赁来维护一个在副本之间一致的修改顺序。master 授予一个 chunk 租约给副本之一，我们称这个副本为 *primary*。Primary 为所有修改挑选一个顺序给 chunk。当应用修改时，所有的副本都遵循这个顺序。因此，全局修改顺序定义为，先由 master
 
 
 
