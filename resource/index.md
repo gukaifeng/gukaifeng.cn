@@ -1,0 +1,187 @@
+---
+title: 我的技术学习资源站
+date: 2021-09-24 01:07:19
+updated: 2021-12-22 08:48:40
+categories: []
+tags: []
+toc: true
+
+---
+
+
+
+这个文章记录了我在学习过程中所阅读过的文档、书籍以及各类资源站。
+
+
+
+<!--more-->
+
+
+
+## 1. 编程语言
+
+
+
+### 1.1 C/C++
+
+**标准库参考**
+
+1. [cplusplus/reference](http://www.cplusplus.com/reference/)
+2. [cppreference 英文](https://en.cppreference.com/)
+3. [cppreference 中文](https://zh.cppreference.com/)
+
+
+
+### 1.2. Rust
+
+**官网**
+
+1. [Rust 英文官网](https://www.rust-lang.org/)
+2. [Rust 中文官网](https://www.rust-lang.org/zh-CN/)
+
+**书籍（文档）**
+
+1. [《The Rust Programming Language》官网原版](https://doc.rust-lang.org/book/#the-rust-programming-language)
+2. [《Rust 程序语言设计》非官方译本（建议对照原版一起看）](https://kaisery.github.io/trpl-zh-cn/)
+3. [Rust 标准库 std 文档](https://doc.rust-lang.org/stable/std/)
+
+
+
+**Playground**
+
+1. [Rust Playground](https://play.rust-lang.org/)
+
+
+
+### 1.3. Golang
+
+**官网**
+
+1. [Golang 英文官网](https://go.dev/)
+2. [Golang 中文官网](https://go-zh.org/)
+
+**书籍（文档）**
+
+1. [Go Documentation](https://go.dev/doc/)
+2. [Go Documentation 中文](https://go-zh.org/doc/)
+
+**教程**
+
+1. [A Tour of Go](https://go.dev/tour/welcome/1)
+1. [A Tour of Go 中文](https://tour.go-zh.org/)
+
+**Playground**
+
+1. [Go Playground](https://go.dev/play/)
+
+
+
+
+
+## 2. 数据库
+
+
+
+### 2.1. RocksDB
+
+
+
+1. [RocksDB 官网](https://rocksdb.org/)
+2. [RocksDB 中文网（非官方）](https://rocksdb.org.cn/)
+3. [RocksDB Github](https://github.com/facebook/rocksdb)
+4. [RocksDB Wiki](https://github.com/facebook/rocksdb/wiki)
+
+
+
+
+
+### 2.2. 其他
+
+1. [Awesome Database Learning](https://github.com/pingcap/awesome-database-learning)
+
+
+
+
+
+
+
+## 3. 分布式系统
+
+
+
+
+
+**官网**
+
+1. [Raft 一致性算法官网](https://raft.github.io/)
+
+
+
+**论文**
+
+1. Google 三驾马车 论文
+
+    1. [GFS](https://storage.googleapis.com/pub-tools-public-publication-data/pdf/035fc972c796d33122033a0614bc94cff1527999.pdf) (2003)
+    2. [MapReduce](https://storage.googleapis.com/pub-tools-public-publication-data/pdf/16cb30b4b92fd4989b8619a61752a2387c6dd474.pdf) (2004)
+    3. [Bigtable](https://storage.googleapis.com/pub-tools-public-publication-data/pdf/68a74a85e1662fe02ff3967497f31fda7f32225c.pdf) (2006)
+
+2. 一个实用的容错虚拟机系统设计
+
+    [The Design of a Practical System for Fault-Tolerant Virtual Machines](http://nil.csail.mit.edu/6.824/2020/papers/vm-ft.pdf)
+
+3. Raft 一致性算法论文
+
+    [In Search of an Understandable Consensus Algorithm (Extended Version)](http://nil.csail.mit.edu/6.824/2017/papers/raft-extended.pdf)
+
+4. Raft 一致性算法论文的几个中文翻译版本（建议对照原版一起看）
+
+    https://github.com/gukaifeng/raft-zh_cn/blob/master/raft-zh_cn.md
+
+    https://github.com/gukaifeng/raft_translation/blob/master/raft_translation.pdf
+
+
+
+**课程**
+
+1. [MIT6.824: Distributed Systems（官方最新）](https://pdos.csail.mit.edu/6.824/)
+2. [MIT6.824: Distributed Systems（官方 2020）](http://nil.csail.mit.edu/6.824/2020/)
+3. [MIT6.824 2020 YouTube](https://www.youtube.com/playlist?list=PLrw6a1wE39_tb2fErI4-WkMbsvGQk9_UB)
+4. [MIT6.824 2020 哔哩哔哩（Simtoco译）（后面不全，适合先了解）](https://www.bilibili.com/video/av91748150)
+5. [MIT6.824 2020 Simtoco](https://www.simtoco.com/#/albums?id=1000019)
+6. [MIT6.824 2021 追加课程 Simtoco](https://www.simtoco.com/#/albums?id=1000044)
+7. [MIT6.824 延伸解读 Simtoco](https://www.simtoco.com/#/albums?id=1000046)
+
+
+
+**其他**
+
+1. [Raft 可视化教程](http://thesecretlivesofdata.com/raft/)
+
+
+
+
+
+## 4. 数据结构
+
+1. [LSM 树论文](https://www.cs.umb.edu/~poneil/lsmtree.pdf)
+
+
+
+
+
+## 5. 工具
+
+### 5.1. 在线翻译
+
+1. [谷歌翻译](https://translate.google.com/)
+2. [有道翻译](https://fanyi.youdao.com/)
+3. [百度翻译](https://fanyi.baidu.com/)
+
+
+
+
+## N. 网站收藏
+
+1. [shields.io](https://shields.io/): 提供快速和可扩展的信息图像作为徽章，可用于 GitHub, Travis CI, Jenkins, WordPress 等服务。你可以使用这些徽章来跟踪项目的状态，或用于推广目的。
+
+2. [fontawesome.com](https://fontawesome.com/): 在你的网站上使用从 Font Awesome 获得的矢量 icons 和社交 logo，这是网络上最流行的图标集和工具包。
