@@ -36,172 +36,6 @@ GFS 是 Google 提出的一个文件系统，其是分布式的，主要用于�
 
 
 
-opportunity n. 机会，机遇
-
-allude v. 略加提及
-
-lay out 展示
-
-promptly adv. 迅速地
-
-contiguous adj. 连续的
-
-arbitrary adj. 任意的
-
-conscious adj. 意识到的
-
-Performance-conscious 注重表现的，追求性能的
-
-steadily adv. 逐渐地
-
-forth adv. 向前
-
-go back and forth 来回走动
-
-seldom adv. 很少
-
-well-defined adj. 定义明确的
-
-semantics n. 语义学
-
-essential adj. 基本的，必不可少的
-
-simultaneously adv. 同时地
-
-sustain v. 维持、保持
-
-sustained adj. 持续的，持久的
-
-latency n. 延迟
-
-place a premiun on ... 重视 ...
-
-stringent adj. 严格的，严厉的
-
-hierarchically adv. 分层次地
-
-invaluable adj. 无价的，极为宝贵的
-
-flaky adj. 薄片的，不稳定的，脆弱的
-
-lease 出租，租用
-
-orphan n. 孤儿 v. 使成为孤儿 adj. 孤儿的
-
-coherence n. 一致性
-
-sophisticated adj. 复杂的
-
-bottleneck n. 瓶颈，障碍物
-
-translate A into B 把 A 翻译成 B
-
-sidestep v. 回避
-
-fragmentation n. 碎片
-
-comfortably adj. 舒服的
-
-stagger 交错
-
-poll v.（计算机）轮询
-
-no point 没有意义的
-
-eternally adv. 总是；永恒地
-
-even if 虽然；即使
-
-respond v. 回应
-
-thereby adv. 因此，从而
-
-throughput n. 吞吐量
-
-minute n. 分钟
-
-or so 左右（eg: in a minute or so，在 1 分钟左右）
-
-catastrophe n. 灾难
-
-interference n. 干预
-
-interspersed adj. 点缀的，散置的
-
-mingle v. 混合
-
-fragment n. 碎片，片段
-
-distinguish v. 区别，辨别
-
-purge v. 清除
-
-premature adj. 过早的
-
-irreversibly adv. 不可逆地
-
-accommodate v. 提供住所、支持、容纳、适应
-
-###### resilient adj. 有弹性的
-
-perspective n. 视角，看法  adj. 透视的
-
-keep ... from ... 阻止
-
-lease v. 租约
-
-grant v. 授予，同意，承认
-
-piggybacked v. 驮运，附带
-
-revoke v. 撤回，撤销
-
-decouple v. 使分离
-
-consecutive adj. 连续的，不间断的
-
-straddles v. 跨过
-
-interleave v. 交错
-
-in a pipelined fashion 以流水线的方式
-
-outbound adj. 向外去的
-
-among prep. 在 ... 当中
-
-congestion n. 拥堵
-
-full-duplex 全双工
-
-elapse v. 消逝 n. 时间的流逝
-
-serializable adj. 可串行化
-
-complicated adj. 复杂的
-
-worstcase n. 最坏的情况
-
-bytewise 逐字节
-
-readily adv. 轻而易举地，迅速地
-
-instantaneously adv. 立即地，即刻
-
-interruption n. 打断
-
-copy-on-write n. 写时复制
-
-outstanding adv. 杰出的，未完成的
-
-is about to 要，即将
-
-reclaim v. 回收
-
-alias n. 别名
-
-suffice v. 足以...
-
 ### 2.1. 假想（目标）
 
 GFS 在设计的时候有一些假想，即预期要实现的目标。
@@ -512,11 +346,25 @@ Record append 是修改操作的一种，也适合我们 3.1 中说到的控制�
 
 ### 4.2. 副本放置
 
+一个 GFS 集群高度分布在多个级别上。GFS 集群往往在很多个机器机架上含有数百个 chunkservers 。这些 chunkservers 可能轮流被来自相同或不同机架上的数百个客户端连接。在不同机架上的两个机器间通信可能经过一个或多个网络交换机。此外，出入一个机架的带宽可能小于这个机架中所有机器的总带宽。多级分布提出了一个特别的挑战，即在保证可伸缩性、可靠性和可用性的前提下，分发数据。
+
+chunk 副本的放置策略服务于两个目的：(1) 最大化数据的可靠性和可用性，(2) 最大化网络带宽利用率。为了实现这两个目的，仅仅跨机器传播副本是不够的，因为这只是能抵御磁盘或机器故障，以及能充分利用每个机器的网络带宽。我们必须也跨机架传播 chunk 副本，这可以确保即便整个机架都损坏了或者离线了（例如，由于共享资源故障，如网络开关或电源电路）。这也意味着，关于一个 chunk 的流量，尤其是读，可以充分利用多个机架的总带宽。另一方面，写流量必须流经多个机架，这是一个我们乐意看到的权衡。
 
 
 
+### 4.3. 创建(Creation)、重新复制(Re-replication)、重新平衡(Rebalancing)
 
-### 4.3. 创建、再复制、再平衡
+chunk 副本将在下面三种情况下创建：chunk 创建、重新赋值、重新平衡。
+
+master 在**创建(*create*)**一个 chunk 时会选择一个位置来放置初始的空的副本<font color=red>（这里没理解初始的空的是啥意思）</font>。这考虑到了几个因素，(1) 我们想把新的副本放在磁盘空间利用率低于平均值的 chunkservers 上。随着时间推移，这个方法会使得各个 chunkservers 上的磁盘利用率相等。(2) 我们想限制在每个 chunkserver 上“最近”创建的数量。尽管创建操作本身开销很低，但创建操作会可靠的预测即将到来的大量的写流量，因为 chunk 是在写操作有要求时创建（这里就是说，在一个 chunkserver 上创建一个新的 chunk，创建操作本身开销不大，但是接下来往往会有写操作，如果“最近”创建的 chunk 太多，那么意味着后面会有太多的写流量，这会加重这个 chunkserer 的压力）。在我们的 append 一次读多次(append-once-read-many) 的工作负载中，当 chunk 被完全写入完成以后，通常会变成实际上的只读。(3) 像上面讨论的那样，我们想在跨机架传播一个 chunk 的副本。
+
+当副本的有效数量低于用户指定的值时，master **重新复制(*re-replicates*)**一个 chunk。可能导致重新复制操作发生的原因多种多样：(1) 一个 chunkserver 变得不可用，则会给 master 报告它上面的副本可能损坏；(2) chunkserver 上的磁盘之一由于错误变得不可用；(3) 或者用户指定的副本数量增加了。
+
+基于下面几个因素需要被重新复制的 chunk 会被优先处理：(1) 当前副本数量与目标副本数量相差太多。例如，相比丢失了一个副本的 chunk，我们会更优先处理丢失了两个副本的 chunk 的重新复制操作。(2) 我们倾向先处理存在的文件的 chunk 的重新复制操作，而不是最近删除的文件（详见 4.4）。(3) 最后，为了最小化故障对正在运行的应用程序带来的影响，我们提高任何使得客户端进程阻塞的 chunk 的优先级。
+
+master 选择优先级最高的 chunk，通过指示一些 chunkservers 直接从一个现存的有效副本拷贝 chunk 数据来“克隆”这个 chunk。新副本的放置策略的目标和新建 chunk 的放置类似：均衡磁盘空间利用率，限制任一单个 chunkserver 上的活跃的克隆操作数，以及跨机架传播副本。为了防止克隆流量大于客户端流量太多，master 同时在整个集群上和每个 chunkserver 上限制活跃克隆操作的数量。此外，每个 chunkserver 通过减少其向源 chunkserver 的读请求来限制其花在每个克隆操作上的带宽总量。
+
+最后，master 定期**重新平衡(*rebalances*)** 副本：master 检查当前副本的分布，然后移动一些副本，为了更好的利用磁盘空间，以及更好的负载均衡。通过这个过程，master 也可以逐渐填满一个新的 chunkserver，而不是立即用新的 chunks 和随之而来的大量写流量将其淹没。新副本的放置标准也和上面讨论过的类似。此外，master 也必须选择要移除哪个现存的副本。一般来说，master 倾向于移除那些空闲空间低于平均值的 chunkservers 上的 chunk，以平衡各个 chunkserver 磁盘空间的使用。
 
 
 
