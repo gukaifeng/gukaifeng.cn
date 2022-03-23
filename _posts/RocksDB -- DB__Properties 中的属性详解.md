@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 
 上面的代码演示了获取 rocksdb 属性值的方法之一。
 
-关于代码中 `"rocksdb.num-files-at-level2"` 的介绍详见[第 1 小节：kNumFilesAtLevelPrefix]()
+关于代码中 `"rocksdb.num-files-at-level2"` 的介绍详见 [1. kNumFilesAtLevelPrefix](https://gukaifeng.cn/posts/rocksdb-db-properties-zhong-de-shu-xing-xiang-jie/#1-kNumFilesAtLevelPrefix)
 
 我这里上面代码执行后的输出如下：
 
@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 
 
 
-##### 1. kNumFilesAtLevelPrefix
+### 1. kNumFilesAtLevelPrefix
 
 **定义**
 
