@@ -146,7 +146,7 @@ rocksdb.sstables
 
 **含义**
 
-SST 文件的总结信息。是一个多行 stirng。
+SST 文件的**简略**信息。是一个多行 stirng。
 
 具体信息形如：
 
@@ -223,6 +223,18 @@ SST 文件的总结信息。是一个多行 stirng。
 ```
 
 可以看到，每个 level 都有描述，即便没有 sst 文件的 levle 4,5,6 中也同样有对应的标题。
+
+我们这里取其中一条来分析：
+
+```
+ 328:30430428[84038683 .. 85066084]['6B65792D746573743638373435353539' seq:84038683, type:1 .. '6B65792D746573743639373732393630' seq:85066084, type:1](0)
+```
+
+这是上面 level 1 的第 1 条信息。
+
+信息一开始的 `328` 表示 sst 文件的编号，你可以在数据库目录里找到对应的 sst 文件，就像下图这样。
+
+![](https://gukaifeng.cn/posts/rocksdb-db-properties-zhong-de-shu-xing-xiang-jie/RocksDB -- DB__Properties 中的属性详解_1.png)
 
 
 
