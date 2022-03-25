@@ -126,7 +126,9 @@ rocksdb.stats
 
 这是一个多行 string，包含了数据库里的一些数据统计信息。
 
-这个属性其实就是 [5. kCFStats](https://gukaifeng.cn/posts/rocksdb-db-properties-zhong-de-shu-xing-xiang-jie/#5-kCFStats) 和 [8. kDBStats](https://gukaifeng.cn/posts/rocksdb-db-properties-zhong-de-shu-xing-xiang-jie/#8-kDBStats) 的组合，内容是一模一样的，所以我们在下面具体的属性内专门再说。
+这个属性其实就是 [6. kCFStatsNoFileHistogram](https://gukaifeng.cn/posts/rocksdb-db-properties-zhong-de-shu-xing-xiang-jie/#6-kCFStatsNoFileHistogram) 和 [7. kCFFileHistogram](https://gukaifeng.cn/posts/rocksdb-db-properties-zhong-de-shu-xing-xiang-jie/#7-kCFFileHistogram) 和 [8. kDBStats](https://gukaifeng.cn/posts/rocksdb-db-properties-zhong-de-shu-xing-xiang-jie/#8-kDBStats) 的组合。
+
+所以这个属性我们在下面 6. 和 7. 和 8. 小节来说，内容是一模一样的。
 
 
 
@@ -187,7 +189,7 @@ SST 文件的**简略**信息。是一个多行 stirng。
 
 这是上面 level 1 的第 1 条信息。
 
-\- **`328`**
+\- **`328`**
 
 信息一开始的 `328` 表示 sst 文件的编号，你可以在数据库目录里找到对应的 sst 文件，就像下图这样。
 
@@ -195,24 +197,24 @@ SST 文件的**简略**信息。是一个多行 stirng。
 
 ![000328.sst](https://gukaifeng.cn/posts/rocksdb-db-properties-zhong-de-shu-xing-xiang-jie/rocksdb-db-properties-zhong-de-shu-xing-xiang-jie_1.png)
 
-\- **`30430428`**
+\- **`30430428`**
 
 这个表示 sst 文件的大小，单位字节。这里代表 `000328.sst` 这个文件的大小是 30430428 字节。
 
-\- **`[84038683 .. 85066084]`**
+\- **`[84038683 .. 85066084]`**
 
 `84038683 ` 是这个 sst 文件的最小序列号(sequence number)，`85066084` 是这个 sst 文件的最大序列号。
 
-\- **`['6B65792D746573743638373435353539' seq:84038683, type:1 .. '6B65792D746573743639373732393630' seq:85066084, type:1]`**
+\- **`['6B65792D746573743638373435353539' seq:84038683, type:1 .. '6B65792D746573743639373732393630' seq:85066084, type:1]`**
 
 `'6B65792D746573743638373435353539' seq:84038683, type:1` 是最小的内部键(interval key)解析后的信息，  
 `'6B65792D746573743639373732393630' seq:85066084, type:1` 是最大的内部键解析后的信息。
 
 这里以最小的内部键解析后的信息举例：
 
-\- \- `'6B65792D746573743638373435353539'`  是 key 的 16 进制编码，可以通过这个编码解析出原始的 key 的。这个编码的长度将是原始 key （Slice 类型）长度的两倍，原因是原来是一个字符 1 个字节（8 位），用 16 进制编码，是将原来的数据每 4 位编程一个 16 进制值，所以返回的长度将是原来数据长度的两倍。
+\- \- `'6B65792D746573743638373435353539'`  是 key 的 16 进制编码，可以通过这个编码解析出原始的 key 的。这个编码的长度将是原始 key （Slice 类型）长度的两倍，原因是原来是一个字符 1 个字节（8 位），用 16 进制编码，是将原来的数据每 4 位编成一个 16 进制值，所以返回的长度将是原来数据长度的两倍。
 
-\- \- `seq:84038683` 是这个 key 的序列号，与上述的 sst 文件的最小序列号是一样的。
+\- \- `seq:84038683` 是这个 key 的序列号，与上述的 sst 文件的最小序列号是一样的。
 
 \- \- `type:1` 是这个 key 的 value 的类型，`1` 表示这是一个正常的值。具体关于此值的定义详见 [`dbformat.h`](https://github.com/facebook/rocksdb/blob/v6.25.3/db/dbformat.h#L39-L74)，很清楚，这里就不多赘述了。
 
@@ -234,7 +236,11 @@ rocksdb.cfstats
 
 **含义**
 
+这是一个多行 string，包含了数据库中 关于 column family 的一些数据统计信息。
 
+这个属性其实就是 [6. kCFStatsNoFileHistogram](https://gukaifeng.cn/posts/rocksdb-db-properties-zhong-de-shu-xing-xiang-jie/#6-kCFStatsNoFileHistogram) 和 [7. kCFFileHistogram](https://gukaifeng.cn/posts/rocksdb-db-properties-zhong-de-shu-xing-xiang-jie/#7-kCFFileHistogram) 的组合。
+
+所以这个属性我们在下面 6. 和 7. 小节来说，内容是一模一样的。
 
 
 
@@ -253,6 +259,43 @@ rocksdb.cfstats-no-file-histogram
 ```
 
 **含义**
+
+这个属性的输出内容比较多，宽度比较大，  
+为了方便看，这里同时放上了示例输出的图片形式和代码形式，两者一致。
+
+![示例输出](https://gukaifeng.cn/posts/rocksdb-db-properties-zhong-de-shu-xing-xiang-jie/rocksdb-db-properties-zhong-de-shu-xing-xiang-jie_2.png)
+
+```
+** Compaction Stats [default] **
+Level    Files      Size     Score Read(GB)  Rn(GB) Rnp1(GB) Write(GB) Wnew(GB) Moved(GB) W-Amp Rd(MB/s) Wr(MB/s) Comp(sec) CompMergeCPU(sec) Comp(cnt) Avg(sec) KeyIn KeyDrop Rblob(GB) Wblob(GB)
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  L0      6/5       2.12 GB   1.4      0.0     0.0      0.0  199099.8 199099.8       0.0   1.0      0.0    269.5 756504.74         250346.23    554853    1.363       0      0       0.0       0.0
+  L1     38/38      1.12 GB   0.0 249127.6 199097.7  50029.9  248731.1 198701.2       0.0   1.2    134.9    134.7 1890421.55         452407.19    200791    9.415     93G   156M       0.0       0.0
+  L2     60/0     979.08 MB   1.0 213539.6 198700.1  14839.5   86964.5  72125.0       0.0   0.4     13.0      5.3 16830463.52         691433.34   4870877    3.455     89G   580M       0.0       0.0
+  L3    309/2       4.05 GB   1.0  28156.2 19799.1   8357.2   23635.3  15278.1   52325.9   1.2      9.3      7.8 3109912.67         407217.85    268347   11.589     29G  2260M       0.0       0.0
+  L4    982/15     16.19 GB   1.0  48411.4 25620.9  22790.4   33402.8  10612.4   41983.0   1.3      9.5      6.6 5221179.63         716863.16    758257    6.886     52G    13G       0.0       0.0
+  L5    205/2      29.18 GB   0.5 146746.1 52595.2  94151.0   94151.0      0.0       0.0   1.8     10.1      6.5 14814832.53        2756096.66    494153   29.980    182G    58G       0.0       0.0
+ Sum   1600/62     53.61 GB   0.0 685981.0 495813.0 190168.0  685984.5 495816.4   94308.9   3.4     16.5     16.5 42623314.64        5274364.44   7147278    5.964    446G    74G       0.0       0.0
+ Int      0/0       0.00 KB   0.0      0.4     0.4      0.1       0.7      0.6       0.0   2.0     10.5     17.3     41.22              6.14         3   13.740    449K    43K       0.0       0.0
+
+** Compaction Stats [default] **
+Priority Files      Size     Score Read(GB)  Rn(GB) Rnp1(GB) Write(GB) Wnew(GB) Moved(GB) W-Amp Rd(MB/s) Wr(MB/s) Comp(sec) CompMergeCPU(sec) Comp(cnt) Avg(sec) KeyIn KeyDrop Rblob(GB) Wblob(GB)
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Low      0/0       0.00 KB   0.0 685981.0 495813.0 190168.0  486884.7 296716.6       0.0   0.0     16.8     11.9 41866809.91        5024018.21   6592425    6.351    446G    74G       0.0       0.0
+High      0/0       0.00 KB   0.0      0.0     0.0      0.0  199099.8 199099.8       0.0   0.0      0.0    269.5 756504.74         250346.23    554853    1.363       0      0       0.0       0.0
+
+Blob file count: 0, total size: 0.0 GB
+
+Uptime(secs): 4728090.8 total, 14.0 interval
+Flush(GB): cumulative 199099.803, interval 0.356
+AddFile(GB): cumulative 0.000, interval 0.000
+AddFile(Total Files): cumulative 0, interval 0
+AddFile(L0 Files): cumulative 0, interval 0
+AddFile(Keys): cumulative 0, interval 0
+Cumulative compaction:  669.906709 TB write,  148.57 MB/s write, 685980.985360 GB read,  148.57 MB/s read, 42623314.6 seconds
+Interval   compaction:    0.694616 GB write,   50.67 MB/s write,    0.424185 GB read,   30.94 MB/s read,    41.2 seconds
+Stalls(count): 2273408 level0_slowdown, 1603632 level0_slowdown_with_compaction, 0 level0_numfiles, 0 level0_numfiles_with_compaction, 0 stop for pending_compaction_bytes, 10738 slowdown for pending_compaction_bytes, 0 memtable_compaction, 2 memtable_slowdown, interval 9 total count
+```
 
 
 
