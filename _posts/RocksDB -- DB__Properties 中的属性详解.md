@@ -236,7 +236,7 @@ rocksdb.cfstats
 
 **含义**
 
-这是一个多行 string，包含了数据库中 关于 column family 的一些数据统计信息。
+这是一个多行 string，包含了数据库中关于 column family 的一些数据统计信息。
 
 这个属性其实就是 [6. kCFStatsNoFileHistogram](https://gukaifeng.cn/posts/rocksdb-db-properties-zhong-de-shu-xing-xiang-jie/#6-kCFStatsNoFileHistogram) 和 [7. kCFFileHistogram](https://gukaifeng.cn/posts/rocksdb-db-properties-zhong-de-shu-xing-xiang-jie/#7-kCFFileHistogram) 的组合。
 
@@ -295,6 +295,42 @@ Stalls(count): 2273408 level0_slowdown, 1603632 level0_slowdown_with_compaction,
 ```
 
 
+我们可以看到上面上班部分有两个“表格”，标题都是 `** Compaction Stats [default] **`，  
+两个表格第一行的表头是一样的，只有下面的内容不同，我们这里先说第一行表头的含义，`Level` 列下面不同的值会在这个属性的解释内说明。
+
+* `Level` : 用于级别压缩 LSM 的级别。
+    * `L<N>` : 表示 LSM 的级别，如 L0，L3 等。对于 universal compaction，所有文件都在 L0 中。
+    * `Sum` : 表示 `L<N>` 各属性的和。
+    * `Int` : 与 `Sum` 类似，也是各层的和，但只包含来自上一个报告间隔的数据。需要注意这里是单词 "Interval" 的缩写，表示“间隔”，而不是整数类型。
+    * `Low`（第二个表格）: 
+    * `High`（第二个表格）: 
+* `Files` : 这有两个值 `a/b`，a 是此 level 中的 sst 文件数，b 是此 level 当前正在进行压缩的 sst 文件数。
+* `Size` : 此 level 全部的 sst 文件总大小。
+* `Score` : 当前 level 的 compaction 最高分数。  
+    当有多个 level 触发 compaction 条件时，就要依靠分数选择执行 compaction 的 level，分数越高越优先。  
+    分数可以是 0 或 1，分数大于 1 的 level 是需要被压缩的。  
+    L0 的分数计算方法是 `num L0 files` / `level0_file_num_compaction_trigger`，或 L0 的总大小减去 `max_bytes_for_level_base`，二者取较大的。  
+    L1 及以上的分数计算方法是 `Level files size` / `MaxBytesForLevel`。
+* `Read(GB)` : 
+* `Rn(GB)` : 
+* `Rnp1(GB)` : 
+* `Write(GB)` : 
+* `Wnew(GB)` : 
+* `Moved(GB)` : 
+* `W-Amp` : 
+* `Rd(MB/s)` : 
+* `Wr(MB/s)` : 
+* `Comp(sec)` : 
+* `CompMergeCPU(sec)` : 
+* `Comp(cnt)` : 
+* `Avg(sec)` : 
+* `KeyIn` : 
+* `KeyDrop` : 
+* `Rblob(GB)` : 
+* `Wblob(GB)` : 
+
+
+
 
 
 
@@ -314,7 +350,7 @@ rocksdb.cf-file-histogram
 
 **含义**
 
-下面是一个具体的 rocksdb 实例的此属性输出，我们先看一下此属性的值，再分析其含义。
+下面是一个真实世界的 rocksdb 实例的此属性输出，我们先看一下此属性的值，再分析其含义。
 
 ```
 ** File Read Latency Histogram By Level [default] **
