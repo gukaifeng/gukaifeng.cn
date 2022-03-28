@@ -308,12 +308,13 @@ Stalls(count): 2273408 level0_slowdown, 1603632 level0_slowdown_with_compaction,
 * `Size` : 此 level 全部的 sst 文件总大小。
 * `Score` : 当前 level 的 compaction 最高分数。  
     当有多个 level 触发 compaction 条件时，就要依靠分数选择执行 compaction 的 level，分数越高越优先。  
-    分数可以是 0 或 1，分数大于 1 的 level 是需要被压缩的。  
-    L0 的分数计算方法是 `num L0 files` / `level0_file_num_compaction_trigger`，或 L0 的总大小减去 `max_bytes_for_level_base`，二者取较大的。  
+    分数 0 或 1 都是正确的值，分数大于 1 的 level 是需要被压缩的。  
+    L0 的分数计算方法是 L0 的文件数除以 `level0_file_num_compaction_trigger`，或 L0 的总大小减去 `max_bytes_for_level_base`，二者取较大的。这里要注意，如果第 L0 的文件数小于 `level0_file_num_compaction_trigger`，那无论分数多高都不会执行 compaction。  
     L1 及以上的分数计算方法是 `Level files size` / `MaxBytesForLevel`。
-* `Read(GB)` : 
-* `Rn(GB)` : 
-* `Rnp1(GB)` : 
+* `Read(GB)` : 在 `L<N>` 到 `L<N+1>` 之间的 compaction 中总共读取的数据大小，包括从 `L<N>` 和从 `L<N+1>` 读的。  
+    即 Read(GB) = Rn(GB) + Rnp1(GB)。
+* `Rn(GB)` : 在 `L<N>` 到 `L<N+1>` 之间的 compaction 中，仅包含从 `L<N>` 读取的数据大小。
+* `Rnp1(GB)` : 在 `L<N>` 到 `L<N+1>` 之间的 compaction 中，仅包含从 `L<N+1>` 读取的数据大小。
 * `Write(GB)` : 
 * `Wnew(GB)` : 
 * `Moved(GB)` : 
