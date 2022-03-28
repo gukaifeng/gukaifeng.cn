@@ -311,8 +311,7 @@ Stalls(count): 2273408 level0_slowdown, 1603632 level0_slowdown_with_compaction,
     分数 0 或 1 都是正确的值，分数大于 1 的 level 是需要被压缩的。  
     L0 的分数计算方法是 L0 的文件数除以 `level0_file_num_compaction_trigger`，或 L0 的总大小减去 `max_bytes_for_level_base`，二者取较大的。这里要注意，如果第 L0 的文件数小于 `level0_file_num_compaction_trigger`，那无论分数多高都不会执行 compaction。  
     L1 及以上的分数计算方法是 `Level files size` / `MaxBytesForLevel`。
-* `Read(GB)` : 在 `L<N>` 到 `L<N+1>` 之间的 compaction 中总共读取的数据大小，包括从 `L<N>` 和从 `L<N+1>` 读的。  
-    即 Read(GB) = Rn(GB) + Rnp1(GB)。
+* `Read(GB)` : 在 `L<N>` 到 `L<N+1>` 之间的 compaction 中总共读取的数据大小，包括从 `L<N>` 和从 `L<N+1>` 读的。即 `Read(GB)` = `Rn(GB)` + `Rnp1(GB)`。
 * `Rn(GB)` : 在 `L<N>` 到 `L<N+1>` 之间的 compaction 中，仅包含从 `L<N>` 读取的数据大小。
 * `Rnp1(GB)` : 在 `L<N>` 到 `L<N+1>` 之间的 compaction 中，仅包含从 `L<N+1>` 读取的数据大小。
 * `Write(GB)` : 
