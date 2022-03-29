@@ -314,20 +314,20 @@ Stalls(count): 2273408 level0_slowdown, 1603632 level0_slowdown_with_compaction,
 * `Read(GB)` : 在 `L<N>` 到 `L<N+1>` 之间的 compaction 中总共读取的数据大小，包括从 `L<N>` 和从 `L<N+1>` 读的。即 `Read(GB)` = `Rn(GB)` + `Rnp1(GB)`。
 * `Rn(GB)` : 在 `L<N>` 到 `L<N+1>` 之间的 compaction 中，仅包含从 `L<N>` 读取的数据大小。
 * `Rnp1(GB)` : 在 `L<N>` 到 `L<N+1>` 之间的 compaction 中，仅包含从 `L<N+1>` 读取的数据大小。
-* `Write(GB)` : 
-* `Wnew(GB)` : 
-* `Moved(GB)` : 
-* `W-Amp` : 
-* `Rd(MB/s)` : 
-* `Wr(MB/s)` : 
-* `Comp(sec)` : 
-* `CompMergeCPU(sec)` : 
-* `Comp(cnt)` : 
-* `Avg(sec)` : 
-* `KeyIn` : 
-* `KeyDrop` : 
-* `Rblob(GB)` : 
-* `Wblob(GB)` : 
+* `Write(GB)` : 在 `L<N>` 到 `L<N+1>` 之间的 compaction 中总共写入的数据大小。
+* `Wnew(GB)` : 写入 `L<N+1>` 的新字节数。计算方法是在 `L<N>` 的 compaction 中写入 `L<N+1>` 的字节数减去从 `L<N+1>` 读取的字节数。
+* `Moved(GB)` : 在 `L<N>` 到 `L<N+1>` 之间的 compaction 中，从 `L<N>` 移动到 `L<N+1>` 的字节数。注意这里除了会更新 manifest 来表示某个文件原来在 `L<N>` 而现在在 `L<N+1>` 以外不涉及其他 I/O 操作。
+* `W-Amp` : （写入 `L<N+1>` 的总字节数） / （从 `L<N>` 读的总字节数）。这是 `L<N>` 和 `L<N+1>` 之间的 compaction 的写放大。
+* `Rd(MB/s)` : `L<N>` 到 `L<N+1>` 之间的 compaction 的读取速率，其值等于 `Read(GB) * 1024` / `duration`，`duration` 就是 `Comp(sec)`，不过做了一点处理，就是把 Comp(sec) 的微秒形式 + 1，以防止其作为分母时为 0。（在代码中进行这个时间计算时，单位用的是微秒，Comp(sec) 也只是把微秒换算成秒。上面说的是在原始的微秒值上 + 1）
+* `Wr(MB/s)` : `L<N>` 到 `L<N+1>` 之间的 compaction 的写入速率，其值等于 `Write(GB) * 1024` / `duration`，`duration` 含义同上。
+* `Comp(sec)` : `L<N>` 到 `L<N+1>` 之间的总的 compaction 耗时。
+* `CompMergeCPU(sec)` : `L<N>` 到 `L<N+1>` 之间的 compaction 占用 CPU 的时间。
+* `Comp(cnt)` : `L<N>` 到 `L<N+1>` 之间进行的 compaction 数量。
+* `Avg(sec)` : `L<N>` 到 `L<N+1>` 之间，平均每个 compaction 的耗时。
+* `KeyIn` : `L<N>` 到 `L<N+1>` 之间 compaction 过程中比较的 key 数量。
+* `KeyDrop` : 在 compaction 过程中丢弃（未写入）的 key 数量。
+* `Rblob(GB)` : `L<N>` 到 `L<N+1>` 之间的 compaction 从 blob 文件中读取的数据大小。
+* `Wblob(GB)` : `L<N>` 到 `L<N+1>` 之间的 compaction 写入 blob 文件的数据大小。
 
 
 
