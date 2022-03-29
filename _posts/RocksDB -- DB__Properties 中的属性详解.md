@@ -296,14 +296,16 @@ Stalls(count): 2273408 level0_slowdown, 1603632 level0_slowdown_with_compaction,
 
 
 我们可以看到上面上班部分有两个“表格”，标题都是 `** Compaction Stats [default] **`，  
-两个表格第一行的表头是一样的，只有下面的内容不同，我们这里先说第一行表头的含义，`Level` 列下面不同的值会在这个属性的解释内说明。
+然后是一行关于 Blob 文件的信息，最后是多行统计信息。下面我们逐一说明。
+
+\-
+
+我们先看第一个表格：
 
 * `Level` : 用于级别压缩 LSM 的级别。
     * `L<N>` : 表示 LSM 的级别，如 L0，L3 等。对于 universal compaction，所有文件都在 L0 中。
     * `Sum` : 表示 `L<N>` 各属性的和。
     * `Int` : 与 `Sum` 类似，也是各层的和，但只包含来自上一个报告间隔的数据。需要注意这里是单词 "Interval" 的缩写，表示“间隔”，而不是整数类型。
-    * `Low`（第二个表格）: 
-    * `High`（第二个表格）: 
 * `Files` : 这有两个值 `a/b`，a 是此 level 中的 sst 文件数，b 是此 level 当前正在进行压缩的 sst 文件数。
 * `Size` : 此 level 全部的 sst 文件总大小。
 * `Score` : 当前 level 的 compaction 最高分数。  
@@ -318,7 +320,7 @@ Stalls(count): 2273408 level0_slowdown, 1603632 level0_slowdown_with_compaction,
 * `Wnew(GB)` : 写入 `L<N+1>` 的新字节数。计算方法是在 `L<N>` 的 compaction 中写入 `L<N+1>` 的字节数减去从 `L<N+1>` 读取的字节数。
 * `Moved(GB)` : 在 `L<N>` 到 `L<N+1>` 之间的 compaction 中，从 `L<N>` 移动到 `L<N+1>` 的字节数。注意这里除了会更新 manifest 来表示某个文件原来在 `L<N>` 而现在在 `L<N+1>` 以外不涉及其他 I/O 操作。
 * `W-Amp` : （写入 `L<N+1>` 的总字节数） / （从 `L<N>` 读的总字节数）。这是 `L<N>` 和 `L<N+1>` 之间的 compaction 的写放大。
-* `Rd(MB/s)` : `L<N>` 到 `L<N+1>` 之间的 compaction 的读取速率，其值等于 `Read(GB) * 1024` / `duration`，`duration` 就是 `Comp(sec)`，不过做了一点处理，就是把 Comp(sec) 的微秒形式 + 1，以防止其作为分母时为 0。（在代码中进行这个时间计算时，单位用的是微秒，Comp(sec) 也只是把微秒换算成秒。上面说的是在原始的微秒值上 + 1）
+* `Rd(MB/s)` : `L<N>` 到 `L<N+1>` 之间的 compaction 的读取速率，其值等于 `Read(GB) * 1024` / `duration`，`duration` 就是 `Comp(sec)`，不过做了一点处理，就是把 Comp(sec) 的微秒形式 + 1，以防止其作为分母时为 0。（在代码中进行这个时间计算时，单位用的是微秒，Comp(sec) 也只是把微秒换算成秒。上面说的是在原始的微秒值上 + 1，这对结果几乎没有影响。）
 * `Wr(MB/s)` : `L<N>` 到 `L<N+1>` 之间的 compaction 的写入速率，其值等于 `Write(GB) * 1024` / `duration`，`duration` 含义同上。
 * `Comp(sec)` : `L<N>` 到 `L<N+1>` 之间的总的 compaction 耗时。
 * `CompMergeCPU(sec)` : `L<N>` 到 `L<N+1>` 之间的 compaction 占用 CPU 的时间。
@@ -329,7 +331,65 @@ Stalls(count): 2273408 level0_slowdown, 1603632 level0_slowdown_with_compaction,
 * `Rblob(GB)` : `L<N>` 到 `L<N+1>` 之间的 compaction 从 blob 文件中读取的数据大小。
 * `Wblob(GB)` : `L<N>` 到 `L<N+1>` 之间的 compaction 写入 blob 文件的数据大小。
 
+\-
 
+然后我们看第二个表格：
+
+第二个表格只有第一列和上一个表格不同，所有我们这里只说这一列。  
+这一列的表头是 `Priority`，也就是优先级，下面有 2 个属性值，`Low` 和 `High`。  
+事实上，受限于我们的实例，这个地方总共可以有 4 个属性值，分别为：`Bottom`、`Low`、`High`、和 `User`。  
+这个表格展示的就是各个优先级的操作的统计数据，应该不难理解。
+
+\-
+
+关于 Blob 这一行，只有两个内容，一是 Blob 文件的数量，二是 Blob 文件的总大小。  
+这里指的是当前数据库中存在的 Blob 文件的数量和总大小。
+
+\-
+
+最后就是这个多行的统计信息了。
+
+下面大部分统计都有两个条目，`cumulative`（除了 `Uptime(secs)` 用的 `total`，含义一样） 和 `interval`。
+
+`cumulative` 表示**从数据库开始运行**到现在的统计值。  
+`interval` 表示本次报告距离上次报告的间隔。
+
+这里以 `Uptime(secs)` 和 `Flush(GB)` 举例说明，后面其他的就简单说了。
+
+* `Uptime(secs)` :
+    * `total` : 数据库已运行时间（从启动到现在）。
+    * `interval` : 本次报告距离上次报告的间隔时间。  
+    这里表示当前显示的数据库运行时间，比上次显示的数据库运行时间，多了多少秒。  
+    例如上次报告的 `total` 值是 100.3，当前 `total` 值是 102.5，那么 `interval` 就是 2.2。
+* `Flush(GB)` : 
+    * `cumulative` : 从数据库开始运行到现在，累计完成 flush 的数据大小。注意这里指的是从内存 flush 到 L0 的数据。
+    * `interval` : 本次报告距离上次报告的间隔大小。  
+    这里表示当前显示的已 flush 数据大小，比上次显示的已 flush 数据大小，多了多少。  
+    计算方法同上。
+
+下面就简单说了：
+
+* `AddFile(GB)` : 增加的文件大小。
+* `AddFile(Total Files)` : 增加的文件数量。
+* `AddFile(L0 Files)` : L0 增加的文件数量。
+* `AddFile(Keys)` : 增加的 key 的数量。
+* `compaction`（`cumulative` 和 `interval` 在两行）: 
+    * `write` : compaction 中写入的数据。有两个值，前者是写入总量，后者是写入速率。
+    * `read` : compaction 中读取的数据。有两个值，前者是读取总量，后者是读取速率。
+    * `seconds` : compaction 进行的时间。
+
+最后还有个 `Stalls(count)` :
+
+* `Stalls(count)` :
+    * `level0_slowdown` : 由 `level0_slowdown_writes_trigger` 导致的推迟次数。
+    * `level0_slowdown_with_compaction` : 
+    * `level0_numfiles` : 由 `level0_stop_writes_trigger` 导致的推迟次数。
+    * `level0_numfiles_with_compaction` : 
+    * `stop for pending_compaction_bytes` : 
+    * `slowdown for pending_compaction_bytes` : 
+    * `memtable_compaction` : 因为所有的 memtable 都满了，flush 过程无法跟上导致的推迟次数。
+    * `memtable_slowdown` : 
+    * `interval` n `total count` : 距离上次报告增加的推迟(Stall)总次数。其值就是前面 8 项里除了 `level0_slowdown_with_compaction` 和 `level0_numfiles_with_compaction` 的另外 6 项的间隔的和。
 
 
 
