@@ -381,16 +381,20 @@ Stalls(count): 2273408 level0_slowdown, 1603632 level0_slowdown_with_compaction,
 最后还有个 `Stalls(count)` :
 
 * `Stalls(count)` :
-    * `level0_slowdown` : 由 `level0_slowdown_writes_trigger` 导致的推迟次数。
-    * `level0_slowdown_with_compaction` : 
-    * `level0_numfiles` : 由 `level0_stop_writes_trigger` 导致的推迟次数。
-    * `level0_numfiles_with_compaction` : 
-    * `stop for pending_compaction_bytes` : 
-    * `slowdown for pending_compaction_bytes` : 
-    * `memtable_compaction` : 因为所有的 memtable 都满了，flush 过程无法跟上导致的推迟次数。
-    * `memtable_slowdown` : 
-    * `interval` n `total count` : 距离上次报告增加的推迟(Stall)总次数。其值就是前面 8 项里除了 `level0_slowdown_with_compaction` 和 `level0_numfiles_with_compaction` 的另外 6 项的间隔的和。
+    * `level0_slowdown` : 由于 L0 的文件数达到了 `level0_slowdown_writes_trigger` 导致的写入**放缓**的次数。
+    * `level0_slowdown_with_compaction` : 触发 `level0_slowdown` 时（计数 + 1 时），若当前有涉及 level 0 的compaction 正在进行，则此计数 + 1。
+    * `level0_numfiles` : 由于 L0 的文件数达到了 `level0_stop_writes_trigger` 导致的写入**停止**次数。
+    * `level0_numfiles_with_compaction` : 触发 `level0_numfiles` 时（计数 + 1 时），若当前有涉及 level 0 的compaction 正在进行，则此计数 + 1。
+    * `stop for pending_compaction_bytes` : 由于待进行 compaction 的字节数达到了 `hard_pending_compaction_bytes_limit` 导致的写入**停止**次数。
+    * `slowdown for pending_compaction_bytes` : 由于待进行 compaction 的字节数达到了 `soft_pending_compaction_bytes_limit` 导致的写入**放缓**次数。
+    * `memtable_compaction` : 因为所有的 memtable 都满了，flush 过程无法跟上导致的写入**停止**次数。
+    * `memtable_slowdown` : 因为所有的 memtable 都快满了，flush 过程无法跟上导致的写入**放缓**次数。
+    * `interval` n `total count` : 距离上次报告增加的 Stall 总次数。其值就是前面 8 项里除了 `level0_slowdown_with_compaction` 和 `level0_numfiles_with_compaction` 的另外 6 项的间隔的和。
 
+对于 `interval` n `total count`，其值又等于 `io_stalls.total_stop` + `io_stalls.total_slowdown`。  
+`io_stalls.total_stop` 是上面 3 种导致写入**停止**的情况次数的和，  
+`io_stalls.total_slowdown` 是上面与 3 种导致写入**放缓**的情况次数的和。  
+这两个属性我们用 `GetMapProperty()` 获取时才会输出，而 `GetProperty()` 不会输出。
 
 
 
