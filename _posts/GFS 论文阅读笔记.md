@@ -71,9 +71,9 @@ Snapshot 和 record append 会在后面进一步讨论。
 
 ### 2.3. 架构
 
-一个 GFS 集群包含单个 *master* 和多个 *chunkservers*，允许多个 *client* 访问。如 Figure 1 所示。
+一个 GFS 集群包含单个 *master* 和多个 *chunkservers*，允许多个 *client* 访问。如图 1 所示。
 
-![Figure 1: GFS Architecture](https://gukaifeng.cn/posts/gfs-lun-wen-yue-du-bi-ji/GFS_Figure_1.png)
+![图 1: GFS 架构](https://gukaifeng.cn/posts/gfs-lun-wen-yue-du-bi-ji/GFS_Figure_1.png)
 
 每个 master 或 chunkserver 一般都是一个商品 Linux 机器中运行着的一个用户级服务进程。在同一个机器上同时运行一个 chunkserver 和一个 client 是很容易，但前提是机器资源允许，并且你可以接受运行不稳定的应用程序代码导致的更低的可靠性。
 
@@ -93,7 +93,7 @@ GFS 中只有一个 master，这大大简化了其设计，并且使得 master �
 
 ---
 
-现在我们通过一个简单的读操作来解释 GFS 的工作流程（就如 Figure 1 中的那样）。
+现在我们通过一个简单的读操作来解释 GFS 的工作流程（就如图 1 中的那样）。
 
 首先，要使用固定的 chunk 大小，客户端把应用程序指定的文件名和字节偏移翻译成这个文件中的一个 chunk 索引。然后客户端向 master 发送一个包含文件名和 chunk 索引的请求，master 给客户端回复相应的 chunk 句柄和 chunk 副本的位置。客户端以文件名和 chunk 索引作为 key 缓存这些信息。
 
@@ -189,9 +189,9 @@ GFS 有一个宽松的一致性模型，很好地支持我们的高度分布式�
 
 文件命名空间的修改（例如，文件创建）是原子的，且只能由 master 来操作：命名空间锁确保原子性和正确性（详见 4.1）；master 的操作日志定义了一个这些操作的全局的总的次序（详见 2.6.3）。
 
-在数据修改后，文件区域的状态依赖于修改的类型，修改成功还是失败，以及这些是否是并发的修改。Table 1 总结了在数据修改后的文件区域的状态。
+在数据修改后，文件区域的状态依赖于修改的类型，修改成功还是失败，以及这些是否是并发的修改。表 1 总结了在数据修改后的文件区域的状态。
 
-![Table 1: File Region State After Mutation](https://gukaifeng.cn/posts/gfs-lun-wen-yue-du-bi-ji/GFS_Table_1.png)
+![表 1 : 发生修改后文件区域的状态](https://gukaifeng.cn/posts/gfs-lun-wen-yue-du-bi-ji/GFS_Table_1.png)
 
 * 对于一个文件区域，如果所有的客户端总是看到相同的数据（不论看的是哪个副本），那这个文件区域是一致的 *consistent*。
 
@@ -212,7 +212,7 @@ GFS 有一个宽松的一致性模型，很好地支持我们的高度分布式�
 
 作为对比，一个普通的 append 仅仅是一个在客户端认为是当前文件末尾的偏移处的 write。
 
-标志着包含写入 record 的 *defined* 的区域的开始的偏移会被返回给客户端。此外，GFS 可能会在写入的内容之间插入填充或 record 的复制。我们认为 GFS 插入内容占据的区域是 *inconsistent* 的（即 Table 1 中的 *defined* interspersed with *inconsistent*，即 *defined* 区域中穿插了 *inconsistent* 区域，但这些区域不会影响读取数据的结果，因为读者会过滤掉这些），且占用的空间比起用户数据的总量而言微不足道。
+标志着包含写入 record 的 *defined* 的区域的开始的偏移会被返回给客户端。此外，GFS 可能会在写入的内容之间插入填充或 record 的复制。我们认为 GFS 插入内容占据的区域是 *inconsistent* 的（即表 1 中的 *defined* interspersed with *inconsistent*，即 *defined* 区域中穿插了 *inconsistent* 区域，但这些区域不会影响读取数据的结果，因为读者会过滤掉这些），且占用的空间比起用户数据的总量而言微不足道。
 
 在连续的成功的修改后，GFS 会保证被修改的文件区域是 *defined* 的，并且包含最后一次修改写入的数据。GFS 实现这一点，通过 (a) 以相同的顺序应用修改到 chunk 以及其所有的拷贝上（详见 3.1），(b) 使用 chunk 版本号检测某个拷贝是否过期（即在其对应的 chunkserver 挂掉时，错过了修改。详见 4.5）。过期的 chunk 拷贝永远都不会被再应用修改，其位置也不会再由 master 提供给客户端，这些过期的 chunk 将尽快被垃圾回收。
 
@@ -252,9 +252,9 @@ Google 设计 GFS 系统交互要最小化在所有的操作中对 master 的涉
 
 租约机制是设计用来最小化 master 的管理开销的。一个租约有一个初始的 60s 的超时时间。然而，只要 chunk 被修改，primary 就可以向 master 请求延时，并且通常会收到延时的许可，并且这不限制次数。这些扩展请求与授权是附带在 master 和所有 chunkservers 之间交换的常规的心跳(*HeartBeat*)信息中的。master 有时可能会尝试在一个租约到期前将其撤销（例如，master 想要禁用一个正在重命名的文件上的修改）。即便 master 与一个 primary 失去了联系，master 也可以在旧的租约到期后安全地向另一个副本授予租约。
 
-在 Figure 2 中，我们通过列出 write 控制流描述了这个过程，并且用数字标记了步骤顺序。
+在图 2 中，我们通过列出 write 控制流描述了这个过程，并且用数字标记了步骤顺序。
 
-![Figure 2: Write Control and Data Flow](https://gukaifeng.cn/posts/gfs-lun-wen-yue-du-bi-ji/GFS_Figure_2.png)
+![图 2: 写控制和数据流](https://gukaifeng.cn/posts/gfs-lun-wen-yue-du-bi-ji/GFS_Figure_2.png)
 
 1. 客户端向 master 询问，哪个 chunkserver 持有要访问的 chunk 当前的租约，以及其他副本的位置。如果目前没有任何一个 chunkserver 持有要访问的 chunk 的租约，master 就会选择一个副本，授予一个租约（没有在图上显示出）。
 2. master 向客户端回复 primary 的标识和其他副本（图中 *secondary* 标记，所有除了 primary 的副本都是 secondary）的位置。客户端缓存这个数据，用于将来的修改操作。只有当 primary 变得不可达，或副本不再持有租约时，客户端才需要再次联系 master。
@@ -266,7 +266,7 @@ Google 设计 GFS 系统交互要最小化在所有的操作中对 master 的涉
 
 
 
-如果应用程序的 write 很大或者跨过了一个 chunk 的边界，GFS 客户端代码就会把其拆成多个 write 操作。这些新的 write 操作也都遵循上述控制流（Figure 2），但可能会与来自其他客户端的并发操作交错并被覆盖。因此，共享文件区域最终可能包含来自不同客户端的片段，尽管副本将是相同的，因为单个操作在所有的副本上以相同的顺序成功完成。这就会出现我们在 2.7 中提到过的 *consistent* 但 *undefined* 的状态。
+如果应用程序的 write 很大或者跨过了一个 chunk 的边界，GFS 客户端代码就会把其拆成多个 write 操作。这些新的 write 操作也都遵循上述控制流（图 2），但可能会与来自其他客户端的并发操作交错并被覆盖。因此，共享文件区域最终可能包含来自不同客户端的片段，尽管副本将是相同的，因为单个操作在所有的副本上以相同的顺序成功完成。这就会出现我们在 2.7 中提到过的 *consistent* 但 *undefined* 的状态。
 
 
 
@@ -497,17 +497,17 @@ RPC 日志包括在线上发送的确切请求和响应，不包括被读取或�
 
 所有的机器都配备 dual 1.4 Ghz PIII 处理器，2 GB 内存，两个 80 GB 5400 rpm 的磁盘，以及 100 Mbps 的全双工以太网连接到一个 HP 2542 交换机。全部的 19 个服务器机器都连接到一个交换机上，全部的 16 个客户端机器都连接到另一个交换机上，两个交换机之间通过 1 Gbps 链路连接。
 
-![Figure 3: Aggregate Throughputs. Top curves show theoretical limits imposed by our networktopology. Bottom curves show measured throughputs. They have error bars that show 95% confidence intervals, which are illegible in some cases because of low variance in measurements.](https://gukaifeng.cn/posts/gfs-lun-wen-yue-du-bi-ji/GFS_Figure_3.png)
+![图 3: 总吞吐量. 上面的曲线（即 Network limit）表示由我们网络拓扑决定的理论极限。下面的曲线（即 Aggregate read rate）表示我们测量得到的吞吐量，这个曲线具有显示 95% 置信区间的误差线，由于测量值的方差较低，在某些情况下，这些区间难以辨认。](https://gukaifeng.cn/posts/gfs-lun-wen-yue-du-bi-ji/GFS_Figure_3.png)
 
 #### 6.1.1. 读
 
 N 个客户端同时从文件系统中读。每个客户端从一个 320 GB 的文件集中读取一个随机选择的 4 MB 区域，重复 256 次，所以每个客户端最终读取了 1 GB 的数据。这些 chunkservers 加起来只有 32 GB 的内存，所以我们预计 Linux 缓冲区缓存中的命中率最多为 10%。 我们的结果应该接近冷缓存结果。
 
-Figure 3(a) 展示了 N 个客户端总的读速率以及该速率的理论上限。当两个交换机之间的 1Gbps 链路饱和时，总的读速率的极限峰值在 125 MB/s，或者说当客户端的 100 Mbps 网络接口饱和时，每个客户端的读速率极限峰值是 12.5 MB/s，以适用者为准。当只有一个客户端在读时，我们观察到的读速率是 10 MB/s，即每个客户端 12.5 MB/s 理论峰值的 80%。当 16 个客户端都在读时，总的读速率达到了 94 MB/s，大约是理论峰值 125 MB/s 的 75%。这个效率从 80% 降到 75% 是因为，随着读者的增加，多个读者同时从同一个 chunkserver 读取数据的可能性也增加了。
+图 3(a) 展示了 N 个客户端总的读速率以及该速率的理论上限。当两个交换机之间的 1Gbps 链路饱和时，总的读速率的极限峰值在 125 MB/s，或者说当客户端的 100 Mbps 网络接口饱和时，每个客户端的读速率极限峰值是 12.5 MB/s，以适用者为准。当只有一个客户端在读时，我们观察到的读速率是 10 MB/s，即每个客户端 12.5 MB/s 理论峰值的 80%。当 16 个客户端都在读时，总的读速率达到了 94 MB/s，大约是理论峰值 125 MB/s 的 75%。这个效率从 80% 降到 75% 是因为，随着读者的增加，多个读者同时从同一个 chunkserver 读取数据的可能性也增加了。
 
 #### 6.1.2. 写
 
-N 个客户端同时写 N 个不同的文件。每个客户端通过一组 1 MB 的 write 往一个新文件中写入 1 GB 数据。Figure 3(b) 展示了总的写速率以及理论极限。总的写速度的峰值稳定在 67 MB/s，因为我们需要把每个字节都写到 16 个 chunkservers 中的 3 个上，每个 chunkserver 有一个 12.5 MB/s 的输入连接。
+N 个客户端同时写 N 个不同的文件。每个客户端通过一组 1 MB 的 write 往一个新文件中写入 1 GB 数据。图 3(b) 展示了总的写速率以及理论极限。总的写速度的峰值稳定在 67 MB/s，因为我们需要把每个字节都写到 16 个 chunkservers 中的 3 个上，每个 chunkserver 有一个 12.5 MB/s 的输入连接。
 
 只有一个客户端写时，观察到的写速率是 6.3 MB/s，大约是理论极限值的一半。导致这一问题的罪魁祸首是我们的网络堆栈，网络堆栈和我们用来给 chunk 副本推送数据的流水线方案交互得不是很好。从一个副本向另一个副本传播数据的延迟会降低总的写速率。
 
@@ -519,7 +519,7 @@ N 个客户端同时写 N 个不同的文件。每个客户端通过一组 1 MB 
 
 #### 6.1.3. 记录追加(Record Appends)
 
-Figure 3(c) 展示了 record append 的性能。N 个客户端同时追加同一个文件。性能受限于存储该文件最后一个 chunk 的 chunkserver 的网络带宽，独立于客户端的数量。从一开始的一个客户端时 6.0 MB/s 到 16 个客户端时的 4.8 MB/s，这个下降主要是由于网络拥塞，以及不同客户端看到的网络传输速率差异。
+图 3(c) 展示了 record append 的性能。N 个客户端同时追加同一个文件。性能受限于存储该文件最后一个 chunk 的 chunkserver 的网络带宽，独立于客户端的数量。从一开始的一个客户端时 6.0 MB/s 到 16 个客户端时的 4.8 MB/s，这个下降主要是由于网络拥塞，以及不同客户端看到的网络传输速率差异。
 
 我们的应用程序倾向于并发生成多个这样的文件。换句话说，N 个客户端同时 append 到 M 个共享文件，N 和 M 都是几十或者数百。因此，在实践中，我们实验中的 chunkserver 的网络拥塞不是大问题，因为客户端可以在写入一个文件时取得进展，而另一个文件的 chunkserver 则处于繁忙状态。
 
@@ -533,13 +533,13 @@ Figure 3(c) 展示了 record append 的性能。N 个客户端同时追加同一
 
 在集群 A 和 B 中，一个单个的任务包含了在很多机器上的很多进程同时读和写很多的文件。
 
-![Table 2: Characteristics of two GFS clusters](https://gukaifeng.cn/posts/gfs-lun-wen-yue-du-bi-ji/GFS_Table_2.png)
+![表 2 : 两个 GFS 集群的特征](https://gukaifeng.cn/posts/gfs-lun-wen-yue-du-bi-ji/GFS_Table_2.png)
 
 
 
 #### 6.2.1. 存储
 
-从 Table 2 中的前 5 行中可以看到，两个集群都有上百个 chunkservers，都支持很多 TB 的磁盘空间，且这些磁盘空间中有相当多的，但没有全部写满磁盘的数据。"Used disk" 包含所有 chunk 副本。实际上所有文件都会被复制 3 次（3 个副本），因此，A 和 B 两个集群分别存储了 18 TB（55 / 3 ≈ 18） 和 52 TB （155 / 3 ≈ 52）的文件数据。
+从表 2 中的前 5 行中可以看到，两个集群都有上百个 chunkservers，都支持很多 TB 的磁盘空间，且这些磁盘空间中有相当多的，但没有全部写满磁盘的数据。"Used disk" 包含所有 chunk 副本。实际上所有文件都会被复制 3 次（3 个副本），因此，A 和 B 两个集群分别存储了 18 TB（55 / 3 ≈ 18） 和 52 TB （155 / 3 ≈ 52）的文件数据。
 
 两个集群有相似的文件数量（A: 735 k, B: 737 k），尽管 B 中有很大比例的 dead files（即被删除、或被新版本替换的，但是其存储空间还没有被回收的文件）。集群 B 还具有更多 chunk，因为集群 B 的文件往往更大。<font color=red>这里没太理解是由于 dead files 多导致的 chunk 多，还是集群 B 的普通文件就更大。</font>
 
@@ -557,17 +557,17 @@ chunkservers 一共存储了数十 GB 的元数据，其中大部分是 64 KB �
 
 #### 6.2.3. 读写速率
 
-Table 3 展示了不同时期的读写速率。当我们进行这些测量时，A 和 B 两个集群都已经启动了大约一周。（集群最近已经重新启动(restart)以升级到新的 GFS 版本）
+表 3 展示了不同时期的读写速率。当我们进行这些测量时，A 和 B 两个集群都已经启动了大约一周。（集群最近已经重新启动(restart)以升级到新的 GFS 版本）
 
 从重新启动开始，平均写速率小于 30 MB/s。当我们进行这些测量时，集群 B 处于写入活动的突发过程中，生成了大约 100 MB/s的数据，这产生了 300 MB/s的网络负载，因为写入被传播到三个副本。
 
 正如我们所假设的那样，读取速率远高于写入速率，总工作负载包含的读取次数多于写入次数。这两个集群都处于繁重的阅读活动中。特别是，A 在前一周一直保持 580 MB/s 的读取率。A 的网络配置可以支持750 MB / s，因此它有效地利用了资源。集群 B 可以支持 1300 MB/s 的峰值读取速率，但其应用程序仅使用 380 MB/s。
 
-![Table 3: Performance Metrics for Two GFS Clusters](https://gukaifeng.cn/posts/gfs-lun-wen-yue-du-bi-ji/GFS_Table_3.png)
+![表 3 : 两个 GFS 集群的性能指标](https://gukaifeng.cn/posts/gfs-lun-wen-yue-du-bi-ji/GFS_Table_3.png)
 
 #### 6.2.4. master 负载
 
-Table 3 还显示，发送到 master 的操作速率约为每秒 200 到 500 次操作。master 可以轻松跟上这个速度，因此这不是这些工作负载的瓶颈。
+表 3 还显示，发送到 master 的操作速率约为每秒 200 到 500 次操作。master 可以轻松跟上这个速度，因此这不是这些工作负载的瓶颈。
 
 在早期版本的 GFS 中，master 偶尔会成为某些工作负载的瓶颈，它花费大部分时间按顺序扫描大型目录（包含数十万个文件）以查找特定文件。此后，我们更改了 master 数据结构，以允许通过命名空间进行高效的二进制搜索。master 现在可以轻松支持每秒数千次文件访问。如有必要，我们可以通过在命名空间数据结构前面放置名称查找缓存来进一步加快速度。
 
@@ -593,15 +593,19 @@ Table 3 还显示，发送到 master 的操作速率约为每秒 200 到 500 次
 
 ### 6.3.1. 方法和注意事项
 
-这些结果仅包括来自客户端的请求，因此它们反映了我们的应用程序为整个文件系统生成的工作负载。它们不包括执行客户端请求或内部后台活动的服务器间请求，例如转发写入或重新平衡
+这些结果仅包括来自客户端的请求，因此它们反映了我们的应用程序为整个文件系统生成的工作负载。它们不包括执行客户端请求或内部后台活动的服务器间请求，例如转发写入或重新平衡。
 
+有关 I/O 操作的统计信息基于从 GFS 服务器记录的实际 RPC 请求中以启发式方式重建的信息。举例来说，GFS 客户端代码可能会把读拆分进多个 RPC 中以提高并行性，我们从中推断出原始读取。由于我们的访问模式是高度程式化的，因此我们希望任何错误都会出现在噪声中。应用程序的显式日志记录可能会提供稍微更准确的数据，但从逻辑上讲，重新编译和重新启动数千个正在运行的客户端来这样做是不可能的，而且从尽可能多的机器收集结果也很麻烦。
 
-
-
+有一点应该小心，就是不要从我们的工作负载中过度概括。由于 GFS 和使用 GFS 的应用程序都由 Google 完全控制，所以应用程序往往会为了 GFS 做调整优化，反过来 GFS 也是为这些应用程序设计的。这些相互的影响可能也存在于广泛的应用程序和文件系统中，但是这种影响在我们的案例中可能更明显。
 
 
 
 #### 6.3.2. chunkserver 工作负载
+
+![表 4 : 按大小(Size, %)划分操作。对于读(Read)，size 是实际读、传输的数据总量，而不是请求的数据总量。](https://gukaifeng.cn/posts/gfs-lun-wen-yue-du-bi-ji/GFS_Table_4.png)
+
+表 4 按大小(Size)显示了操作的分布情况。
 
 
 
