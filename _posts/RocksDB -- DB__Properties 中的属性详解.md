@@ -15,6 +15,8 @@ RocksDB 中的 DB 类中定义了一个结构体 Properties，里面是许多 Ro
 
 结构体 Properties 中的每个成员都对应一个 rocksdb 属性，我们可以通过 `GetProperty()` 或 `GetMapProperty()` 等方法来获取其中的内容。具体方法说明详见 [获取属性值的方法](https://gukaifeng.cn/posts/rocksdb-db-lei/#18-2-获取属性值的方法)。
 
+**本文的所有属性示例均使用 `GetProperty()`，其他的方法的输出内容可能会略有不同，但大体一样。**
+
 例如：
 
 ```cpp
@@ -529,8 +531,36 @@ Percentiles: P50: 0.50 P75: 0.75 P99: 0.99 P99.9: 2.11 P99.99: 595.00
 
 这个示例比较长，用来解释说明有点冗余，我们就简单看看就好。  
 
-一开始的标题也写明了，这个属性给出的是一个 “**按 level 划分的文件读取延迟柱状图**”。  
+一开始的标题也写明了，这个属性给出的是一个 “**按 level 划分的文件读取延迟柱状图**”，延迟单位为微秒。  
 `default` 同样表示默认列族。
+
+这里选一段来，方便解释，如下：
+```
+** Level 3 read latency histogram (micros):
+Count: 7024 Average: 0.0209  StdDev: 0.51
+Min: 0  Median: 0.5005  Max: 32
+Percentiles: P50: 0.50 P75: 0.75 P99: 0.99 P99.9: 1.00 P99.99: 29.79
+------------------------------------------------------
+[       0,       1 ]     7017  99.900%  99.900% ####################
+(       1,       2 ]        2   0.028%  99.929% 
+(       2,       3 ]        1   0.014%  99.943% 
+(       3,       4 ]        1   0.014%  99.957% 
+(       6,      10 ]        1   0.014%  99.972% 
+(      22,      34 ]        2   0.028% 100.000% 
+```
+这是 Level 3 的数据。
+
+`Count` : 表示当前 Level 总共读的次数（上例为 Level 3 总共读了 7024 次）。  
+`Average` : 所有的读的平均延迟（上例为 Level 3 的 7024 次读的平均延迟为 0.0209 微秒）。  
+`Min`, `Median`, `Max` : 分别表示所有读延迟的最小值、中位数和最大值。  
+`Percentiles`: P50, P75, P99, P99.99, P99.99 的延迟。
+
+下面最左边是柱状图的区间，和数学中的括号类似，`(` `)` 表示开区间，`[` `]` 表示闭区间。  
+第二列是数量，即当前延迟区间的读数量，总和等于上面的 `Count`。  
+第三列是当前延迟区间的读数量占总读数量的比例。  
+最后一列是从 0 到当前延迟区间的读书量的总占比。
+
+
 
 
 
@@ -550,8 +580,39 @@ rocksdb.dbstats
 
 **含义**
 
+下面是一个现实示例的该输出输出，我们在下面解释。
 
+```
+** DB Stats **
+Uptime(secs): 5262850.5 total, 8.7 interval
+Cumulative writes: 19G writes, 81G keys, 18G commit groups, 1.0 writes per commit group, ingest: 216850.74 GB, 42.19 MB/s
+Cumulative WAL: 19G writes, 0 syncs, 19332703393.00 writes per sync, written: 216850.74 GB, 42.19 MB/s
+Cumulative stall: 350:12:45.064 H:M:S, 24.0 percent
+Interval writes: 31K writes, 134K keys, 31K commit groups, 1.0 writes per commit group, ingest: 364.40 MB, 41.74 MB/s
+Interval WAL: 31K writes, 0 syncs, 31934.00 writes per sync, written: 0.36 GB, 41.74 MB/s
+Interval stall: 00:00:0.000 H:M:S, 0.0 percent
+```
 
+`total` 和 `Cumulative` 都表示从数据库启动开始到现在的累计结果。  
+`interval` 表示距离上次报告的间隔。
+
+这样，这个属性输出就只有 4 个值：
+* `Uptime(secs)` : 数据库从启动到现在的时间。
+* `writes` :
+    * `writes` : 写入次数。
+    * `keys` : 写入的 key 数量。
+    * `commit groups` : 提交写入的组数量。
+    * `writes per commit group` : 平均每个组包含的 write 数量。
+    * `ingest` : 有两个值，分别表示写入数据库的总数据大小，与平均写入速率。
+    * `syncs` : sync 次数。
+    * `writes per sync` : 每次 sync 的 write 次数。
+    * `written` : 这里有两个值，分别为写入的字节数、写入速率。
+* `WAL` : 
+    * `writes` : 写入次数。
+    * `syncs` : sync 次数。
+    * `writes per sync` : 每次 sync 的 write 次数。
+    * `written` : 这里有两个值，分别为已写入的总字节数、平均写入速率。
+* `stall` : 有两个值。第一个是推迟时间，格式是 `时:分:秒`。第二个 `percent` 是推迟时间占数据库运行时间的百分比。
 
 
 ## 9. kLevelStats
@@ -569,8 +630,28 @@ rocksdb.levelstats
 ```
 
 **含义**
+顾名思义，LSM 各个 Level 的统计数据。
 
+下面给出一个真实世界的实例的此属性：
 
+```
+Level Files Size(MB)
+--------------------
+  0        0        0
+  1       49     1304
+  2       72     1050
+  3      291     4280
+  4      929    16625
+  5      205    29882
+  6        0        0
+  7        0        0
+  8        0        0
+  9        0        0
+```
+
+很简单，就是每个 Level 的 sst 文件数，以及总大小。
+
+这里注意下是压缩(compaction)后的大小，别的就不多解释了。
 
 
 
@@ -610,7 +691,7 @@ rocksdb.num-immutable-mem-table
 
 **含义**
 
-
+尚未 flush 的不可变 memtable 数量。
 
 
 
@@ -630,7 +711,7 @@ rocksdb.num-immutable-mem-table-flushed
 
 **含义**
 
-
+已经 flush 完成的不可变 memtable 数量。
 
 
 
@@ -650,7 +731,9 @@ rocksdb.mem-table-flush-pending
 
 **含义**
 
+值为 0 或 1。
 
+1 表示当前存在待 flush 的 memtable，0 反之。
 
 
 
@@ -670,7 +753,7 @@ rocksdb.num-running-flushes
 
 **含义**
 
-
+当前正在进行的 flush 数量。
 
 
 
@@ -690,7 +773,9 @@ rocksdb.compaction-pending
 
 **含义**
 
+值为 0 或 1。
 
+1 表示当前存在至少一个正在等待的 compaction，0 反之。
 
 
 
@@ -710,7 +795,7 @@ rocksdb.num-running-compactions
 
 **含义**
 
-
+当前正在进行的 compaction 数量。
 
 
 
@@ -730,7 +815,7 @@ rocksdb.background-errors
 
 **含义**
 
-
+后台累计发生的错误总数。
 
 
 
@@ -750,7 +835,7 @@ rocksdb.cur-size-active-mem-table
 
 **含义**
 
-
+当前活跃的 memtable 的大概大小（字节）。
 
 
 
@@ -770,7 +855,9 @@ rocksdb.cur-size-all-mem-tables
 
 **含义**
 
+全部 memtabke 总的大概大小（字节）。
 
+包含当前活跃的 memtable，以及未 flush 的不可变 memtable。
 
 
 
@@ -790,9 +877,9 @@ rocksdb.size-all-mem-tables
 
 **含义**
 
+全部 memtabke 总的大概大小（字节）。
 
-
-
+包含当前活跃的 memtable、未 flush 的不可变 memtable，以及 pinned 的不可变 memtable。
 
 ## 21. kNumEntriesActiveMemTable
 
@@ -810,7 +897,7 @@ rocksdb.num-entries-active-mem-table
 
 **含义**
 
-
+当前活跃的 memtable 中的条目总数。
 
 
 
