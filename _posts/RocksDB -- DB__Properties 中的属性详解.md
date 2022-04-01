@@ -1,7 +1,7 @@
 ---
 title: RocksDB -- DB::Properties 中的属性详解
 date: 2022-03-02 16:42:26
-updated: 2022-03-29 18:52:26
+updated: 2022-04-01 18:52:26
 categories: [数据库]
 tags: [RocksDB,数据库]
 toc: true
@@ -1028,7 +1028,13 @@ rocksdb.is-file-deletions-enabled
 
 0 表示允许，非 0 表示不允许。
 
+这里的内部实现是有一个计数器 `disable_delete_obsolete_files_`，用来累计禁用次数，默认为 1。
 
+方法 `DBImpl::DisableFileDeletions()` 给此计数器加 1。
+
+方法 `DBImpl::EnableFileDeletions(bool force)`：  
+参数 `force` 若为 true 则直接将计数器归零。  
+参数 `force` 若为 false 则给计数器减 1，最多把计数器减到 0。
 
 ## 28. kNumSnapshots
 
