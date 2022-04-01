@@ -901,641 +901,687 @@ rocksdb.num-entries-active-mem-table
 
 
 
-## 22. 
+## 22. kNumEntriesImmMemTables
 
 **定义**
 
 ```cpp
-
+static const std::string kNumEntriesImmMemTables;
 ```
 
 **属性**
 
 ```
-
+rocksdb.num-entries-imm-mem-tables
 ```
 
 **含义**
 
+未 flush 的不可变 memtable 中的条目数量。
 
 
 
-
-## 23. 
+## 23. kNumDeletesActiveMemTable
 
 **定义**
 
 ```cpp
-
+static const std::string kNumDeletesActiveMemTable;
 ```
 
 **属性**
 
 ```
-
+rocksdb.num-deletes-active-mem-table
 ```
 
 **含义**
 
 
+当前活跃的 memtable 中删除的条目总数。
 
 
 
-## 24. 
+## 24. kNumDeletesImmMemTables
 
 **定义**
 
 ```cpp
-
+static const std::string kNumDeletesImmMemTables;
 ```
 
 **属性**
 
 ```
-
+rocksdb.num-deletes-imm-mem-tables
 ```
 
 **含义**
 
+未 flush 的不可变 memtable 中删除的条目总数。
 
 
 
-
-## 25. 
+## 25. kEstimateNumKeys
 
 **定义**
 
 ```cpp
-
+static const std::string kEstimateNumKeys;
 ```
 
 **属性**
 
 ```
-
+rocksdb.estimate-num-keys
 ```
 
 **含义**
 
+数据库中大概的 key 数量。
+
+包含活跃的 memtable，未 flush 的不可变 memtable，以及存储空间（已 flush 的 sst 文件）中的。
+
+是大致数量而不是精确数量，原因是有一些 key 的删除、覆盖操作难以及时统计。
 
 
 
-
-## 26. 
+## 26. kEstimateTableReadersMem
 
 **定义**
 
 ```cpp
-
+static const std::string kEstimateTableReadersMem;
 ```
 
 **属性**
 
 ```
-
+rocksdb.estimate-table-readers-mem
 ```
 
 **含义**
 
+用于读取 sst 而使用的大概内存大小。
+
+不包括 block cache 使用的内存（例如 filter 和 index blocks）。
 
 
 
-
-## 27. 
+## 27. kIsFileDeletionsEnabled
 
 **定义**
 
 ```cpp
-
+static const std::string kIsFileDeletionsEnabled;
 ```
 
 **属性**
 
 ```
-
+rocksdb.is-file-deletions-enabled
 ```
 
 **含义**
 
+表示是否允许删除过期、废弃的文件。
+
+0 表示允许，非 0 表示不允许。
 
 
 
-
-## 28. 
+## 28. kNumSnapshots
 
 **定义**
 
 ```cpp
-
+static const std::string kNumSnapshots;
 ```
 
 **属性**
 
 ```
-
+rocksdb.num-snapshots
 ```
 
 **含义**
 
+数据库中未释放的快照数量。
 
 
 
-
-## 29. 
+## 29. kOldestSnapshotTime
 
 **定义**
 
 ```cpp
-
+static const std::string kOldestSnapshotTime;
 ```
 
 **属性**
 
 ```
-
+rocksdb.oldest-snapshot-time
 ```
 
 **含义**
 
+最旧的未释放的快照的 unix 时间戳。
 
 
 
-
-## 30. 
+## 30. kOldestSnapshotSequence
 
 **定义**
 
 ```cpp
-
+static const std::string kOldestSnapshotSequence;
 ```
 
 **属性**
 
 ```
-
+rocksdb.oldest-snapshot-sequence
 ```
 
 **含义**
 
+最旧的未释放的快照的序列号。
 
 
 
-
-## 31. 
+## 31. kNumLiveVersions
 
 **定义**
 
 ```cpp
-
+static const std::string kNumLiveVersions;
 ```
 
 **属性**
 
 ```
-
+rocksdb.num-live-versions
 ```
 
 **含义**
 
+实时版本(live version)数量。
+
+`Version` 是一个内部数据结构，详见 `version_set.h`。
+
+更多实时版本通常意味着更多的 SST 文件不会被迭代器或未完成的 compactions 删除。
 
 
 
-
-## 32. 
+## 32. kCurrentSuperVersionNumber
 
 **定义**
 
 ```cpp
-
+static const std::string kCurrentSuperVersionNumber;
 ```
 
 **属性**
 
 ```
-
+rocksdb.current-super-version-number
 ```
 
 **含义**
 
 
+返回当前 LSM 版本的编号。它是一个 `uint64_t` 整数，在 LSM 树发生任何更改后递增。
+
+重新启动数据库后，不会保留该号码，将再次从0开始。
 
 
-
-## 33. 
+## 33. kEstimateLiveDataSize
 
 **定义**
 
 ```cpp
-
+static const std::string kEstimateLiveDataSize;
 ```
 
 **属性**
 
 ```
-
+rocksdb.estimate-live-data-size
 ```
 
 **含义**
 
 
+以字节为单位返回实时数据量的估计值。
+
+对于 BlobDB ，它还包括版本的 blob 文件中实时的字节确切值。
 
 
-
-## 34. 
+## 34. kMinLogNumberToKeep
 
 **定义**
 
 ```cpp
-
+static const std::string kMinLogNumberToKeep;
 ```
 
 **属性**
 
 ```
-
+rocksdb.min-log-number-to-keep
 ```
 
 **含义**
 
+应当保留日志文件的最小数量。
 
 
 
-
-## 35. 
+## 35. kMinObsoleteSstNumberToKeep
 
 **定义**
 
 ```cpp
-
+static const std::string kMinObsoleteSstNumberToKeep;
 ```
 
 **属性**
 
 ```
-
+rocksdb.min-obsolete-sst-number-to-keep
 ```
 
 **含义**
 
+返回要保留的过时 SST 的最小文件号。
+
+如果可以删除所有过时的文件，将返回 `uint64_t` 的最大值（即 18446744073709551615）。
 
 
 
-
-## 36. 
+## 36. kTotalSstFilesSize
 
 **定义**
 
 ```cpp
-
+static const std::string kTotalSstFilesSize;
 ```
 
 **属性**
 
 ```
-
+rocksdb.total-sst-files-size
 ```
 
 **含义**
 
+所有 sst 文件的总大小（字节）。
+
+注意，如果 sst 文件太多，输出这个属性值可能会降低数据库的查询速度。
 
 
 
-
-## 37. 
+## 37. kLiveSstFilesSize
 
 **定义**
 
 ```cpp
-
+static const std::string kLiveSstFilesSize;
 ```
 
 **属性**
 
 ```
-
+rocksdb.live-sst-files-size
 ```
 
 **含义**
 
+返回属于最新 LSM 树的所有 SST 文件的总大小（字节）。
 
 
 
-
-## 38. 
+## 38. kLiveSstFilesSizeAtTemperature
 
 **定义**
 
 ```cpp
-
+static const std::string kLiveSstFilesSizeAtTemperature;
 ```
 
 **属性**
 
 ```
-
+rocksdb.live_sst_files_size_at_temperature
 ```
 
 **含义**
 
+所有特定文件温度下 SST 文件的总大小（字节）
 
 
 
-
-## 39. 
+## 39. kBaseLevel
 
 **定义**
 
 ```cpp
-
+static const std::string kBaseLevel;
 ```
 
 **属性**
 
 ```
-
+rocksdb.base-level
 ```
 
 **含义**
 
+L0 数据将被 compact 到的 level 数。
 
 
 
-
-## 40. 
+## 40. kEstimatePendingCompactionBytes
 
 **定义**
 
 ```cpp
-
+static const std::string kEstimatePendingCompactionBytes;
 ```
 
 **属性**
 
 ```
-
+rocksdb.estimate-pending-compaction-bytes
 ```
 
 **含义**
 
+返回 compaction 需要重写的估计总字节数，以使所有 level 降低到目标大小以下。
+
+对 level-based 以外的其他压缩无效。
 
 
 
-
-## 41. 
+## 41. kAggregatedTableProperties
 
 **定义**
 
 ```cpp
-
+static const std::string kAggregatedTableProperties;
 ```
 
 **属性**
 
 ```
-
+rocksdb.aggregated-table-properties
 ```
 
 **含义**
 
 
+返回目标列族的聚合表属性的字符串或映射表示。
+
+仅包含对聚合有意义的属性。
+ 
+下面是一个使用 `GetProperty()` 输出的例子（字符串）。  
+其实用 `GetMapProperty()` 更合适，可以输出更好理解的键值对形式（我懒了）。
 
 
+```
+# data blocks=770855; # entries=109566553; # deletions=0; # merge operands=0; # range deletions=0; raw key size=2557375015; raw average key size=23.340837; raw value size=1680842603; raw average value size=15.340837; data block size=3134714864; index block size (user-key? 62, delta-value? 62)=21101981; filter block size=0; # entries for filter=0; (estimated) table size=3155816845; filter policy name=N/A; prefix extractor name=N/A; column family ID=N/A; column family name=N/A; comparator name=N/A; merge operator name=N/A; property collectors names=N/A; SST file compression algo=N/A; SST file compression options=N/A; creation time=0; time stamp of earliest key=0; file creation time=0; slow compression estimated data size=0; fast compression estimated data size=0; DB identity=; DB session identity=; DB host id=; original file number=0; 
+```
 
-## 42. 
+## 42. kAggregatedTablePropertiesAtLevel
 
 **定义**
 
 ```cpp
-
+static const std::string kAggregatedTablePropertiesAtLevel;
 ```
 
 **属性**
 
 ```
-
+rocksdb.aggregated-table-properties-at-level<N>
 ```
 
 **含义**
 
+与上一个类似，不过是按 Level 输出的。
 
 
 
-
-## 43. 
+## 43. kActualDelayedWriteRate
 
 **定义**
 
 ```cpp
-
+static const std::string kActualDelayedWriteRate;
 ```
 
 **属性**
 
 ```
-
+rocksdb.actual-delayed-write-rate
 ```
 
 **含义**
 
+当前实际的延迟写速率。
+
+0 表示没有延迟。
 
 
 
-
-## 44. 
+## 44. kIsWriteStopped
 
 **定义**
 
 ```cpp
-
+static const std::string kIsWriteStopped;
 ```
 
 **属性**
 
 ```
-
+rocksdb.is-write-stopped
 ```
 
 **含义**
 
 
+表示写入是否已经停止。
+
+1 表示已停止，0 反之。
 
 
-
-## 45. 
+## 45. kEstimateOldestKeyTime
 
 **定义**
 
 ```cpp
-
+static const std::string kEstimateOldestKeyTime;
 ```
 
 **属性**
 
 ```
-
+rocksdb.estimate-oldest-key-time
 ```
 
 **含义**
 
 
+数据库中最旧的 key 的时间戳估计值。
+
+目前只对 `compaction_options_fifo.allow_compaction` 为 `false` 的 FIFO compaction 有效。
 
 
-
-## 46. 
+## 46. kBlockCacheCapacity
 
 **定义**
 
 ```cpp
-
+static const std::string kBlockCacheCapacity;
 ```
 
 **属性**
 
 ```
-
+rocksdb.block-cache-capacity
 ```
 
 **含义**
 
+block cache 的容量。
 
 
 
-
-## 47. 
+## 47. kBlockCacheUsage
 
 **定义**
 
 ```cpp
-
+static const std::string kBlockCacheUsage;
 ```
 
 **属性**
 
 ```
-
+rocksdb.block-cache-usage
 ```
 
 **含义**
 
+存在于 block cache 中的条目占用的内存大小。
 
 
 
-
-## 48. 
+## 48. kBlockCachePinnedUsage
 
 **定义**
 
 ```cpp
-
+static const std::string kBlockCachePinnedUsage;
 ```
 
 **属性**
 
 ```
-
+rocksdb.block-cache-pinned-usage
 ```
 
 **含义**
 
+被 pinned 的条目占用的内存大小。
 
 
 
-
-## 49. 
+## 49. kOptionsStatistics
 
 **定义**
 
 ```cpp
-
+static const std::string kOptionsStatistics;
 ```
 
 **属性**
 
 ```
-
+rocksdb.options-statistics
 ```
 
 **含义**
 
+一个多行 strings，即 `options.statistics` 的内容。
 
 
 
-
-## 50. 
+## 50. kNumBlobFiles
 
 **定义**
 
 ```cpp
-
+static const std::string kNumBlobFiles;
 ```
 
 **属性**
 
 ```
-
+rocksdb.num-blob-files
 ```
 
 **含义**
 
+当前版本中 blob 文件的数量。
 
 
 
-
-## 51. 
+## 51. kBlobStats
 
 **定义**
 
 ```cpp
-
+static const std::string kBlobStats;
 ```
 
 **属性**
 
 ```
-
+rocksdb.blob-stats
 ```
 
 **含义**
 
+当前版本中所有 blob 文件总的数量和总的大小，以及 blob 文件总的垃圾大小。
+
+下面是一个示例值：
+```
+Number of blob files: 0
+Total size of blob files: 0
+Total size of garbage in blob files: 0
+```
 
 
 
-
-## 52. 
+## 52. kTotalBlobFileSize
 
 **定义**
 
 ```cpp
-
+static const std::string kTotalBlobFileSize;
 ```
 
 **属性**
 
 ```
-
+rocksdb.total-blob-file-size
 ```
 
 **含义**
 
+所有的版本中的 blob 文件的总大小。
 
 
 
 
-## 53. 
+## 53. kLiveBlobFileSize
 
 **定义**
 
 ```cpp
-
+static const std::string kLiveBlobFileSize;
 ```
 
 **属性**
 
 ```
-
+rocksdb.live-blob-file-size
 ```
 
 **含义**
 
-
+当前版本的 blob 文件的总大小。
 
