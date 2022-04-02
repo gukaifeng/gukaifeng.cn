@@ -1139,7 +1139,7 @@ rocksdb.current-super-version-number
 
 返回当前 LSM 版本的编号。它是一个 `uint64_t` 整数，在 LSM 树发生任何更改后递增。
 
-重新启动数据库后，不会保留该号码，将再次从0开始。
+重新启动数据库后，不会保留该号码，将再次从 0 开始。
 
 
 ## 33. kEstimateLiveDataSize
@@ -1246,6 +1246,7 @@ rocksdb.live-sst-files-size
 
 返回属于最新 LSM 树的所有 SST 文件的总大小（字节）。
 
+这里的“最新”，我的理解是 LSM 的最新状态。
 
 
 ## 38. kLiveSstFilesSizeAtTemperature
@@ -1264,9 +1265,22 @@ rocksdb.live_sst_files_size_at_temperature
 
 **含义**
 
-所有特定文件温度下 SST 文件的总大小（字节）
+所有特定文件温度(temperature)下的 SST 文件的总大小（字节）
 
+rocksdb 中定义了一个温度类 `Temperature`，用以描述文件的温度：
+```cpp
+enum class Temperature : uint8_t {
+  kUnknown = 0,
+  kHot = 0x04,
+  kWarm = 0x08,
+  kCold = 0x0C,
+};
+```
+rocksdb 把文件的温度信息传递给文件系统，使得文件获得不同的放置或编码。
 
+这几个温度的编号中间保留了一些数字，留给以后可能的扩展。
+
+另外，虽然这个属性比较好解释，<font color="red">但我没在代码中发现任何的实际调用，该属性的输出始终为空。</font>
 
 ## 39. kBaseLevel
 
@@ -1286,6 +1300,13 @@ rocksdb.base-level
 
 L0 数据将被 compact 到的 level 数。
 
+这个值默认是 1。
+
+如果当前不是 level-compaction，这个值是 -1，因为不适用。
+
+这个值的含义是 L0 的数据会被直接 compact 到哪个层，一般来说就是 L1，也可以设的更高。
+
+举个例子，如果该值为 3，那么 L0 的数据就会被直接 compact 到 L3，L1 和 L2 就是空的。
 
 
 ## 40. kEstimatePendingCompactionBytes
@@ -1331,7 +1352,7 @@ rocksdb.aggregated-table-properties
 
 仅包含对聚合有意义的属性。
  
-下面是一个使用 `GetProperty()` 输出的例子（字符串）。  
+下面是一个使用 `GetProperty()` 输出的例子（字符串），基本都可以通过名字来理解。  
 其实用 `GetMapProperty()` 更合适，可以输出更好理解的键值对形式（我懒了）。
 
 
