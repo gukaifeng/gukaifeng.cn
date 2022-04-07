@@ -9,7 +9,10 @@ toc: true
 
 
 
-传送门: [MapReduce 论文原文](https://storage.googleapis.com/pub-tools-public-publication-data/pdf/16cb30b4b92fd4989b8619a61752a2387c6dd474.pdf)
+MapReduce 论文原文传送门：  
+[MapReduce: Simplified Data Processing on Large Clusters](https://storage.googleapis.com/pub-tools-public-publication-data/pdf/16cb30b4b92fd4989b8619a61752a2387c6dd474.pdf)
+
+
 
 > 这里需要一个前置知识，你需要先了解一下函数式语言中的 map 和 reduce，因为 MapReduce 就是借鉴了函数式语言中的 map 和 reduce 的思想，如果你不了解这个，后面理解起来可能会有些困难。
 >
