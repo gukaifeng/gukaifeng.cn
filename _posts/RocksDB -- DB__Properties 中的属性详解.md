@@ -671,7 +671,9 @@ rocksdb.block-cache-entry-stats
 
 **含义**
 
+block cache 的使用统计数据。
 
+因为我写这篇博客的时候还没有用到这个属性，所以这里后面再回来补。
 
 
 
