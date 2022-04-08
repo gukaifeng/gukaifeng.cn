@@ -9,5 +9,5 @@ tags: [Raft,论文,分布式]
 
 
 Raft 论文原文传送门：  
-[In Search of an Understandable Consensus Algorithm (Extended Version)](http://nil.csail.mit.edu/6.824/2017/papers/raft-extended.pdf)
+[In Search of an Understandable Consensus Algorithm (Extended Version)](https://raft.github.io/raft.pdf)
 
