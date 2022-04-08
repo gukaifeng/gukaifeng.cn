@@ -46,7 +46,7 @@ MapReduce 的实现运行在一个大型计算机器群上，并且是高可伸�
 
 计算程序拿到一组输入 key/value 对，然后产出一组输出 key/value 对。MapReduce 库的用户可以把这个计算表达为两个函数：*Map* 和 *Reduce*。
 
-*Map*，由用户编写，获取一个输入 kv 对，然后生成一组中间 kv 对。MapReduce 库同一中间 key `I` 的所有中间 value 组合到一起，发送给 *Reduce* 函数。
+*Map*，由用户编写，获取一个输入 kv 对，然后生成一组中间 kv 对。MapReduce 库把同一中间 key `I` 的所有中间 value 组合到一起，发送给 *Reduce* 函数。
 
 *Reduce* 函数也由用户编写，接收一个中间 key `I` 和这个 key 的一组 value。*Reduce* 合并这些 value，组合成一组可能更小的 value（每次 *Reduce* 调用往往只产出 0 个或者 1 个输出 value）。这些中间 value 通过一个迭代器传递给用户的 reduce 函数，这样使得我们可以处理那些总量很大，无法全部放入内存的 value。
 
@@ -79,7 +79,7 @@ reduce(String key, Iterator values):
 
 
 
--
+\-
 
 这个示例完整的代码在论文最后的 Appendix A，这里直接在下面给出（这个示例第 66 行还用到了 4.3 要讲的组合器函数）。
 
