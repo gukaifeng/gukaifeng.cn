@@ -9,15 +9,13 @@ mathjax: true
 
 
 
-<font size=5px>[6.824: Distributed Systems](http://nil.csail.mit.edu/6.824/2020/)</font>
+课程主页传送门：<font size=4px>[6.824: Distributed Systems](http://nil.csail.mit.edu/6.824/2020/)</font>
 
-[6.824 Lab 1: MapReduce](http://nil.csail.mit.edu/6.824/2020/labs/lab-mr.html)
-
-[6.824 Lab 2: Raft](http://nil.csail.mit.edu/6.824/2020/labs/lab-raft.html)
-
-[6.824 Lab 3: Fault-tolerant Key/Value Service](http://nil.csail.mit.edu/6.824/2020/labs/lab-kvraft.html)
-
-[6.824 Lab 4: Sharded Key/Value Service](http://nil.csail.mit.edu/6.824/2020/labs/lab-shard.html)
+4 个 lab 传送门：  
+[Lab 1: MapReduce](http://nil.csail.mit.edu/6.824/2020/labs/lab-mr.html)  
+[Lab 2: Raft](http://nil.csail.mit.edu/6.824/2020/labs/lab-raft.html)  
+[Lab 3: Fault-tolerant Key/Value Service](http://nil.csail.mit.edu/6.824/2020/labs/lab-kvraft.html)  
+[Lab 4: Sharded Key/Value Service](http://nil.csail.mit.edu/6.824/2020/labs/lab-shard.html)
 
 
 
