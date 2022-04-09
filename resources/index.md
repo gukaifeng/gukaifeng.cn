@@ -87,8 +87,7 @@ toc: true
 
 
 1. [RocksDB 官网](https://rocksdb.org/)
-2. [RocksDB 中文网（非官方）](https://rocksdb.org.cn/)
-3. [RocksDB Github](https://github.com/facebook/rocksdb)
+2. [RocksDB Github](https://github.com/facebook/rocksdb)
 4. [RocksDB Wiki](https://github.com/facebook/rocksdb/wiki)
 
 
