@@ -9,6 +9,13 @@ toc: true
 
 
 
+> <font color=red>请注意，此文章尚未完成。</font>  
+> <font color=red>当此文章完结时，此声明将被删除。</font>
+
+
+
+
+
 RocksDB 的 Histograms 枚举定义在 `statistics.h` 中，相关代码在[这里](https://github.com/facebook/rocksdb/blob/v6.25.3/include/rocksdb/statistics.h#L423-#L520)。
 
 `statistics.h` 中还声明了一个 Histograms 枚举值与 rocksdb 属性的一一对应关系，相关代码在[这里](https://github.com/facebook/rocksdb/blob/v6.25.3/include/rocksdb/statistics.h#L522)，而具体的定义在 `statistics.cc` 中，在[这里](https://github.com/facebook/rocksdb/blob/v6.25.3/monitoring/statistics.cc#L219-L274)。
