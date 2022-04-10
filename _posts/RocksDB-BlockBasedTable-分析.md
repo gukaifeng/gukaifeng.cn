@@ -8,6 +8,17 @@ categories: [数据库]
 toc: true
 ---
 
+
+
+> <font color=red>请注意，此文章尚未完成。</font>  
+> <font color=red>当此文章完结时，此声明将被删除。</font>
+
+
+
+
+
+
+
 参考链接：https://github.com/facebook/rocksdb/wiki/Rocksdb-BlockBasedTable-Format
 
 \- BlockBasedTable 是 RocksDB 默认的表类型。

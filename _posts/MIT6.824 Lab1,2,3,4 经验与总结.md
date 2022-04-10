@@ -9,6 +9,17 @@ mathjax: true
 
 
 
+
+
+> <font color=red>请注意，此文章尚未完成。</font>  
+> <font color=red>当此文章完结时，此声明将被删除。</font>
+
+
+
+
+
+
+
 课程主页传送门：<font size=4px>[6.824: Distributed Systems](http://nil.csail.mit.edu/6.824/2020/)</font>
 
 4 个 lab 传送门：  
