@@ -8,6 +8,19 @@ categories: [算法题解]
 toc: true
 ---
 
+
+
+
+
+> <font color=red>请注意，此文章尚未完成。</font>  
+> <font color=red>当此文章完结时，此声明将被删除。</font>
+
+
+
+
+
+
+
 因为我在做LeetCode的时候，是断断续续的做的，周期比较长。
 
 所以有时候做到后面，前面的就忘了怎么做了。
