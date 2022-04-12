@@ -6,7 +6,7 @@ categories: [技术杂谈]
 tags: [Python]
 ---
 
-这篇文章要说的是，在不改变图片尺寸的前提下，缩小图片的尺寸（肯定会降低图片质量）。
+这篇文章要说的是，在不改变图片尺寸的前提下，缩小图片的大小（肯定会降低图片质量）。
 
 如果你同时想要改变图片的尺寸，看 [Python 缩放图片（保持宽高比）](https://www.gukaifeng.cn/posts/python-suo-fang-tu-pian-bao-chi-kuan-gao-bi/)。
 
