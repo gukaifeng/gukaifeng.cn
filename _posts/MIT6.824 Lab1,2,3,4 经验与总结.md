@@ -38,7 +38,9 @@ mathjax: true
 
 RPC 的参数传输到接收方后变成了空指针，调了很久，最后发现是参数中不能传自己定义的结构体类型。
 
+RPC 中 args 和 reply 参数不能为空指针。
 
+一个追随者收到 AppendEntries RPC 时，判定其是否为有效的 RPC，应该看 RPC 中的任期是否大于等于其自己最后一个条目的 RPC。因为如果这个追随者与其他服务器失联很久，其会不停的开始新选举，导致其自己的任期非常大，进而拒绝恢复连接后的领导者的有效 RPC。
 
 ## Lab 3: Fault-tolerant Key/Value Service
 
