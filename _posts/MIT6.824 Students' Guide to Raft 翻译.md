@@ -141,7 +141,7 @@ Raft 的终极指南在 Raft 论文的图 2 中。该图指定了 Raft 服务器
 
 
 
-一个常见的混淆来源是 nextIndex 和 matchIndex 之间的区别。 特别是，您可能会观察到 matchIndex = nextIndex - 1，而根本没有实现 matchIndex。 这是不安全的。 虽然 nextIndex 和 matchIndex 通常同时更新为相似的值（具体而言，nextIndex = matchIndex + 1），但两者的用途截然不同。 nextIndex 是对领导者与给定追随者共享什么前缀的猜测。 它通常非常乐观（我们分享一切），并且仅在负面回应时才向后移动。 例如，当一个领导者刚刚被选举出来时，nextIndex 被设置为日志末尾的索引索引。 在某种程度上，nextIndex 是用于性能的——你只需要将这些东西发送给这个对等点。
+一个常见的混淆来源是 nextIndex 和 matchIndex 之间的区别。 特别是，您可能会观察到 matchIndex = nextIndex - 1，而根本没有实现 matchIndex。 这是不安全的。 虽然 nextIndex 和 matchIndex 通常同时更新为相似的值（具体而言，nextIndex = matchIndex + 1），但两者的用途截然不同。 nextIndex 是对领导者与给定追随者共享什么前缀的猜测。 它通常非常乐观（我们分享一切），并且仅在负面回应时才向后移动。 例如，当一个领导者刚刚被选举出来时，nextIndex 被设置为日志末尾的索引索引。 在某种程度上，nextIndex 是用于执行的——你只需要将这些东西发送给这个对等点。
 
 一个常见的混淆来源是 `nextIndex` 和 `matchIndex` 之间的区别。 特别是，您可能会观察到 `matchIndex = nextIndex - 1`，而根本没有实现 `matchIndex`。 这是不安全的。 虽然 `nextIndex` 和 `matchIndex` 通常同时更新为相似的值（具体而言，`nextIndex = matchIndex + 1`），但两者的用途截然不同。`nextIndex` 是对领导者与给定追随者共享什么前缀的**猜测**。它通常非常乐观（我们分享一切），并且仅在负面回应时才向后移动。例如，当一个领导者刚刚被选举出来时，`nextIndex` 被设置为日志末尾的索引索引。在某种程度上，`nextIndex` 是用于执行的——你只需要将这些东西发送给这个对等点。
 
