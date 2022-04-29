@@ -418,9 +418,9 @@ Raft 的日志在正常运行时会增长，以容纳更多的客户端请求，
 
 
 
+此图 13 为翻译版本，但保留了部分相对重要的英文原词。在[这里](https://gukaifeng.cn/posts/raft-lun-wen-yue-du-bi-ji/Raft_Figure_13.png)查看原图。
 
-
-![图 13：安装快照(InstallSnapshot) RPC 摘要。快照被分割成块进行传输，这些块可以为追随者提供了活跃信号，使追随者可以重置其选举计时器。](https://gukaifeng.cn/posts/raft-lun-wen-yue-du-bi-ji/Raft_Figure_13.png)
+![图 13：安装快照(InstallSnapshot) RPC 摘要。快照被分割成块进行传输，这些块可以为追随者提供了活跃信号，使追随者可以重置其选举计时器。](https://gukaifeng.cn/posts/raft-lun-wen-yue-du-bi-ji/Raft_Figure_13_Chinese.png)
 
 
 
@@ -439,3 +439,4 @@ Raft 的日志在正常运行时会增长，以容纳更多的客户端请求，
 ## 8. 客户端交互
 
 本节介绍客户端如何与 Raft 交互，包括客户端如何找到集群领导者以及 Raft 如何支持线性化语义。这些问题适用于所有基于共识的系统，Raft 的解决方案与其他系统类似。
+
