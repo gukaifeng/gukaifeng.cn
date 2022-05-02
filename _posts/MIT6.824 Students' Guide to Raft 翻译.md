@@ -1,15 +1,10 @@
 ---
 title: "MIT6.824 Students' Guide to Raft 翻译"
 date: 2022-04-24 23:30:00
-updated: 2022-04-24 23:30:00
+updated: 2022-05-02 23:38:00
 categories: [技术杂谈]
 tags: [MIT6.824,Raft,论文,分布式]
 ---
-
-
-
-> <font color=red>请注意，此文章尚未完成。</font>  
-> <font color=red>当此文章完结时，此声明将被删除。</font>
 
 
 
@@ -192,3 +187,133 @@ Raft 论文包括几个有趣的可选特性。在 6.824 中，我们要求学�
 
 
 
+当在 Raft 上构建服务时（例如 [second 6.824 Raft lab](https://pdos.csail.mit.edu/6.824/labs/lab-kvraft.html) 中的键/值存储，服务与 Raft 日志之间的交互可能很棘手。此部分详细介绍了您的开发过程的一些方面，您在构建应用程序时可能会发现有用。
+
+
+
+### 4.1. 应用客户端操作
+
+您可能会对如何根据复制日志来实现应用程序感到困惑。你可以从让你的服务开始，每当它接收到客户端请求时，将请求发送给领导者，等待 Raft 应用某些东西，执行客户端请求的操作，然后返回给客户端。虽然这在单客户端系统中会很好，但它不适用于并发客户端。
+
+相反，服务应该被构建为一个**状态机**，客户端操作将状态机从一种状态转换到另一种状态。您应该在某处有一个循环，该循环同时接受一个客户端操作（在所有服务器上以相同的顺序 — 这就是 Raft 出现的地方），并按顺序将每个操作应用于状态机。这个循环应该是代码中**唯一**触及应用程序状态的部分（6.824 中的键/值映射）。 这意味着你的面向客户端的 RPC 方法应该简单地将客户端的操作提交给 Raft，然后**等待**该操作被这个“应用器(applier)循环”应用。只有当客户端的命令出现时，它才会被执行，并读出任何返回值。 请注意，**这包括读取请求**！
+
+这就引出了另一个问题：您如何知道客户端操作何时完成？ 在没有失败的情况下，这很简单 — 您只需等待放入日志的内容返回（即传递给 `apply()`）。发生这种情况时，您会将结果返回给客户端。但是，如果出现故障怎么办？ 例如，当客户端最初联系您时，您可能是领导者，但后来又选举了其他人，您放入日志的客户请求已被丢弃。显然你需要让客户再试一次，但你怎么知道什么时候告诉他们错误呢？
+
+解决此问题的一种简单方法是在 Raft 日志中记录插入时客户端操作出现的位置。一旦该索引处的操作发送到 `apply()`，您可以根据针对该索引执行的操作是否确实是您放在那里的操作来判断客户端的操作是否成功。如果不是，就说明发生了故障，可以将错误返回给客户端。
+
+### 4.2. 复制检测
+
+一旦您的客户端在遇到错误时重试操作，您就需要某种重复检测方案 — 如果客户端向您的服务器发送 `APPEND`，没有收到回复，然后将其重新发送到下一个服务器，您的 `apply()` 函数需要确保 `APPEND` 不会执行两次。为此，您需要为每个客户端请求提供某种唯一标识符，以便您可以识别过去是否见过，更重要的是，是否应用过特定操作。此外，此状态需要成为您的状态机的一部分，以便您的所有 Raft 服务器消除**相同**的重复项。
+
+有许多分配此类标识符的方法。一种简单且相当有效的方法是给每个客户端一个唯一的标识符，然后让他们用一个单调递增的序列号标记每个请求。如果客户端重新发送请求，它会重新使用相同的序列号。您的服务器跟踪它为每个客户端看到的最新序列号，并简单地忽略它已经看到的任何操作。
+
+
+
+### 4.3. Hairy corner-cases
+
+如果您的实现遵循上面给出的一般大纲，那么您可能会遇到至少两个微妙的问题，如果不进行一些认真的调试，可能很难识别。为了节省您一些时间，这里有：
+
+**重新出现索引(Re-appearing indices)** : 假设您的 Raft 库有一些方法 `Start()` 接受命令，并返回该命令在日志中放置的索引（以便您知道何时返回客户端，如上所述）。您可能会假设您永远不会看到 Start() 返回相同的索引两次，或者至少两次，如果您再次看到相同的索引，则第一次返回该索引的命令一定失败了。事实证明，这些假设不成立，即使没有服务器崩溃。
+
+考虑下面的场景，有服务器 S1 ~ S5。起初，S1 是领导者，其日志是空的。
+
+1. 两个客户端操作（C1 和 C2）到达 S1。
+2. `Start()` 给 C1 返回 1，给 C2 返回 2。
+3. S1 发送包含 C1 和 C2 的 `AppendEntries` 给 S2，但是所有其他的消息都丢失了。
+4. S3 以候选人身份继续推进。
+5. S1 和 S2 不会给 S3 投票，但是 S3、S4 和 S5 会投票，所以 S3 成为了领导者。
+6. 另一个客户端请求 C3 到达，进入 S3。
+7. S3 调用 `Start()`（返回 1）。
+8. S3 发送 `AppendEntries` 给 S1，S1 丢弃 其日志中的 C1 和 C2，添加 C3。
+9. 在给其他服务器发送 `AppendEntries` 前，S3 故障了。
+10. S1 继续向前推进，因为它日志是最新的，它当选领导者。
+11. 另一个客户端请求 C4 到达 S1。
+12. S1 调用 `Start()`，返回 2（`Start(C2)` 也返回 2）。
+13. S1 的所有 `AppendEntries` 都被丢弃，S2 继续向前推进。
+14. S1 和 S3 不会给 S2 投票，但 S2、S4 和 S5 会，S2 成为领导者。
+15. 一个客户端请求 C5 进入 S2。
+16. S2 调用 `Start()`，其返回 3。
+17. S2 成发送了 `AppendEntries` 到所有服务器，S2 通过在下一个心跳中包含更新的 `leaderCommit = 3` 向各个服务器报告。
+
+由于 S2 的日志是 `[C1 C2 C5]`，这意味着在索引 2 处提交的条目是 C2（并且在所有服务器上已经应用的，包括 S1）。尽管 C4 是最后一次返回 S1 索引 2 的客户操作，但这是事实。
+
+
+
+**四向死锁(The four-way deadlock)** : 发现这一点的所有功劳都归功于 [Steven Allen](http://stebalien.com/)，另一个 6.824 TA 。他发现了以下令人讨厌的四向死锁，当您在 Raft 之上构建应用程序时，您很容易遇到这些死锁。
+
+
+
+您的 Raft 代码，无论其结构如何，都可能具有类似 `Start()` 的函数，允许应用程序向 Raft 日志添加新命令。它也可能有一个循环，当 `commitIndex` 更新时，在应用程序上为 `lastApplied` 和 `commitIndex` 之间的每个元素调用 `apply()`。这些例程可能都需要一些锁 `a`。在你的基于 Raft 的应用程序中，你可能会在 RPC 处理程序中的某个地方调用 Raft 的 `Start()` 函数，并且你在其他地方有一些代码，当 Raft 应用新的日志条目时，这些代码就会被通知。由于这两者需要通信（即 RPC 方法需要知道它放入日志的操作何时完成），它们可能都需要一些锁 `b`。
+
+在 Go 中，这四个代码段可能看起来像这样：
+
+```go
+func (a *App) RPC(args interface{}, reply interface{}) {
+    // ...
+    a.mutex.Lock()
+    i := a.raft.Start(args)
+    // update some data structure so that apply knows to poke us later
+    a.mutex.Unlock()
+    // wait for apply to poke us
+    return
+}
+```
+
+```go
+func (r *Raft) Start(cmd interface{}) int {
+    r.mutex.Lock()
+    // do things to start agreement on this new command
+    // store index in the log where cmd was placed
+    r.mutex.Unlock()
+    return index
+}
+```
+
+```go
+func (a *App) apply(index int, cmd interface{}) {
+    a.mutex.Lock()
+    switch cmd := cmd.(type) {
+    case GetArgs:
+        // do the get
+	// see who was listening for this index
+	// poke them all with the result of the operation
+    // ...
+    }
+    a.mutex.Unlock()
+}
+```
+
+```go
+func (r *Raft) AppendEntries(...) {
+    // ...
+    r.mutex.Lock()
+    // ...
+    for r.lastApplied < r.commitIndex {
+      r.lastApplied++
+      r.app.apply(r.lastApplied, r.log[r.lastApplied])
+    }
+    // ...
+    r.mutex.Unlock()
+}
+```
+
+
+
+现在考虑如果系统处于下面的状态：
+
+* `App.RPC` 只获得了 `a.mutex` 并调用了 `Raft.Start`
+* `Raft.Start` 正在等待 `r.mutex`
+* `Raft.AppendEntries` 正持有 `r.mutex`，且刚刚调用 `App.apply`
+
+
+
+现在，我们的程序死锁了，因为：
+
+* `Raft.AppenEntries` 在 `App.apply` 返回前不会释放锁。
+* `App.apply` 在其获得 `a.mutex` 前不会返回。
+* `a.mutex` 在 `App.RPC` 返回前不会被释放。
+* 在 `Raft.Start` 返回前，`App.RPC` 不会返回。
+* 在获得 `r.mutex` 前，`Raft.Start` 不会返回。
+* `Raft.Start` 必须等待 `Raft.AppendEntries`。
+
+有几种方法可以解决这个问题。最简单的就是在 `App.RPC` 中调用 `a.raft.Start` 后获取 `a.mutex`。然而，这意味着在 `App.RPC` 有机会记录它希望被通知的事实**之前**，可能会为 `App.RPC` 刚刚调用 `Raft.Start` 的操作调用 `App.apply`。另一种可能产生更简洁设计的方案是有一个从 `Raft` 调用 `r.app.apply` 的单个专用线程。 每次更新 `commitIndex` 时都可以通知该线程，然后无需持有锁即可应用，从而打破死锁。
