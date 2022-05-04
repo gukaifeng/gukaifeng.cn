@@ -147,7 +147,15 @@ sys	0m0.900s
 
 ## Lab 3: Fault-tolerant Key/Value Service
 
+1\. 遇到的第一个问题是，测试 `TestUnreliableOneKey3A` 耗时二十几秒才能完成，远超预期。
 
+```
+Test: concurrent append to same key, unreliable (3A)
+```
+
+最后发现原因是，因为我设置了客户端请求超时重试（即服务器太久没有返回 RPC 结果时重试），但超时时间设置的太短或太长。太短会导致有些请求服务器正在处理，没有故障，但还没处理完就被客户端放弃了。太长会导致遇到故障服务器时，客户端等的太久。我最后设置在 200-300 ms，是个比较合适的范围。
+
+2\. 第二个问题是，3A 的最后 6 个测试，即带有 `restart` 标签的测试，耗时均是课程样例输出的 2 倍。
 
 ## Lab 4: Sharded Key/Value Service
 
