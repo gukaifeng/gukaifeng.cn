@@ -100,54 +100,54 @@ Lab1 是实现自己的 MapReduce 模型，比较简单，在 6.824 这里我感
 ```
 [gukaifeng@iZ8vbf7xcuoq7ug1e7hjk5Z raft]$ time go test
 Test (2A): initial election ...
-  ... Passed --   3.1  3  110   30232    0
+  ... Passed --   3.0  3  114   31340    0
 Test (2A): election after network failure ...
-  ... Passed --   4.5  3  128   24809    0
+  ... Passed --   4.5  3  144   26730    0
 Test (2B): basic agreement ...
-  ... Passed --   0.6  3   14    3794    3
+  ... Passed --   0.4  3   14    3794    3
 Test (2B): RPC byte count ...
-  ... Passed --   0.9  3   46  113246   11
+  ... Passed --   0.8  3   46  113154   11
 Test (2B): agreement despite follower disconnection ...
-  ... Passed --   5.4  3  209   55562    8
+  ... Passed --   5.4  3  223   58168    8
 Test (2B): no agreement if too many followers disconnect ...
-  ... Passed --   3.5  5  350   77663    3
+  ... Passed --   3.4  5  380   81237    3
 Test (2B): concurrent Start()s ...
-  ... Passed --   0.6  3   24    6818    6
+  ... Passed --   0.6  3   32    9096    6
 Test (2B): rejoin of partitioned leader ...
-  ... Passed --   2.3  3   99   22613    4
+  ... Passed --   2.1  3   97   22073    4
 Test (2B): leader backs up quickly over incorrect follower logs ...
-  ... Passed --  12.8  5 1334  632664  102
+  ... Passed --  12.7  5 1450  629614  102
 Test (2B): RPC counts aren't too high ...
-  ... Passed --   2.1  3   98   27906   12
+  ... Passed --   2.1  3  108   30920   12
 Test (2C): basic persistence ...
-  ... Passed --   3.5  3  128   30655    6
+  ... Passed --   2.9  3  120   29056    6
 Test (2C): more persistence ...
-  ... Passed --  11.0  5  798  153220   16
+  ... Passed --  10.4  5  910  163694   16
 Test (2C): partitioned leader and one follower crash, leader restarts ...
-  ... Passed --   1.6  3   47   11317    4
+  ... Passed --   1.3  3   49   11883    4
 Test (2C): Figure 8 ...
-  ... Passed --  29.1  5 1482  294102   53
+  ... Passed --  30.1  5 2160  435658   64
 Test (2C): unreliable agreement ...
-  ... Passed --   3.0  5  708  346841  246
+  ... Passed --   2.8  5  691  302570  246
 Test (2C): Figure 8 (unreliable) ...
-  ... Passed --  31.5  5 1750  440162   73
+  ... Passed --  30.3  5 2406  372539   60
 Test (2C): churn ...
-  ... Passed --  16.2  5 1452 1261721  662
+  ... Passed --  16.5  5 1359 2016837  753
 Test (2C): unreliable churn ...
-  ... Passed --  16.1  5 1965  891346  533
+  ... Passed --  16.1  5 1439  723447  297
 PASS
-ok  	_/home/gukaifeng/projects/6.824/src/raft	147.686s
+ok  	_/home/gukaifeng/projects/6.824/src/raft	145.621s
 
-real	2m27.916s
-user	0m4.425s
-sys	0m0.900s
+real	2m25.861s
+user	0m4.224s
+sys	0m0.904s
 ```
 
 
 
 ## Lab 3: Fault-tolerant Key/Value Service
 
-1\. 遇到的第一个问题是，测试 `TestUnreliableOneKey3A` 耗时二十几秒才能完成，远超预期。
+1\. 遇到的第一个问题是，测试 `TestUnreliableOneKey3A` 耗时二十几秒才能完成，远超预期。还有可能导致 3A 最后一个测试（即 `Test: unreliable net, restarts, partitions, linearizability checks (3A)`）在规定的 2 分钟限时内无法完成。
 
 ```
 Test: concurrent append to same key, unreliable (3A)
@@ -155,7 +155,7 @@ Test: concurrent append to same key, unreliable (3A)
 
 最后发现原因是，因为我设置了客户端请求超时重试（即服务器太久没有返回 RPC 结果时重试），但超时时间设置的太短或太长。太短会导致有些请求服务器正在处理，没有故障，但还没处理完就被客户端放弃了。太长会导致遇到故障服务器时，客户端等的太久。我最后设置在 200-300 ms，是个比较合适的范围。
 
-2\. 第二个问题是，3A 的最后 6 个测试，即带有 `restart` 标签的测试，耗时均是课程样例输出的 2 倍。
+2\. 第二个问题是，3A 的最后 6 个测试，即带有 `restart` 标签的测试，耗时均是课程样例输出的 2 倍。其他测试所用时间都正常。因为这 6 个测试都是带有 `restart` 的，初步怀疑跟重启恢复有关。待解决。
 
 ## Lab 4: Sharded Key/Value Service
 
