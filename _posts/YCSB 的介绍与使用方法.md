@@ -222,9 +222,47 @@ ycsb: error: too few arguments
 
 #### 2.2.2. 步骤 2. 选择合适的数据库接口层
 
-数据库接口层是一个 Java 类，可以执行由 YCSB 客户端生成的 `read`，`insert`，`update`，`delete` 和 `scan`  操作对应你的数据库的 API 的调用。
+数据库接口层是一个 Java 类，可以执行由 YCSB 客户端生成的 `read`，`insert`，`update`，`delete` 和 `scan`  操作对应你的数据库的 API 的调用。这个类是在 com.yahoo.ycsb 包中抽象 DB 类的子类。在运行 YCSB 客户端以前，你需要在命令行指定数据库接口层的类名，客户端会动态加载你的接口类。任何在命令行中（或命令行中的参数文件中）指定的属性，都会被传递给 DB 接口实例，用来配置这个接口层（例如，告诉接口层你要测试的数据库的 hostname）。
+
+YCSB 客户端具有简单的虚拟接口层，com.yahoo.ycsb.BasicDB。这个层只会用 System.out 打印其要执行的操作。这对于确保客户端正确运行、调试你的工作负载是有帮助的。
+
+关于在运行 YCSB 时如何使用客户端的详细信息，参见  [Using the Database Libraries](https://github.com/brianfrankcooper/YCSB/wiki/Using-the-Database-Libraries)。关于更多实现 DB 接口层的细节，参见 [Adding a Database](https://github.com/brianfrankcooper/YCSB/wiki/Adding-a-Database)。
+
+你可以对数据库直接使用 `ycsb` 命令。这个客户端使用数据库接口层发送命令给数据库。你可以使用此客户端来确保 DB 层正常工作，数据库正确设置，DB 层可以连接到数据库等等。它还为各种数据库提供了一个通用的接口，可用于检查数据库中的数据。运行命令行客户端：
+
+```shell
+$ ./bin/ycsb shell basic
+> help
+Commands:
+  read key [field1 field2 ...] - Read a record
+  scan key recordcount [field1 field2 ...] - Scan starting at key
+  insert key name1=value1 [name2=value2 ...] - Insert a new record
+  update key name1=value1 [name2=value2 ...] - Update a record
+  delete key - Delete a record
+  table [tablename] - Get or [set] the name of the table
+  quit - Quit
+```
+
+
 
 #### 2.2.3. 步骤 3. 选择合适的工作负载
+
+工作负载定义将在**加载(loading)**阶段加载到数据库中的数据，以及将在**事务(transaction)**阶段对数据集执行的操作。
+
+通常，一个工作负载由以下组成：
+
+1. 工作负载 Java 类（com.yahoo.ycsb.Workload 的子类）
+2. 参数文件（以 Java 的属性格式）
+
+因为该数据集的属性必须在**加载**阶段（以便可以构建和插入正确的记录）以及在**事务**阶段（以便可以引用正确的记录 ID 和字段）已知，所以单个属性集合在两个阶段之间共享。因此这两个阶段都会用到参数文件。工作负载 Java 类使用这些属性来插入记录（**加载**阶段）或执行针对这些记录的事务（**事务**阶段）。选择运行哪个阶段基于你在运行 `ycsb` 命令时指定的参数。
+
+你要在运行 YCSB 客户端时指定这个 java 类和参数文件。客户端将会动态地加载你的工作负载类，并将参数文件中的属性（以及任何在命令行中额外添加的属性）传递给这个类，然后执行工作负载。
+
+
+
+
+
+
 
 
 
