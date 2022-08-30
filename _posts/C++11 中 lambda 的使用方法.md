@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
 
 一个全功能的 lambda 语句应该是这样的：
 
-**（这是 C++11 版本，更高 C++ 版本有新特性，后面再说）**
+**（这是 C++11 版本，更高 C++ 版本有新特性，但不是本文要说的）**
 
 ```cpp
 [ captures ] ( params ) specs { body }
