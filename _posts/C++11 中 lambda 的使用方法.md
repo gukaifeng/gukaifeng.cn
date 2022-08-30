@@ -1,7 +1,7 @@
 ---
 title: C++11 中 lambda 的使用方法.md
 date: 2022-08-30 17:07:10
-updated: 2022-12-09 17:45:10
+updated: 2022-08-30 17:07:10
 categories:
 - 编程语言基础
 - Cpp
@@ -13,7 +13,7 @@ lambda 是 C++11 中的特性，可以简化我们的代码，非常好用。
 
 lambda 的基本功能最常用，且简单。
 
-但其实 lambda 也有很多花里胡哨的功能，这篇文章主要讲基本功能，参考资料来自 [Lambda expressions (since C++11) - cppreference.com](https://en.cppreference.com/w/cpp/language/lambda#Lambda_capture)，如果你想要学习那些本文中没有介绍的花里胡哨的用法，可以自己看看。
+但其实 lambda 也有很多花里胡哨的功能，这篇文章主要讲基本功能，参考资料来自 [Lambda expressions (since C++11) - cppreference.com](https://en.cppreference.com/w/cpp/language/lambda)，如果你想要学习那些本文中没有介绍的花里胡哨的用法，可以自己看看。
 
 ## 1. 一个简单的示例演示
 
