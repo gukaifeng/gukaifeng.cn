@@ -17,11 +17,7 @@ toc: true
 
 此外，在终端中，除了可以给文字加颜色，也可以给文字加背景色，背景色在某些场景下也十分有用，这个在后面也会说。
 
-
-
 ## 1. 示例演示
-
-
 
 下面先看一个例子，使用 **C++** 语言输出：
 
@@ -39,13 +35,11 @@ int main(int argc, char* argv[]) {
 
 输出截图如下（使用截图是因为代码块在这里无法正确显示颜色）：
 
-![](C:\Users\micro\AppData\Roaming\marktext\images\2022-09-03-20-31-27-image.png)
+![](https://gukaifeng.cn/posts/zai-linux-zhong-duan-shu-chu-dai-yan-se-wen-zi-de-fang-fa/zai-linux-zhong-duan-shu-chu-dai-yan-se-wen-zi-de-fang-fa_1.png)
 
 我们再使用 **Shell** 语句试一试：
 
-![](C:\Users\micro\AppData\Roaming\marktext\images\2022-09-03-20-35-46-image.png)
-
-
+![](https://gukaifeng.cn/posts/zai-linux-zhong-duan-shu-chu-dai-yan-se-wen-zi-de-fang-fa/zai-linux-zhong-duan-shu-chu-dai-yan-se-wen-zi-de-fang-fa_2.png)
 
 ## 2. 标准语法
 
@@ -59,15 +53,9 @@ int main(int argc, char* argv[]) {
 
 * `m`：表示转义结束。
 
-
-
 > 请注意，在一般情况下，在希望有效果的文字之后，一定要加 `\e[m` 或 `\e[0m` 重置效果。不然的话，可能你整个终端都是这样的了！
 
-
-
 ## 3. 输出彩色字符
-
-
 
 我们以这个语句为例：
 
@@ -79,21 +67,17 @@ int main(int argc, char* argv[]) {
 
 `\e[m` 代表重置，也就是说后面的文字就不再有红色了。
 
-
-
 ## 3. 给文字加上背景色
 
 大部分 Linux 终端的默认背景色都是深色的（如黑色、深灰色等），所以我们最常用的红黄绿三个颜色的显示在大多数时候并没有什么问题。但如果有用户将终端背景色设置为浅色（如白色，浅灰色等），那像黄色这样的颜色恐怕就很不清晰了。
 
 为了我们输出的颜色文字能在任何场景下都可以被识别，我们可以给文字加一个背景色。
 
-![](C:\Users\micro\AppData\Roaming\marktext\images\2022-09-03-20-55-53-image.png)
+![](https://gukaifeng.cn/posts/zai-linux-zhong-duan-shu-chu-dai-yan-se-wen-zi-de-fang-fa/zai-linux-zhong-duan-shu-chu-dai-yan-se-wen-zi-de-fang-fa_3.png)
 
 通过观察语句我们可以发现，**语法和上面修改文字颜色是一模一样的！**
 
 **事实上，只是不同的颜色代码而已！比如，31 代表红色文字，41 代表红色背景！**
-
-
 
 ## 5. 转义对照表
 
@@ -124,10 +108,6 @@ int main(int argc, char* argv[]) {
 > 
 > 反显的含义是反转文字颜色和背景色。
 
-
-
 例如白底、红色、加粗、下划线：
 
-![](C:\Users\micro\AppData\Roaming\marktext\images\2022-09-03-21-06-59-image.png)
-
-
+![](https://gukaifeng.cn/posts/zai-linux-zhong-duan-shu-chu-dai-yan-se-wen-zi-de-fang-fa/zai-linux-zhong-duan-shu-chu-dai-yan-se-wen-zi-de-fang-fa_4.png)
