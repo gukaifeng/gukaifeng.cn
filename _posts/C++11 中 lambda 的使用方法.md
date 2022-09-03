@@ -1,5 +1,5 @@
 ---
-title: C++11 中 lambda 的使用方法.md
+title: C++11 中 lambda 的使用方法
 date: 2022-08-30 17:07:10
 updated: 2022-08-30 17:07:10
 categories:
