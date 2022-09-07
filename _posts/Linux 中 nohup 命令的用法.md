@@ -7,8 +7,6 @@ tags: [Linux]
 toc: true
 ---
 
-
-
 ## 1. `nohup` 命令的作用和语法
 
 Linux 中的每个命令都会在其执行时开始一个进程，并且此进程会在终端退出时自动终止。假设你正在通过 SSH 执行程序，如果连接断开，会话会被终止，所有正在执行的进程都会终止，然后你可能会面临一个巨大的意外风险。在这个例子中，在后台运行命令对用户来说就有用了，这便是 `nohup` 命令的使用场景。`nohup` (No Hang Up，即不悬挂) 是 Linux 系统命令，用于运行进程，即便用户已经从 shell 或终端登出了也不会终止。
@@ -28,8 +26,6 @@ nohup command [command-argument ...]
 * 如果标准错误是终端，请将其重定向到标准输出。
 
 * 要将输出保存到文件，请使用 `nohup > FILE`。
-
-
 
 ## 2. 使用 `nohup` 命令
 
@@ -57,7 +53,6 @@ Written by Jim Meyering.
 ```shell
 [gukaifeng@iZ8vbf7xcuoq7ug1e7hjk5Z shell]$ nohup ping gukaifeng.cn
 nohup: ignoring input and appending output to 'nohup.out'
-
 ```
 
 我们使用 `nohup` 执行了一个 `ping` 进程，然后有提示输出告诉我们，输入被忽略了，输出被追加到 **nohup.out** 中。
@@ -97,8 +92,6 @@ nohup: ignoring input and redirecting stderr to stdout
 ```
 
 ### 2.2. 搭配 `&` 在后台运行命令（最常用）
-
-
 
 `nohup` 命令只是阻止了挂起信号，但并不会让应用在后台执行。
 
