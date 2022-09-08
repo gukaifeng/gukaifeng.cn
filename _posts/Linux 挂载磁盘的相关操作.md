@@ -1,7 +1,7 @@
 ---
 title: Linux 挂载磁盘的相关操作
 date: 2022-09-08 01:09:00
-updated: 2022-09-08 01:09:00
+updated: 2022-09-08 22:13:00
 categories: [技术杂谈]
 tags: [Linux]
 toc: true
@@ -325,6 +325,34 @@ tmpfs          tmpfs  3.1G  4.0K  3.1G   1% /run/user/0
 ```
 
 关于 **/dev/nvme0n1** 的信息存在，说明自动挂载配置成功了。
+
+### 2.6. 卸载磁盘
+
+卸载命令很简单，`umount` 就是。
+
+最长用的方法就是：
+
+```shell
+umount [Filesystem]
+```
+
+或
+
+```shell
+umount [MOUNTPOINTS]
+```
+
+即 `umount` 后面接磁盘名，或者挂载点，都可以卸载的。
+
+以我们上面将磁盘 **/dev/nvme0n1** 挂载到 **/mnt/nvme0n1** 为例，下面两个命令都是可以正确卸载的：
+
+```shell
+umount /dev/nvme0n1
+```
+
+```shell
+umount /mnt/nvme0n1
+```
 
 
 
