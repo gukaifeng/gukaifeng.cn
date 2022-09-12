@@ -132,7 +132,7 @@ B: this statement is after t.join()
 
 ### Q3. 对于一个新建 std::thread 对象 t，在当前线程的某一时刻执行 t.join() 或 t.detach() 是必须的吗？
 
-> A3：是必须的。更严格的说，应当是在对象 t 销毁前执行 t.join() 或 t.detach()。
+> A3：是必须的。更严格的说，应当是在对象 t 析构前执行 t.join() 或 t.detach()。
 
 
 
@@ -146,7 +146,7 @@ B: this statement is after t.join()
 
 也就是说，**必须调用 join() 或 detach() 和线程的资源释放问题有关。**
 
-那为什么应当在对象 t 销毁前来执行这两个方法呢？
+那为什么应当在对象 t 析构前来执行这两个方法呢？
 
 我们看 std::thread 类的析构函数：
 
@@ -158,7 +158,7 @@ std::terminate();
   }
 ```
 
-我们知道，对于一个正常的线程对象，如果没有调用过 join() 或 detach()，那么它的 joinable() 返回值为 true，也就是说，**如果我们没有 join() 或 detach()，那么在 std::thread 对象销毁时，线程会被直接终止，进而导致内存泄漏。所以应当在对象 t 销毁前来执行这两个方法。**
+我们知道，对于一个正常的线程对象，如果没有调用过 join() 或 detach()，那么它的 joinable() 返回值为 true，也就是说，如果我们没有 join() 或 detach()，也没有转移 std::thread 对象的所有权，那么在 std::thread 对象析构时，**整个进程会被直接终止，甚至析构函数也不会执行，风险极大**，所以应当在对象 t 析构前来执行这两个方法。
 
 
 
@@ -381,3 +381,120 @@ Aborted (core dumped)
 我们在 2.Q3. 提到过，只有调用 join() 或 detach() 后，线程资源才能被正确回收，并且这个调用必须在 std::thread 对象销毁前，因为其析构函数会直接终止 joinable 的线程，且会导致内存泄漏。
 
 所以我们要保证在 std::thread 对象销毁前，根据需求，执行其成员函数 join() 或 detach() 即可解决问题。
+
+还有个小坑容易踩：我们可以认为整个程序是一个最大的作用域，当整个程序结束时（main() 结束），同样可能出现此问题，比如声明过一个全局的 std::thread 对象却没有在合适的位置 join() 或 detach()。
+
+
+
+
+
+### Q7. 如何向线程函数传递非 const 引用参数？
+
+今天给线程函数传参时传了个引用，本以为可以像传指针那样，可以在线程内修改变量，但编译报错了，这里举一个代码示例如下：
+
+```cpp
+#include <iostream>
+#include <thread>
+
+void func(int& num) {
+    num++;
+}
+
+
+int main(int argc, char *argv[]) {
+
+    int a = 10;
+
+    std::thread t(func, a);
+    t.join();
+
+    std::cout << "a =  " << a << std::endl;
+
+    return 0;
+}
+```
+
+
+
+报错关键信息如下：
+
+```
+/usr/include/c++/8/thread:120:17: error: static assertion failed: std::thread arguments must be invocable after conversion to rvalues
+  static_assert( __is_invocable<typename decay<_Callable>::type,
+                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+           typename decay<_Args>::type...>::value,
+```
+
+最关键的一句话是 "std::thread arguments must be invocable after conversion to rvalues"，即参数必须是可调用的或者可以转成右值的。
+
+可调用，指的是第一个参数，就是线程的函数（或其他调用）入口。
+
+可转成右值，就是我们刚刚报错的主要原因，因为引用不能转成右值。
+
+我们看一下这个构造函数的源码：
+
+```cpp
+  template<typename _Callable, typename... _Args,
+      typename = _Require<__not_same<_Callable>>>
+    explicit
+    thread(_Callable&& __f, _Args&&... __args)
+    {
+static_assert( __is_invocable<typename decay<_Callable>::type,
+            typename decay<_Args>::type...>::value,
+  "std::thread arguments must be invocable after conversion to rvalues"
+  );
+```
+
+可以看到其中有参数 `_Args&&... __a`，这里的 `&&` 表示的就是右值。我们刚刚的关键报错信息也在这里。
+
+如何解决呢？首先，你可以选用其他方法实现同样的功能，比如指针，或者说 const 引用，因为 const 引用可以转成右值。
+
+\-
+
+
+
+**那如果我就想传递一个非 const 引用怎么办？**
+
+其实是可以的，但在这之前，我们应该知道为什么不可以是非 const 引用。
+
+我们知道线程是有自己的内存存储空间的，在 std::thread 类的构造中，参数会先按照默认方式复制到线程的存储空间中，然后新创建的线程才能访问它们。这些副本被当做临时变量，以**右值**的方式传递给新线程上的函数或者可调用对象。即便函数相关的参数按设想应该是引用（比如即便你在构造时传递的是 `int const &` 类型，新线程最后传递的其实还是个 `int &&`）。
+
+按上面代码，参数 `num` 应当以引用方式传入的，但我们执行 `std::thread t(func, a);` 时，线程库还是会把 `a` 复制一份到新线程的内存存储空间中，然后将这个副本以 move-only（只能移动，不能复制） 的方式传递给一个右值给 `func()`，因为这个函数预期接收一个非 const 引用，右值不能转为非 const 引用，所以就会编译出错。
+
+**解决方法：使用 `std::ref()`。** 将传递的非 const 引用用 `std::ref()` 包装。
+
+```cpp
+#include <iostream>
+#include <thread>
+
+void func(int& a) {
+    a++;
+}
+
+
+int main(int argc, char *argv[]) {
+
+    int a = 10;
+
+    std::thread t(func, std::ref(a));
+    t.join();
+
+    std::cout << "a =  " << a << std::endl;
+
+    return 0;
+}
+```
+
+输出：
+
+```
+a =  11
+```
+
+可以看到程序如预期般正确运行了！
+
+
+
+
+
+## 第 3 章：在线程间共享数据
