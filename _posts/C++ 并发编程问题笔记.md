@@ -73,7 +73,7 @@ B: this statement is after t.join()
 
 ### Q2. 新线程是从 std::thread 对象创建时就开始执行的吗？
 
-> A2：是的
+> A2：多数情况下是的。但使用默认构造时不是，因为默认构造函数没有给其传递任何参数，无法构建有效的线程。
 
 我们还是看上面的代码，加了 C 语句：
 
@@ -124,34 +124,256 @@ B: this statement is after t.join()
 
 我们可以看到 A 和 C 语句的输出顺序是比较混乱的，但可以看到有 A 先于 C 输出的样例。我这里不打算深究其原因，因为此现象已经足以证明当前问题。
 
+
+
 ### Q3. 对于一个新建 std::thread 对象 t，在当前线程的某一时刻执行 t.join() 或 t.detach() 是必须的吗？
 
-> A3：不是，应当根据需求判断。
+> A3：是必须的。更严格的说，应当是在对象 t 销毁前执行 t.join() 或 t.detach()。
+
+
 
 要理解这个问题，首先我们要清楚 t.join() 和 t.detach() 做了什么，明白为什么要调用它们。
 
-* join() 在概念上与 fork() 相对，fork 是分叉的意思，而 join 是汇合的意思。我们知道调用 t.join() 会阻塞当前线程直到 t 关联的线程 **（记为 t_thread）** 执行完成，这**看起来**就像把 t_thread 线程的内容的代码放到了 t.join() 调用处一样。
+* join() 在概念上与 fork() 相对，fork 是分叉的意思，而 join 是汇合的意思。我们知道调用 t.join() 会阻塞当前线程直到 t 关联的线程 **（记为 t_thread）** 执行完成，这**看起来**就像把 t_thread 线程的内容的代码放到了 t.join() 调用处一样。**线程的资源将在调用 t.join() 后且线程执行完成后被回收。**
 
-* t.detach() 会将线程 t_thread 与当前线程分离，t_thread 将在后台执行。分离后当前线程将无法再与  t_thread 直接通信，也无法等待 t_thread 完成，无法汇合 t_thread（即调用 t.join()）。t_thread 确实还在后台执行，但其归属权和控制权都将转移给 C++ 运行时库（runtime library，又名运行库），由此保证线程退出时与之关联的资源可以被正确回收。
+* t.detach() 会将线程 t_thread 与当前线程分离，t_thread 将在后台执行。分离后当前线程将无法再与  t_thread 直接通信，也无法等待 t_thread 完成，无法汇合 t_thread（即调用 t.join()）。t_thread 确实还在后台执行，但**其归属权和控制权都将转移给 C++ 运行时库（runtime library，又名运行库），由此保证线程退出时与之关联的资源可以被正确回收。**
 
-**什么时候调用 t.join() 呢？**
 
-我们需要当前线程等待 t_thread 执行结束再进行下一步时。例如，t_thread 用到了当前线程中的某局部变量，当前线程未来会销毁此局部变量，这时就需要调用 t.join() 保证 t_thread 执行完了以后再继续当前线程。
 
-**那什么时候调用 t.detach() 呢？**
+也就是说，**必须调用 join() 或 detach() 和线程的资源释放问题有关。**
 
-比如 t_thread 是一个守护进程，守护进程常运行在整个程序的生命周期内，以执行一些任务，比如文件系统监控、从对象缓冲中清除无用数据项等。
+那为什么应当在对象 t 销毁前来执行这两个方法呢？
 
-或者，由 t_thread 执行“启动后即可自主完成”（a fire-and-forget tast）的任务。例如，在一个支持多标签页的文本编辑器中，每个线程负责一个标签页。新建标签页时，由 t_thread 创建一个和其自己一样的线程来处理新标签页，这时就需要 detach，t_thread 和其复制从此各干各的（各负责一个标签页）。
+我们看 std::thread 类的析构函数：
 
-我们还能通过分离线程实现一套机制，用于确认线程完成运行。
+```cpp
+  ~thread()
+  {
+    if (joinable())
+std::terminate();
+  }
+```
 
-\-
+我们知道，对于一个正常的线程对象，如果没有调用过 join() 或 detach()，那么它的 joinable() 返回值为 true，也就是说，**如果我们没有 join() 或 detach()，那么在 std::thread 对象销毁时，线程会被直接终止，进而导致内存泄漏。所以应当在对象 t 销毁前来执行这两个方法。**
 
-我们知道了何时应该调用 join() 或 detach()，即调用它们的原因。那么反过来，如果我们没有调用它们的需求，那就不必调用。
 
-我们通过上面描述的 *什么时候调用 t.join() 呢？* 举一个例子，如果 t_thread 用到了当前线程的局部变量，我们肯定要等待 t_thread 执行完成才能让当前线程继续推进（到可能销毁此局部变量的位置），所以需要调用 t.join()。但如果说，即便不调用 t.join() 阻塞当前线程，我们也能 100% 保证 t_thread 会在局部变量销毁前执行完毕（例如通过锁实现），那就可以不用调用 t.join()。
-
-detach() 就更好理解了，我们没有让 t_thread 在后台运行的需求，就没必要调用。
 
 ### Q4. 为什么 t.join() 或 t.detach() 只能调用一次（两者共享一次），且是否可调用的判断条件均为 t.joinable() ?
+
+当 t 关联的线程是一个活跃线程时，joinable() 返回 true，否则返回 false。 
+
+什么叫活跃线程呢，其实就是正在执行的线程。还有就是，已经执行完但还未调用过 t.join() 或 t.detach() 时，也属于活跃线程。
+
+现在，这个问题可以转换为，**为什么只有 t 关联的线程是活跃线程时才可以执行 t.join() 或 t.detach()，以及为什么一旦执行 t.join() 或 t.detach() 后，t 关联的线程就不再是活跃线程了呢？**
+
+首先我们看 joinable() 方法的实现，看看其做了什么：
+
+```cpp
+class thread
+{
+// ...
+private:
+    id _M_id;
+// ...
+public:
+//...
+    bool
+    joinable() const noexcept
+    { return !(_M_id == id()); }
+// ...
+}
+```
+
+这里的实现是节选的（全部的话可太长了），我们目前只要知道：
+
+* `_M_id` 是 id 类对象，表示 thread 类对象当前关联的线程 ID。
+
+* `id()` 是无惨构造 id 类对象，此构造法得到的 id 对象是特殊的，**其值（为 0）不代表任何线程**。
+
+也就是说，当 t 对象中存储的线程 ID 无法表示任何线程时，就认为是其是非 joinable() 的。
+
+我们看一段代码：
+
+```cpp
+#include <ios>
+#include <iostream>
+#include <thread>
+#include <unistd.h>
+#include <utility>
+
+class ThreadFunc {
+public:
+    ThreadFunc() {}
+    void operator()() {
+        
+    }
+};
+
+int main(int argc, char *argv[]) {
+    std::cout << "main: thread id is " << std::this_thread::get_id() << std::endl;
+
+    std::thread t1((ThreadFunc()));
+    std::thread t2((ThreadFunc()));
+    
+    std::cout << std::boolalpha;
+    std::cout << "  t1: thread id is " << t1.get_id() << ", and joinable() is " << t1.joinable() << std::endl;
+    std::cout << "  t2: thread id is " << t2.get_id() << ", and joinable() is " << t2.joinable() << std::endl;
+    
+    t1.join();
+    t2.detach();
+    std::cout << "  t1: after   join(), thread id is " << t1.get_id() << ", and joinable() is " << t1.joinable() << std::endl;
+    std::cout << "  t2: after detach(), thread id is " << t2.get_id() << ", and joinable() is " << t2.joinable() << std::endl;
+    
+    return 0;
+}
+```
+
+输出如下：
+
+```
+main: thread id is 140367827535680
+  t1: thread id is 140367809496832, and joinable() is true
+  t2: thread id is 140367801104128, and joinable() is true
+  t1: after   join(), thread id is thread::id of a non-executing thread, and joinable() is false
+  t2: after detach(), thread id is thread::id of a non-executing thread, and joinable() is false
+```
+
+通过观察输出，再进一步解释，我们可以明白一件事：
+
+当调用过 t.join() 或 t.detach() 时，这两个方法会将 t 中表示线程 id 的对象值改为 0，即不再代表任何线程。也就是说，**一旦调用过 t.join() 或 t.detach()，t 中表示的线程 id 将失效，t 将无法再控制与其关联的线程！**
+
+**t 无法再控制与其关联的线程，自然也就无法再次 join() 或 detach()，所以这俩方法只能执行一次。**
+
+还有就是，不是说 joinable() 为 false 后线程就没了，只是 t 跟这线程没关系了，线程还是那个线程，只是不再满足 “只有 t 关联的线程是活跃线程时才可以执行 t.join() 或 t.detach()” 中的“关联”二字。
+
+
+
+### Q5. 线程对象何时是 joinable 的？
+
+
+
+**除了**下列情况，线程对象都是 joinable 的：
+
+1. 其是默认构造的。
+
+2. 如果其已经被用来使用移动构造或赋值构造创建了另一个 std::thread 对象。
+
+3. 其成员函数 join() 或 detach 已经被调用过。
+
+我们下面通过代码看上述三种场景：
+
+```cpp
+#include <ios>
+#include <iostream>
+#include <thread>
+#include <unistd.h>
+#include <utility>
+
+class ThreadFunc {
+public:
+    ThreadFunc() {}
+    void operator()() {}
+};
+
+
+int main(int argc, char *argv[]) {
+
+    std::cout << std::boolalpha;
+    
+    std::cout << "\n-------------------------------------------------------------------\n\n";
+
+    std::thread t1;
+
+    std::cout << "t1 was constructed by default-constructor,  t1's joinable() is " << t1.joinable() << std::endl;
+
+    std::cout << "\n-------------------------------------------------------------------\n\n";
+    
+    std::thread t2((ThreadFunc()));
+    std::thread t3((ThreadFunc()));
+    
+    std::cout << "t2, before t2.join(), t2's joinable() is " << t2.joinable() << std::endl;
+    std::cout << "t3, before t3.detach(), t3's joinable() is " << t3.joinable() << std::endl << std::endl;
+    
+    t2.join();
+    t3.detach();
+    
+    std::cout << "t2, after t2.join(), t2's joinable() is " << t2.joinable() << std::endl;
+    std::cout << "t3, after t3.detach(), t3's joinable() is " << t3.joinable() << std::endl;
+
+    std::cout << "\n-------------------------------------------------------------------\n\n";
+
+    std::thread t4((ThreadFunc()));
+    std::thread t5((ThreadFunc()));
+
+    std::cout << "t4, t4's joinable() is " << t4.joinable() << std::endl;
+    std::cout << "t5, t5's joinable() is " << t5.joinable() << std::endl << std::endl;
+
+    std::thread t6(std::move(t4));
+    std::thread t7 = std::move(t5);
+
+    std::cout << "t6 was constructed by \"std::move(t4)\", so t4's joinable() is " << t4.joinable() << ", t6's joinable() is " << t6.joinable() << std::endl;
+    std::cout << "t7 was constructed by \"= std::move(t5)\", so t5's joinable() is " << t5.joinable() << ", t7's joinable() is " << t7.joinable() << std::endl;
+
+    std::cout << "\n-------------------------------------------------------------------\n\n";
+
+    return 0;
+}
+```
+
+输出：
+
+```
+[gukaifeng@iZ8vbf7xcuoq7ug1e7hjk5Z main]$ ./muti-threads 
+
+-------------------------------------------------------------------
+
+t1 was constructed by default-constructor,  t1's joinable() is false
+
+-------------------------------------------------------------------
+
+t2, before t2.join(), t2's joinable() is true
+t3, before t3.detach(), t3's joinable() is true
+
+t2, after t2.join(), t2's joinable() is false
+t3, after t3.detach(), t3's joinable() is false
+
+-------------------------------------------------------------------
+
+t4, t4's joinable() is true
+t5, t5's joinable() is true
+
+t6 was constructed by "std::move(t4)", so t4's joinable() is false, t6's joinable() is true
+t7 was constructed by "= std::move(t5)", so t5's joinable() is false, t7's joinable() is true
+
+-------------------------------------------------------------------
+
+terminate called without an active exception
+Aborted (core dumped)
+```
+
+
+
+上面的输出中应该已经比较清楚地说明了上面三点了。
+
+最后的出错信息与本例无关，出错的原因是在整个程序结束时（main() 结束代表整个程序结束），还有线程正在运行。这里在下个问题解释。
+
+
+
+
+
+### Q6. terminate called without an active exception?
+
+
+
+报错信息：
+
+```
+terminate called without an active exception
+Aborted (core dumped)
+```
+
+在 C++ 多线程编程中，该报错信息表示，有 std::thread 对象在销毁时（如离开作用域），其关联的线程仍然活跃（是 joinable 的）。
+
+我们在 2.Q3. 提到过，只有调用 join() 或 detach() 后，线程资源才能被正确回收，并且这个调用必须在 std::thread 对象销毁前，因为其析构函数会直接终止 joinable 的线程，且会导致内存泄漏。
+
+所以我们要保证在 std::thread 对象销毁前，根据需求，执行其成员函数 join() 或 detach() 即可解决问题。
