@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
 我这里先给出一个执行结果：
 
 ```
-[gukaifeng@iZ8vbf7xcuoq7ug1e7hjk5Z main]$ ./muti-threads 
+[gukaifeng@iZ8vbf7xcuoq7ug1e7hjk5Z main]$ ./multi-threads 
 A: sleep loop: time = 0, span = 1
 A: sleep loop: time = 1, span = 1
 A: sleep loop: time = 2, span = 1
@@ -112,13 +112,13 @@ int main(int argc, char *argv[]) {
 下面是执行了两次的输出：
 
 ```
-[gukaifeng@iZ8vbf7xcuoq7ug1e7hjk5Z main]$ ./muti-threads 
+[gukaifeng@iZ8vbf7xcuoq7ug1e7hjk5Z main]$ ./multi-threads 
 A: sleep loop: time = C: this statement is used to test the start time of a new thread0, span = 1
 
 A: sleep loop: time = 1, span = 1
 A: sleep loop: time = 2, span = 1
 B: this statement is after t.join()
-[gukaifeng@iZ8vbf7xcuoq7ug1e7hjk5Z main]$ ./muti-threads 
+[gukaifeng@iZ8vbf7xcuoq7ug1e7hjk5Z main]$ ./multi-threads 
 C: this statement is used to test the start time of a new threadA: sleep loop: time = 
 0, span = 1
 A: sleep loop: time = 1, span = 1
@@ -327,7 +327,7 @@ int main(int argc, char *argv[]) {
 输出：
 
 ```
-[gukaifeng@iZ8vbf7xcuoq7ug1e7hjk5Z main]$ ./muti-threads 
+[gukaifeng@iZ8vbf7xcuoq7ug1e7hjk5Z main]$ ./multi-threads 
 
 -------------------------------------------------------------------
 
