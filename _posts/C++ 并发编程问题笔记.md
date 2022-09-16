@@ -498,3 +498,49 @@ a =  11
 
 
 ## 第 3 章：在线程间共享数据
+
+### Q1. 类的 const 成员函数可以锁住类中的互斥成员吗？
+
+>需要互斥成员由 `mutable` 关键字修饰才可以（也可以不加，但需要忽略编译器报错）。
+>
+>一方面，如 lock() 等方法是非 const 的，在 const 成员函数中调用非 const 的方法是错误的行为，因为非 const 方法是有可能修改成员变量的，那么我们一开始的 const 成员函数的 const 就失去了意义。
+>
+>另一方面，要想正确使用互斥，就肯定要对互斥修改，所以我们应该给互斥加 `mutable` 关键字。
+
+我们看一段演示代码，下面的代码中，类 TestMutex 中有一个互斥成员 `_m`，有一个字符串成员 `_data`，有一个 const 成员函数 `read_data()` 用来读这个 `data` 并返回其值，读需要锁住互斥 `_m`。
+
+```cpp
+#include <iostream>
+#include <mutex>
+
+class TestMutex {
+    std::mutex _m;
+    std::string _data;
+public:
+    TestMutex(std::string data = "default data")
+        : _data(data)
+    {
+    }
+    std::string read_data() const {
+        std::lock_guard lock(_m);
+        return _data;
+    }
+};
+
+int main(int argc, char *argv[])
+{
+    TestMutex tm;
+    std::cout << tm.read_data() << std::endl;
+
+    return 0;
+}
+```
+
+我们编译会报错，关键信息如下：
+```
+error: passing ‘std::lock_guard<const std::mutex>::mutex_type’ {aka ‘const std::mutex’} as ‘this’ argument discards qualifiers [-fpermissive]
+```
+
+大意是我们在 const 成员函数 `read_data()` 中调用了 `lock()`，`lock()` 是有可能修改 `_m` 的，我们的 const 限定符可能就没用了。在编译的时候加选项 `-fpermissive` 可以忽略这个错误，不过我们最好还是不要这样做。
+
+如果我们想要保持 `read_data()` 仍然是 const 的，那给 `std::mutex _m` 加上 `mutable` 关键字就是一个合理的解决方案。即 `mutable std::mutex _m`。
