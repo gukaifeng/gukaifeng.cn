@@ -1,8 +1,145 @@
 ---
 title: 我的 Git 常用命令笔记
 date: 2022-11-10 18:46:20
-updated: 2022-11-10 18:46:20
+updated: 2022-11-18 19:05:20
 categories: [技术杂谈]
 tags: [Git]
 ---
+
+
+
+
+
+## 1. 基础命令
+
+
+
+## 2. 场景
+
+
+
+### 2.1. 关于贮藏
+
+下面的所有列出场景都是我自己实际用过的场景，但 git stash 的功能远不止这些，如果你没有在下面找到你适用的场景，可以参考 https://man7.org/linux/man-pages/man1/git-stash.1.html 或 https://git-scm.com/docs/git-stash 查看更多内容。
+
+#### 2.1.1. 贮藏代码
+
+
+
+> 我们从分支 A 分出了分支 B，并在 B 分支上开发。  
+> 在 B 分支开发结束前，我们接到了新的任务且优先级更高，需要暂时中断分支 B 的任务，并从分支 A 再分出一个新的分支 C，在分支 C 上进行新的开发。
+
+
+
+此场景需要以下几步：
+
+1. 暂存分支 B 中的修改；
+2. 回到分支 A（并更新，如果有需要）；
+3. 在分支 A 上新建分支 C，并切换到分支 C 开始新的开发；
+4. 拓展：C 分支任务完成后，继续 B 分支的开发（或交替开发）。
+
+\-
+
+**1. 暂存分支 B 中的修改**
+
+```shell
+git stash push [-m|--message <message>]
+```
+
+这会将你的修改暂存，索引工作树的代码都会恢复到 HEAD。
+
+`-m` 是可选的，就是给这个暂存条目写个描述，用法和 `git commit -m` 一样。不写也可以，但如果暂存的条目比较多的话容易混淆，建议写上。
+
+然后可以通过 `git stash list` 命令看到你的 stash 队列。
+
+**2. 回到分支 A（并更新，如果有需要）**
+
+回到分支 A：
+
+```shell
+git switch A
+```
+
+更新（如果需要）：
+
+```shell
+git pull
+```
+
+这一步比较自由，可以看自己的需求，比如你也可以从 B 直接 pull 新的，但是从 B 创建 C。
+
+
+
+**3. 在分支 A 上新建分支 C，并切换到分支 C 开始新的开发**
+
+创建分支 C：
+
+```shell
+git branch C
+```
+
+切换到分支 C：
+
+```shell
+git switch C
+```
+
+现在可以开始新的开发了。
+
+
+
+#### 2.1.2 恢复贮藏的代码
+
+
+
+> 续 2.1.1：C 分支任务完成后，继续 B 分支的开发（或交替开发）
+>
+> 假设我们现在 C 分支已经开发完成，需要回到 B 分支，恢复我们暂存的内容，然后继续开发。
+
+
+
+若 C 分支是刚刚开发完成的（已经提交完所有的修改），那么工作区应当是干净的，所以可以直接切回 B 分支：
+
+```shell
+git switch B
+```
+
+这一步如果分支 C 还没有开发完成，想要交替开发分支 B 的话，则在分支 C 上执行上面 2.1.1 中的 1、2 步即可。
+
+我们可以先看看分支 B 中有哪些暂存条目：
+
+```shell
+$ git stash list
+stash@{0}: On example_B: this is a description message of stash entry
+```
+
+可以看到我这里 B 分支的名字叫做 `example_B`，只有一个 stash 条目 `stash@{0}`，然后有关于这个 stash 条目的描述 "this is a description message of stash entry"。
+
+我们恢复 `stash@{0}` 中的代码到工作区：
+
+```shell
+git stash pop
+
+// or
+git stash apply
+```
+
+现在我们的分支 B 就回到了一开始状态，可以继续开发了！
+
+上面的 `git stash pop` 和  `git stash apply` 类似，二者的区别是 `pop` 会弹出 stash 栈中的条目，你再 `git stash list` 时就没有这条目了，而 `apply` 只是应用条目中的内容，但不在栈中将此条目弹出。如果你以后不再需要这个 stash 条目，就用 `pop`，反之用 `apply`。
+
+
+
+#### 2.1.3. 在多个 stash 条目中选择一个恢复
+
+> 假设当前分支有多个 stash 条目，我们想恢复其中一个（不是栈顶的那一个）。
+
+我们知道 stash 条目是存在栈中的，2.1.2 中提到的 `git stash pop` 和 `git stash apply` 默认是恢复栈顶的那个条目，也就是最后 push 的条目。
+
+如果我们想要恢复栈中间的也很简单，每个 stash 条目都有一个编号，例如上面的 `stash@{0}` 中的 `0` 就是该条目的编号，我们只需要在 `git stash pop` 和 `git stash apply`  命令后面加上编号即可，例如：
+
+```shell
+git stash pop 2  // 应用并删除条目 stash@{2}
+git stash apply 3  // 应用但不删除条目 stash@{3}
+```
 
