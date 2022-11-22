@@ -58,6 +58,9 @@ sudo dnf install -y rpmdevtools rpmlint
 * `rpmdevtools`：顾名思义，是 rpm 的开发者工具。
 * `rpmlint`：用于检查 rpm 软件包中的常见错误。
 
+
+### 2.2. 构建文件树
+
 安装完 `rpmdevtools` 后，创建我们需要构建 RPM 包的文件树：
 
 ```shell
@@ -105,7 +108,7 @@ EOF
 
 这创建了一个名为 `hello.sh` 的简单 shell 脚本，其会在终端中打印 "Hello world"。这个脚本非常简单，但是对于演示 RPM 包的构建过程来说足够了。
 
-### 2.2. 将脚本放到指定目录中
+### 2.3. 将脚本放到指定目录中
 
 要为我们刚刚的脚本构建 RPM 包，我们必须把这个脚本放在 RPM 构建系统期望的位置。我们创建一个目录，目录名使用大部分项目都遵循的[语意版本控制(Semantic Versioning)](https://semver.org/)，然后将 `hello.sh` 放进去。
 
@@ -126,7 +129,7 @@ tar --create --file hello-0.0.1.tar.gz hello-0.0.1
 mv hello-0.0.1.tar.gz SOURCES
 ```
 
-### 2.3. 创建 `.spce` 文件
+### 2.4. 创建 `.spce` 文件
 
 一个 RPM 包由一个 `.spce` 文件定义。`.spec` 文件的语法很严格，不过 `rpmdev` 给我们提供了样板。
 
@@ -261,7 +264,7 @@ $ rpm --eval '%{_bindir}'
 * `%{_sysconfdir}`：配置目录（默认为 `/etc`）。
 
 
-### 2.4. 检查 `.spec` 文件中的错误（rpmlint）
+### 2.5. 检查 `.spec` 文件中的错误（rpmlint）
 
 `rpmlint` 命令可以用找出 `.spec` 文件中的错误：
 
@@ -278,5 +281,270 @@ $ rpmlint ~/rpmbuild/SPECS/hello.spec
 
 这两个 warning 都可以忽略，所以目前我们的 `.spec` 文件没有问题。
 
-### 2.5. 构建包（rpmbuild）
+### 2.6. 构建包（rpmbuild）
 
+构建 RPM 包需要用到 rpmbuild 命令。在本文早前的 [2.5](#2-2-构建文件树) 小节，我们提到过 `.src.rpm`（源 RPM 包） 和 `.rpm` 包的区别。
+
+**（可选）** 使用下面的命令创建 `.src.rpm` 包：
+
+```shell
+$ rpmbuild -bs ~/rpmbuild/SPECS/hello.spec
+Wrote: /home/gukaifeng/rpmbuild/SRPMS/hello-0.0.1-1.el8.src.rpm
+```
+
+其中的参数 `-bs` 表示：
+* `-b`: build
+* `-s`: source
+
+**（必须）** 使用下面的命令创建二进制 `.rpm` 包：
+
+```shell
+$ rpmbuild -bb ~/rpmbuild/SPECS/hello.spec
+Executing(%prep): /bin/sh -e /var/tmp/rpm-tmp.6Zwexi
++ umask 022
++ cd /home/gukaifeng/rpmbuild/BUILD
++ cd /home/gukaifeng/rpmbuild/BUILD
++ rm -rf hello-0.0.1
++ /usr/bin/tar -xof /home/gukaifeng/rpmbuild/SOURCES/hello-0.0.1.tar.gz
++ cd hello-0.0.1
++ /usr/bin/chmod -Rf a+rX,u+w,g-w,o-w .
++ exit 0
+Executing(%install): /bin/sh -e /var/tmp/rpm-tmp.AhF9fh
++ umask 022
++ cd /home/gukaifeng/rpmbuild/BUILD
++ '[' /home/gukaifeng/rpmbuild/BUILDROOT/hello-0.0.1-1.el8.x86_64 '!=' / ']'
++ rm -rf /home/gukaifeng/rpmbuild/BUILDROOT/hello-0.0.1-1.el8.x86_64
+++ dirname /home/gukaifeng/rpmbuild/BUILDROOT/hello-0.0.1-1.el8.x86_64
++ mkdir -p /home/gukaifeng/rpmbuild/BUILDROOT
++ mkdir /home/gukaifeng/rpmbuild/BUILDROOT/hello-0.0.1-1.el8.x86_64
++ cd hello-0.0.1
++ rm -rf /home/gukaifeng/rpmbuild/BUILDROOT/hello-0.0.1-1.el8.x86_64
++ mkdir -p /home/gukaifeng/rpmbuild/BUILDROOT/hello-0.0.1-1.el8.x86_64//usr/bin
++ cp hello.sh /home/gukaifeng/rpmbuild/BUILDROOT/hello-0.0.1-1.el8.x86_64//usr/bin
++ '[' noarch = noarch ']'
++ case "${QA_CHECK_RPATHS:-}" in
++ /usr/lib/rpm/check-buildroot
++ /usr/lib/rpm/redhat/brp-ldconfig
+/sbin/ldconfig: Warning: ignoring configuration file that cannot be opened: /etc/ld.so.conf: No such file or directory
++ /usr/lib/rpm/brp-compress
++ /usr/lib/rpm/brp-strip /usr/bin/strip
++ /usr/lib/rpm/brp-strip-comment-note /usr/bin/strip /usr/bin/objdump
++ /usr/lib/rpm/brp-strip-static-archive /usr/bin/strip
++ /usr/lib/rpm/brp-python-bytecompile '' 1
++ /usr/lib/rpm/brp-python-hardlink
++ PYTHON3=/usr/libexec/platform-python
++ /usr/lib/rpm/redhat/brp-mangle-shebangs
+Processing files: hello-0.0.1-1.el8.noarch
+Provides: hello = 0.0.1-1.el8
+Requires(rpmlib): rpmlib(CompressedFileNames) <= 3.0.4-1 rpmlib(FileDigests) <= 4.6.0-1 rpmlib(PayloadFilesHavePrefix) <= 4.0-1
+Checking for unpackaged file(s): /usr/lib/rpm/check-files /home/gukaifeng/rpmbuild/BUILDROOT/hello-0.0.1-1.el8.x86_64
+Wrote: /home/gukaifeng/rpmbuild/RPMS/noarch/hello-0.0.1-1.el8.noarch.rpm
+Executing(%clean): /bin/sh -e /var/tmp/rpm-tmp.7Gxbkj
++ umask 022
++ cd /home/gukaifeng/rpmbuild/BUILD
++ cd hello-0.0.1
++ rm -rf /home/gukaifeng/rpmbuild/BUILDROOT/hello-0.0.1-1.el8.x86_64
++ exit 0
+```
+
+其中的参数 `-bb` 表示：
+* `-b`: build
+* `-b`: binary
+
+
+也可以使用 `-ba` 同时创建 `.src` 和二进制 rpm 包。
+
+构建过程完成后，我们的目录结构应当是下面这样的（如果没有 `-bs` 或者 `-ba` 的话，只用了 `-bb`，那么就没有 **SRPMS** 目录中的内容，别的都一样）：
+
+```
+$ tree ~/rpmbuild/
+/home/gukaifeng/rpmbuild/
+├── BUILD
+│   └── hello-0.0.1
+│       └── hello.sh
+├── BUILDROOT
+├── RPMS
+│   └── noarch
+│       └── hello-0.0.1-1.el8.noarch.rpm
+├── SOURCES
+│   └── hello-0.0.1.tar.gz
+├── SPECS
+│   └── hello.spec
+└── SRPMS
+    └── hello-0.0.1-1.el8.src.rpm
+
+8 directories, 5 files
+```
+
+到这里，我们的包就构建完了，其中 **RPMS** 目录下的 noarch 目录表示其中的包是不区分 CPU 架构的，其内的 `hello-0.0.1-1.el8.noarch.rpm` 就是我们最终打包好的 RPM 包。
+
+>这一小节讲的其实是非常基础的 RPM 打包过程，有一些细节也没有说的足够详细（比如 .spec 文件一些项和值的含义没有说），我们先借此熟悉流程，然后会在后面介绍更复杂的场景。
+
+
+## 3. 安装我们自己的 RPM 包
+
+上面小节已经成功构建了包含我们 `hello.sh` 脚本的包 `hello-0.0.1-1.el8.noarch.rpm`。
+
+现在我们可以通过 `dnf` 命令安装了：
+
+```shell
+$ sudo dnf install ~/rpmbuild/RPMS/noarch/hello-0.0.1-1.el8.noarch.rpm
+[sudo] password for gukaifeng: 
+Last metadata expiration check: 0:24:52 ago on Wed 23 Nov 2022 12:06:23 AM CST.
+Dependencies resolved.
+=========================================================================================================
+ Package              Architecture          Version                    Repository                   Size
+=========================================================================================================
+Installing:
+ hello                noarch                0.0.1-1.el8                @commandline                6.5 k
+
+Transaction Summary
+=========================================================================================================
+Install  1 Package
+
+Total size: 6.5 k
+Installed size: 29  
+Is this ok [y/N]: y
+Downloading Packages:
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                                                 1/1 
+  Installing       : hello-0.0.1-1.el8.noarch                                                        1/1 
+  Verifying        : hello-0.0.1-1.el8.noarch                                                        1/1 
+
+Installed:
+  hello-0.0.1-1.el8.noarch                                                                               
+
+Complete!
+```
+
+相当熟悉的界面！到这里就安装完成了！
+
+当然你也可以直接使用 `rpm` 命令安装，像下面这样：
+
+```shell
+sudo rpm -ivh ~/rpmbuild/RPMS/noarch/hello-0.0.1-1.el8.noarch.rpm
+```
+
+这里不做进一步解释了，使用包管理器 `dnf` 安装和直接使用 `rpm` 命令安装的区别不是本文重点。
+
+
+## 4. 验证我们的包是否已被安装
+
+我们从两个方面来验证，我自己把这两个方面归为理论和实际。
+
+\-
+
+**理论方面**就是我们通过 rpm 的查询命令，来查看我们的包是否已被安装以及其他相关信息：
+
+```shell
+$ rpm -qi hello
+Name        : hello
+Version     : 0.0.1
+Release     : 1.el8
+Architecture: noarch
+Install Date: Wed 23 Nov 2022 12:31:39 AM CST
+Group       : Unspecified
+Size        : 29
+License     : GPL
+Signature   : (none)
+Source RPM  : hello-0.0.1-1.el8.src.rpm
+Build Date  : Wed 23 Nov 2022 12:30:57 AM CST
+Build Host  : iZ8vbf7xcuoq7ug1e7hjk5Z
+Relocations : (not relocatable)
+Summary     : A simple hello world script
+Description :
+A demo RPM build
+```
+
+可以看到，`rpm -qi` 命令查到了我们的 hello 包已经成功安装，并打印了一些相关信息。
+
+我们在 `.spec` 文件中写的 changelog 也可以查看：
+
+```shell
+$ rpm -q hello --changelog
+* Tue Nov 15 2022 gukaifeng <892859816@qq.com> - 0.0.1
+- First version being packaged
+```
+
+我们还可以查看一下这个包内都有些什么：
+
+```shell
+$ rpm -ql hello
+/usr/bin/hello.sh
+```
+
+可以看到我们的包中只有一个文件 `/usr/bin/hello.sh`，这也是我们期望中的。
+
+\-
+
+**实际方面**就是，不使用 rpm 相关的命令。我们安装一个包后，最重要的，就是使用它，所以我这里的实际方面，就是我们实际使用这个包试试看，如果能用，就说明包安装成功了。
+
+我们可以用下看看，不过要注意我们的只是个脚本，并不是一个直接的可执行文件，所以执行的时候像下面这样：
+
+```shell
+$ sh hello.sh
+Hello world
+```
+
+**注意哦，我执行上面 `bash hello.sh` 的目录中是没有 `hello.sh` 文件的，所以 `bash` 实际执行的是我们安装在 `/usr/bin` 目录下的那个！**
+
+
+## 5. 移除我们安装的 RPM 包
+
+同样的，我们可以通过包管理器 dnf 删除：
+
+```shell
+$ sudo dnf remove hello
+[sudo] password for gukaifeng: 
+Dependencies resolved.
+=========================================================================================================
+ Package             Architecture         Version                      Repository                   Size
+=========================================================================================================
+Removing:
+ hello               noarch               0.0.1-1.el8                  @@commandline                29  
+
+Transaction Summary
+=========================================================================================================
+Remove  1 Package
+
+Freed space: 29  
+Is this ok [y/N]: y
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                                                 1/1 
+  Erasing          : hello-0.0.1-1.el8.noarch                                                        1/1 
+  Verifying        : hello-0.0.1-1.el8.noarch                                                        1/1 
+
+Removed:
+  hello-0.0.1-1.el8.noarch                                                                               
+
+Complete!
+```
+
+也可以通过 rpm 命令直接删除：
+
+```shell
+sudo rpm --verbose --erase hello
+```
+
+移除成功以后，我们在上一节的实际方面的验证就无法再使用了：
+
+```shell
+$ sh hello.sh
+sh: hello.sh: No such file or directory
+```
+
+因为我们的包已经被卸载了嘛。
+
+
+## 6. 进阶：打包需要编译的程序
+
+
+## 7. 高阶：打包更复杂的程序
