@@ -43,14 +43,24 @@ tags: [Git]
 **1. 暂存分支 B 中的修改**
 
 ```shell
-git stash push [-m|--message <message>]
+git stash push [-u|--include-untracked] [-m|--message <message>]
 ```
 
 这会将你的修改暂存，索引工作树的代码都会恢复到 HEAD。
 
-`-m` 是可选的，就是给这个暂存条目写个描述，用法和 `git commit -m` 一样。不写也可以，但如果暂存的条目比较多的话容易混淆，建议写上。
+我这里给出了两个常用的**可选**参数：
 
-然后可以通过 `git stash list` 命令看到你的 stash 队列。
+* `-m`：给这个暂存条目写个描述，用法和 `git commit -m` 一样。不写也可以，但如果暂存的条目比较多的话容易混淆，建议写上。
+
+* `-u`：表示包含未跟踪的文件。如果你有新添加的文件要贮藏，就需要加上这个。
+
+> 还有更多参数见 https://git-scm.com/docs/git-stash。
+
+
+
+然后可以通过 `git stash list` 命令看到你的 stash 队列。
+
+
 
 **2. 回到分支 A（并更新，如果有需要）**
 
