@@ -16,6 +16,8 @@ tags: [VSCode, C, Cpp, Cmake]
 
 
 
+而如果使用 CMake 的话，我们就只需要配置 `CMakeLists.txt` 文件（可能是多个）就可以了。
+
 
 
 > 本文用于在 VSCode 中配置使用 CMake 的 Linux C/C++ 开发环境的快速入门，关于更深入的内容，建议看：
@@ -142,7 +144,7 @@ int main(int, char**) {
 
 
 
-![kit](https://gukaifeng.cn/posts/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing_1.png)
+![Cmake: Select a kit](https://gukaifeng.cn/posts/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing_1.png)
 
 
 
@@ -167,7 +169,7 @@ int main(int, char**) {
 
 
 
-![variant](https://gukaifeng.cn/posts/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing_2.png)
+![CMake: Select Variant](https://gukaifeng.cn/posts/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing_2.png)
 
 ## 4. 执行 Cmake 项目配置
 
@@ -189,7 +191,7 @@ int main(int, char**) {
 
 
 
-![build](https://gukaifeng.cn/posts/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing_3.png)
+![CMake: Build](https://gukaifeng.cn/posts/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing_3.png)
 
 
 
@@ -212,11 +214,11 @@ $ ./build/cmakeQuickStart
 Hello, world!
 ```
 
-同样，这个操作也可以通过点击状态栏对应图标来实现：
+同样，这个操作也可以通过执行 `ctrl+shift+p` 命令 `CMake: Run Without Debugging` 或快捷键 `shift+F5` 或点击状态栏对应图标来实现：
 
 
 
-![run](https://gukaifeng.cn/posts/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing_4.png)
+![CMake: Run Without Debugging](https://gukaifeng.cn/posts/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing_4.png)
 
 ## 6. 调试断点
 
@@ -234,7 +236,7 @@ Hello, world!
 
 
 
-![debug](https://gukaifeng.cn/posts/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing_5.png)
+![CMake: Debug](https://gukaifeng.cn/posts/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing_5.png)
 
 
 
