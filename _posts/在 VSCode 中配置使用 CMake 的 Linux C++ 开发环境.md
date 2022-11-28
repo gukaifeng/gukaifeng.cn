@@ -1,7 +1,7 @@
 ---
 title: "在 VSCode 中配置使用 CMake 的 Linux C/C++ 开发环境"
 date: 2022-11-28 17:02:32
-updated: 2022-11-28 17:02:32
+updated: 2022-11-28 23:49:32
 categories: [技术杂谈]
 tags: [VSCode, C, Cpp, Cmake]
 ---
@@ -142,7 +142,7 @@ int main(int, char**) {
 
 
 
-![kit](D:\Profession\hexo\_posts\在 VSCode 中配置使用 CMake 的 Linux C++ 开发环境\1.png)
+![kit](https://gukaifeng.cn/posts/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing_1.png)
 
 
 
@@ -167,7 +167,7 @@ int main(int, char**) {
 
 
 
-![variant](D:\Profession\hexo\_posts\在 VSCode 中配置使用 CMake 的 Linux C++ 开发环境\2.png)
+![variant](https://gukaifeng.cn/posts/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing_2.png)
 
 ## 4. 执行 Cmake 项目配置
 
@@ -189,7 +189,7 @@ int main(int, char**) {
 
 
 
-![build](D:\Profession\hexo\_posts\在 VSCode 中配置使用 CMake 的 Linux C++ 开发环境\3.png)
+![build](https://gukaifeng.cn/posts/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing_3.png)
 
 
 
@@ -216,7 +216,7 @@ Hello, world!
 
 
 
-![run](D:\Profession\hexo\_posts\在 VSCode 中配置使用 CMake 的 Linux C++ 开发环境\4.png)
+![run](https://gukaifeng.cn/posts/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing_4.png)
 
 ## 6. 调试断点
 
@@ -234,7 +234,7 @@ Hello, world!
 
 
 
-![debug](D:\Profession\hexo\_posts\在 VSCode 中配置使用 CMake 的 Linux C++ 开发环境\5.png)
+![debug](https://gukaifeng.cn/posts/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing/zai-vscode-zhong-pei-zhi-shi-yong-cmake-de-linux-c-kai-fa-huan-jing_5.png)
 
 
 
