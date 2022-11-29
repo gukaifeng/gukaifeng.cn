@@ -93,7 +93,7 @@ vim /etc/proxychains.conf
 
 其默认内容如下：
 
-```shell
+```conf
 # proxychains.conf  VER 4.x
 #
 #        HTTP, SOCKS4a, SOCKS5 tunneling proxifier with DNS.
