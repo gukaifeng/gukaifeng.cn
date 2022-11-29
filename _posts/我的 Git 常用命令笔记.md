@@ -14,6 +14,40 @@ tags: [Git]
 
 
 
+修改本地分支名字：
+
+```shell
+git branch -m <old_branch_name> <new_branch_name>
+```
+
+修改后会与关联的远程分支失去联系，首次 push 需要指定远程分支，一般在你首次 push 的时候会给你个提示，告诉你怎样做，好解决。
+
+比如我将本地的 master 分支改名为 main，然后首次 push 应当这样：
+
+```shell
+git push origin HEAD:master
+```
+
+这样会将本地的 main 分支与远程的 master 分支关联，就可以正常使用了。
+
+
+
+
+
+修改本地分支关联的远程分支：
+
+```shell
+git branch --set-upstream-to=<remote_rep_name>/<remote_branch_name> <local_branch_name>
+```
+
+例如：
+
+```shell
+git branch --set-upstream-to=origin/main main
+```
+
+将本地分支 main 的与远程仓库 origin 的 main 分支关联。
+
 ## 2. 场景
 
 
@@ -222,3 +256,111 @@ git stash pop
 ```
 
 到这就搞定了，然后后面就接着开发就 ok 了！
+
+
+
+### 2.3. 追新 fork 的源仓库
+
+
+
+> 你 fork 了一个仓库，并在自己 fork 出的仓库里操作某些东西。后来你的 fork 的源仓库更新了，你想同步源仓库。
+
+
+
+我这里以 facebook 的 rocksdb 仓库为例，因为写这里的时候我刚好在操作这个仓库。
+
+首先我们可以看一下当前的远程仓库信息：
+
+```shell
+$ git remote -v
+origin	git@github.com:gukaifeng/rocksdb.git (fetch)
+origin	git@github.com:gukaifeng/rocksdb.git (push)
+```
+
+可以看到远程只有我自己 fork 后的仓库，所以我们得把源仓库加上才行。
+
+```shell
+$ git remote add fb_origin git@github.com:facebook/rocksdb.git
+```
+
+其中 `fb_origin` 是给新远程仓库起的别名，比较随意，随便起，自己知道咋回事就行，然后后面跟的是源仓库的地址。
+
+
+
+现在再看一下远程仓库信息：
+
+```shell
+$ git remote -v
+fb_origin	git@github.com:facebook/rocksdb.git (fetch)
+fb_origin	git@github.com:facebook/rocksdb.git (push)
+origin	git@github.com:gukaifeng/rocksdb.git (fetch)
+origin	git@github.com:gukaifeng/rocksdb.git (push)
+```
+
+可以看到已经有了源仓库了，然后就可以拉取源仓库追新了，例如：
+
+```shell
+$ git pull fb_origin main
+```
+
+`fb_origin` 为远程仓库别名，`main` 为要拉取的分支，这样就可以追更源仓库了（如果你自己也有修改的话，可能需要处理冲突）！
+
+
+
+
+
+
+
+### 2.3. 将本地项目文件夹上传到 GitHub 仓库
+
+
+
+> 本地有一个项目文件夹，其中没有使用过 git，我们现在想把这个文件夹放到远程 git 仓库去（比如 GitHub）。
+
+
+
+这里以 GitHub 为例，先在网页上创建一个新的仓库，主要什么都不要创建（比如取消勾选创建 `README.md` 等），保证新仓库是空的。  
+然后我们会拿到一个新仓库的 git 链接，这里假定是 `git@github.com:gukaifeng/xxx.git`，  
+另外 GitHub 目前的默认分支是 main，这些信息后面会用到。
+
+
+
+首先进入要上传的本地项目根目录，进行初始化操作：
+
+```shell
+git init
+```
+
+然后提交仓库内的全部内容（如果有需要排除的，建议编辑 `.gitignore` 或在 `add` 命令中排除，这些不进一步解释了，不是重点）：
+
+```shell
+git add .
+git commit -m "first commit"
+```
+
+创建本地分支 `main`：
+
+```shell
+git branch -M main
+```
+
+添加远程仓库：
+
+```shell
+git remote add origin git@github.com:gukaifeng/xxx.git
+```
+
+其中 `origin` 是远程仓库别名，只在本地有效，随便起。后面的 git 链接就是我们之前在 GitHub 上创建的新仓库链接。
+
+
+
+最后 push：
+
+```shell
+git push -u origin main
+```
+
+这里简单解释一下，我们在前面创建了本地分支 `main`，因为当前本地就这一个分支，所以我们直接就是在本地 `main` 分支下继续操作的。  
+这里的 `-u` 参数全称是 `--set-upstream`，即设置上游的意思，后面跟着的 `origin` 和 `main` 表示，我们要将当前本地分支，与上游仓库 `origin` 的分支 `main` 关联。最后就是 `git push` 本身的操作，将我们本地的内容推到远程仓库库去。
+
+到这里就完成了，后面的使用就都和普通仓库一样了。
