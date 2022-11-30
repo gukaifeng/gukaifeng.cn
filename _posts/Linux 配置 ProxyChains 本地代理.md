@@ -1,5 +1,5 @@
 ---
-title: Linux 配置 ProxyChains 使用代理
+title: Linux 配置 ProxyChains 本地代理
 date: 2022-11-29 23:33:20
 updated: 2022-11-29 23:33:20
 categories: [技术杂谈]
@@ -288,9 +288,9 @@ curl: (7) Failed to connect to www.google.com port 80: Connection timed out
 ```shell
 $ proxychains4 curl www.google.com
 [proxychains] config file found: /etc/proxychains.conf
-[proxychains] preloading /usr/lib64/proxychains-ng/libproxychains4.so
-[proxychains] DLL init: proxychains-ng 4.16
-[proxychains] Strict chain  ...  192.168.31.100:1080  ...  www.google.com:80  ...  OK
+[proxychains] preloading /usr/lib/libproxychains4.so
+[proxychains] DLL init: proxychains-ng 4.16-git-9-g060801d
+[proxychains] Strict chain  ...  127.0.0.1:10808  ...  www.google.com:80  ...  OK
 <!doctype html><html itemscope="" itemtype="http://schema.org/WebPage" lang="en">...</html>
 ```
 
