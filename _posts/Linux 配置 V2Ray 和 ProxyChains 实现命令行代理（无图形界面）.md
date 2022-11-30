@@ -34,11 +34,13 @@ sudo bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/ma
 
 
 
-另附卸载 V2Ray 的命令：
+> 另附卸载 V2Ray 的命令：
+>
+> ```shell
+> sudo bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh) --remove
+> ```
 
-```shell
-sudo bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh) --remove
-```
+
 
 ### 1.2. 修改配置文件
 
@@ -46,7 +48,9 @@ V2Ray 的配置文件挺长的，我的建议是从其他 V2Ray 客户端导出�
 
 这里以 Windows 下的 V2ray 客户端 V2RayN 客户端为例（若你使用其他客户端，应当也有类似的导出选项）：
 
-![V2RayN 截图 - 导出所选服务器为客户端配置](D:\Profession\hexo\_posts\Linux 配置 V2Ray 和 ProxyChains 实现命令行代理（无图形界面）\1.png)
+
+
+![V2RayN 截图 - 导出所选服务器为客户端配置](https://gukaifeng.cn/posts/linux-pei-zhi-v2ray-he-proxychains-shi-xian-ming-ling-xing-dai-li-wu-tu-xing-jie-mian/linux-pei-zhi-v2ray-he-proxychains-shi-xian-ming-ling-xing-dai-li-wu-tu-xing-jie-mian_1.png)
 
 
 
@@ -105,7 +109,7 @@ $ $ systemctl status v2ray
 
 
 
-因为我之前写过关于 ProxyChains 的文章，重写也是原样搬过来，不如直接看了。见 [Linux 配置 ProxyChains 使用代理](https://gukaifeng.cn/posts/linux-pei-zhi-proxychains-shi-yong-dai-li/)，**原样照做所有步骤**即可。
+因为我之前写过关于 ProxyChains 的文章，重写也是原样搬过来，不如直接看了。见 [Linux 配置 ProxyChains 本地代理](https://gukaifeng.cn/posts/linux-pei-zhi-proxychains-ben-di-dai-li/)，**原样照做所有步骤**即可。
 
 唯一需要我们关注的就是上面文章第 2 小节最后配置 `[ProxyList]` 的部分，很多同学不知道这里该写什么，我们回头看一下刚刚配置的 V2Ray 的 `/usr/local/etc/v2ray/config.json`，以我自己的为例，其中有下面一段需要关注：
 
@@ -204,7 +208,7 @@ http 127.0.0.1 10809
 
 
 
-配置好后的代理测试在文章  [Linux 配置 ProxyChains 使用代理](https://gukaifeng.cn/posts/linux-pei-zhi-proxychains-shi-yong-dai-li/) 内也有，不过本来也比较简单，这里再演示一遍。
+配置好后的代理测试在文章  [Linux 配置 ProxyChains 本地代理](https://gukaifeng.cn/posts/linux-pei-zhi-proxychains-ben-di-dai-li/) 内也有，不过本来也比较简单，这里再演示一遍。
 
 这里就以国内通常无法访问的谷歌 [www.google.com](http://www.google.com/) 为例：
 

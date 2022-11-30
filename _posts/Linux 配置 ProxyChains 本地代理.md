@@ -271,6 +271,8 @@ type  ip  port [user pass]
 在这里配置好你的本地代理信息就可以了。
 
 > ProxyChains 只是本地代理，所以你还需要一个网络代理工具（比如 V2Ray）。
+>
+> 如果你刚好在使用某个 V2Ray 客户端（例如 Windows 上的 V2RrayN），那么这篇文章可能对你也有帮助：[Linux 配置 V2Ray 和 ProxyChains 实现命令行代理（无图形界面）](https://gukaifeng.cn/posts/linux-pei-zhi-v2ray-he-proxychains-shi-xian-ming-ling-xing-dai-li-wu-tu-xing-jie-mian/)。
 
 ## 3. 测试代理
 
