@@ -26,7 +26,7 @@ tags: [Linux, NFS]
 
 
 
-假设有 A 和 B 两台不同的但可以相互连接的（内网或公网均可） Linux 服务器（我这里均以 CentOS 系统举例），我们要将 A 服务器上的 `/nfs-shared/` 目录共享给 B 服务器。在 B 服务器上，将 A 服务器上共享来的目录，挂载（NFS 是通过挂载的方式来访问共享内容的）到自己 `/nfs-shard-from-server/` 目录。完成后，A 服务器访问自己的 `/nfs-shared/` 目录，与 B 服务器访问目录 `/nfs-shard-from-server/` 看到的内容应当始终完全一致（不过 B 机器上可能会有延迟，毕竟是要远程放到 A 服务器的，具体取决 A、B 互联的网络质量）。
+假设有 A 和 B 两台不同的但可以相互连接的（内网或公网均可，但公网比较麻烦，要解决防火墙的问题） Linux 服务器（我这里均以 CentOS 系统举例），我们要将 A 服务器上的 `/nfs-shared/` 目录共享给 B 服务器。在 B 服务器上，将 A 服务器上共享来的目录，挂载（NFS 是通过挂载的方式来访问共享内容的）到自己 `/nfs-shard-from-server/` 目录。完成后，A 服务器访问自己的 `/nfs-shared/` 目录，与 B 服务器访问目录 `/nfs-shard-from-server/` 看到的内容应当始终完全一致（不过 B 机器上可能会有延迟，毕竟是要远程放到 A 服务器的，具体取决 A、B 互联的网络质量）。
 
 
 
@@ -121,7 +121,7 @@ exportfs [-aruv]
 * `-a`：全部挂载(或卸除) `/etc/exports` 内的设定。
 * `-r`：重新挂载 `/etc/exports` 里面的设定，此外，亦同步更新 `/etc/exports` 及 `/var/lib/nfs/xtab` 的内容。
 * `-u`：卸除某一目录。
-* `-v`：在 `export` 的时候，将分享的目录显示到屏幕上！
+* `-v`：在 `export` 的时候，将共享的目录显示到屏幕上！
 
 
 
@@ -257,6 +257,18 @@ systemctl start nfs-server
 
 ### 3.2. 挂载共享目录
 
+挂载之前，我们同样可以使用 `showmount -e` 命令，查看服务器共享了哪些目录，例如：
+
+```shell
+$ showmount -e 8.142.120.167
+Exports list on 8.142.120.167:
+/nfs-shared
+```
+
+> 如果你是在公网共享的话，`showmount -e` 这里可能会面临防火墙问题，你需要打开服务器端相应的端口（不是挂载的端口，是个 UDP 端口）。这里暂时不是重点，先不说了，因为不影响挂载。
+
+
+
 
 
 挂载目录使用 `mount` 命令。`mount` 的功能挺多的，具体见 [man mount](https://man7.org/linux/man-pages/man8/mount.8.html)。
@@ -299,3 +311,46 @@ mount 8.142.120.167:/nfs-shared /nfs-shared-from-server
 
 搞定！
 
+
+
+
+
+## 4. 可能遇到的问题与解决方案
+
+### 4.1. 使用非法端口
+
+
+
+客户端挂载时出现下面的错误信息：
+
+```
+mount.nfs: access denied by server while mounting 8.142.120.167:/nfs-shared
+```
+
+问题有多种，如果你**非常确定你配置中的路径、地址等信息没有写错**，接着往下看。
+
+在 NFS 服务器上查看 log：
+
+```shell
+$ sudo tail /var/log/messages | grep mount
+Dec  3 20:35:27 iZ8vbf7xcuoq7ug1e7hjk5Z rpc.mountd[2050307]: refused mount request from 111.198.231.50 for /nfs-shared (/nfs-shared): illegal port 21497
+Dec  3 20:35:42 iZ8vbf7xcuoq7ug1e7hjk5Z rpc.mountd[2050307]: refused mount request from 111.198.231.50 for /nfs-shared (/nfs-shared): illegal port 19473
+Dec  3 20:37:46 iZ8vbf7xcuoq7ug1e7hjk5Z rpc.mountd[2050307]: refused mount request from 111.198.231.50 for /nfs-shared (/nfs-shared): illegal port 19959
+Dec  3 20:48:43 iZ8vbf7xcuoq7ug1e7hjk5Z rpc.mountd[2050307]: refused mount request from 111.198.231.50 for /nfs-shared (/nfs-shared): illegal port 21324
+```
+
+可以看到显示非法端口。
+
+
+
+这个问题的主要原因是，NFS 服务器的配置文件中 `/etc/export` 中有个默认选项 `secure`，此选项要求不使用 gss 的请求源自小于 `IPPORT_RESERVED` (1024) 的 Internet 端口。然而在很多场景中该端口总是大于 1024 的（例如在使用 NAT 网络地址转换时）。
+
+
+
+在 NFS 服务器的配置文件 `/etc/export` 中指定 `--insecure` 来关闭此要求，例如：
+
+```shell
+/nfs-shared 47.93.49.1(rw,insecure)
+```
+
+> 注意：旧内核（上游内核版本 4.17 之前）对 gss 请求强制执行此要求，无法关闭。
