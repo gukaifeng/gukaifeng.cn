@@ -9,8 +9,39 @@ toc: true
 
 
 
-> <font color=red>请注意，此文章尚未完成。</font>  
-> <font color=red>当此文章完结时，此声明将被删除。</font>
+
+
+> `curl` 的功能非常强大，非常多，本文只会介绍笔者认为比较常用的用法。详细文档请参阅 [man curl](https://man7.org/linux/man-pages/man1/curl.1.html) 和 [man curl-config](https://man7.org/linux/man-pages/man1/curl-config.1.html)。
+
+
+
+## 1. 什么是 `curl`？
+
+
+
+`curl` 是一个使用 URL 语法传输数据的命令行工具和库。
+
+
+
+`curl` 是开源的，项目地址为 https://github.com/curl/curl，官网为 https://curl.se/。
+
+
+
+`curl` 其支持的协议有 `DICT`、`FILE`、`FTP`、`FTPS`、`GOPHER`、`HTTP`、`HTTPS`、`IMAP`、`IMAPS`、`LDAP`、`LDAPS`、`MQTT`、`POP3`、`POP3S`、`RTMP`、`RTMPS`、`RTSP`、`SCP`、`SFTP`、`SMB`、`SMBS`、`SMTP`、`SMTPS`、`TELNET` 和 `TFTP`。
+
+
+
+`curl` 命令被设计为无需用户交互即可工作。
+
+
+
+`curl` 提供了大量有用的技巧，例如代理支持、用户身份验证、FTP 上传、HTTP post、SSL 连接、cookie、文件传输恢复等。`curl` 提供的功能的数量可能会让我们眼花缭乱头晕炫目。
+
+
+
+
+
+## 2. `curl` 常用方法
 
 
 
