@@ -35,7 +35,7 @@ Name:	systemd
 
 
 
-> 官方说法：`systemd` 的拼写是的 "**systemd**"，而不是 "**system D**" 或 "**System D**"，甚至 "**SystemD**，而且也不是 "**system d**"。因为它是一个系统(system)守护(daemon)程序，在 Unix/Linux 下全部都是小写字母，并且带着一个小写字母 **d** 的后缀代表 daemon。
+> 官方说法：`systemd` 的拼写是的 "**systemd**"，而不是 "**system D**" 或 "**System D**"，甚至 "**SystemD**"，而且也不是 "**system d**"。因为它是一个系统(system)守护(daemon)程序，在 Unix/Linux 下全部都是小写字母，并且带着一个小写字母 **d** 的后缀代表 daemon。
 
 
 
@@ -318,7 +318,7 @@ this is the log of systemd demo, current time is Mon Dec 5 00:51:09 CST 2022
 | `enable`           | * 设定指定单元为开机自启。           |
 | `daemon-reload`    | 重载指定单元的单元文件使其立即生效。 |
 
-\* `systemctl enable` 命令会设定指定单元为开机自启。但前文我们说过，单元文件放在目录 `/etc/systemd/system/` 下的单元才会开机自启，也就是说，如果我们的单元文件已经放置在该目录中，那么我们无需 `enable`，其便会开机自启。此命令主要用于单元文件在目录 `/usr/lib/systemd/system` 中的单元，这些单元默认不会开机自启，`enable` 会在 `/etc/systemd/system/` 目录中创建一个指向目录 `/usr/lib/systemd/system` 中指定单元文件的软连接，以此实现对应单元的开机自启。
+\* `systemctl enable` 命令会设定指定单元为开机自启。但前文我们说过，单元文件放在目录 `/etc/systemd/system/` 下的单元才会开机自启，也就是说，如果我们的单元文件已经放置在该目录中，那么我们无需 `enable`，其便会开机自启。此命令主要用于单元文件在目录 `/usr/lib/systemd/system` 中的单元，这些单元默认不会开机自启，`enable` 会在 `/etc/systemd/system/` 目录中创建一个指向目录 `/usr/lib/systemd/system` 中指定单元文件的符号连接，以此实现对应单元的开机自启。`enable` 后，相应的单元文件也会重载（等价 `daemon-reload`）。`disable ` 是与之相反的命令，并且会删除即便不是由 `enable` 创建的符号连接。
 
 
 
