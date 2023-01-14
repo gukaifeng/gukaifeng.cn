@@ -1,7 +1,7 @@
 ---
 title: 如何创建一个 Linux RPM 包
 date: 2022-11-14 01:40:30
-updated: 2022-11-22 01:48:30
+updated: 2022-11-28 01:26:30
 categories: [技术杂谈]
 tags: [RPM]
 ---
@@ -15,6 +15,8 @@ tags: [RPM]
 2. 如何创建一个 RPM 包。
 3. 如何安装(install)、查询(query)、移除(remove)一个 RPM 包。
 
+>RPM 相关功能非常强大，并非一篇文章所能涵盖，本文相关内容仅用于入门。  
+>如果你有本文没有提到的、更复杂的需求，建议参考官方指导：[RPM Packaging Guide](https://rpm-packaging-guide.github.io/)。
 
 ## 1. 什么是 RPM 包？
 
@@ -130,6 +132,8 @@ mv hello-0.0.1.tar.gz SOURCES
 ```
 
 ### 2.4. 创建 `.spce` 文件
+
+>PS：由于 `.spec` 文件的配置是制作 RPM 包过程中最复杂的部分，对初次接触的人来说，一下接受太多内容是很难的，所以本小节只是个样例，没有做太多相关项的解释。更详尽更复杂的相关内容，我们会在第 6 小节以后进一步解释。
 
 一个 RPM 包由一个 `.spce` 文件定义。`.spec` 文件的语法很严格，不过 `rpmdev` 给我们提供了样板。
 
@@ -283,7 +287,7 @@ $ rpmlint ~/rpmbuild/SPECS/hello.spec
 
 ### 2.6. 构建包（rpmbuild）
 
-构建 RPM 包需要用到 rpmbuild 命令。在本文早前的 [2.5](#2-2-构建文件树) 小节，我们提到过 `.src.rpm`（源 RPM 包） 和 `.rpm` 包的区别。
+构建 RPM 包需要用到 rpmbuild 命令。在本文早前的 2.2 小节，我们提到过 `.src.rpm`（源 RPM 包） 和 `.rpm` 包的区别。
 
 **（可选）** 使用下面的命令创建 `.src.rpm` 包：
 
@@ -543,8 +547,326 @@ sh: hello.sh: No such file or directory
 
 因为我们的包已经被卸载了嘛。
 
+## 6. 进阶：配置更完整复杂的 `.spec` 文件
 
-## 6. 进阶：打包需要编译的程序
+`.spec` 文件中描述了 `rpmbuild` 实际构建一个 RPM 包的具体信息。
+
+`.spec` 文件主要由两个部分组成：**Preamble** 和 **Body**：
+
+* **Preamble** 部分包含了一系列元数据项，这些数据项会用在 body 部分中。
+
+* **Body** 部分包含整个构建的主要信息。
 
 
-## 7. 高阶：打包更复杂的程序
+
+### 6.1. Preamble
+
+下表列出了 RPM SPEC 文件中在 Preamble 部分可使用的项。
+
+| Preamble 指示符 | 定义                                                         |
+| --------------- | ------------------------------------------------------------ |
+| `Name`          | 包的基本名称，需要和 SPEC 文件的名字一致。                   |
+| `Version`       | 软件的上游版本号。                                           |
+| `Release`       | 软件当前版本已经发布(release)的次数。通常我们设置初始值为 `1%{?dist}`，其中前面的 1 是值，后面的 `%{?dist}` 是一个宏。每当有新 release 的时候把这个值加 1；当软件有新版本的时候，把这个值重设回 1。关于宏 `%{?dist}` 我们在本小节最后来说。 |
+| `Summary`       | 摘要，关于这个软件包的一行概述。                             |
+| `License`       | 要打包的软件的许可。比如如果是开源软件的话，这里应该写上此软件包遵循的开源许可协议。 |
+| `URL`           | 关于打包的软件的更多信息的完整 URL。大多时候要打包的软件的上游项目网址。 |
+| `Source0`       | 上游源码压缩后的归档文件（没有打补丁的，补丁在其他地方处理）的路径或者 URL。这指向的应该是这个归档文件的一个可达可靠的存储，比如把归档文件放在上游页面，而不是本地存储。如果有需要的话，也可能增加更多 Source 项，比如 `Source1`、`Source2`、`Source3` ... `SourceX` 等等。 |
+| `Patch0`        | 要应用到源码的第一个补丁的名字,没有补丁可以为空。和 Source 项一样，可以有更多 `Patch1`、`Patch2`、`Patch3` ... `PatchX` 等。 |
+| `BuildArch`     | 运行此软件所依赖的处理器架构。如果这个软件不依赖某个具体架构，比如这个软件完全由一个解释型语言编写，那就可以设置为 `BuildArch: noarch`。如果不写的话，这个软件会自动继承构建此包的机器的架构，比如 `x86_64`。 |
+| `BuildRequires` | 构建以编译语言编写的程序所需的包列表，包名之间用逗号或空格分隔。可以有多个 `BuildRequires` 条目，每个条目在 SPEC 文件中都有自己的行。 |
+| `Requires`      | 安装后，运行软件所需的包列表，包名之间用逗号或空格分隔。可以有多个 `BuildRequires` 条目，每个条目在 SPEC 文件中都有自己的行。 |
+| `ExcludeArch`   | 如果软件无法在特定的处理器体系结构上运行，则可以在此处排除该体系结构。 |
+
+`Name`、`Version`、`Release` 三个指示符共同构成了 RPM 包的文件名。RPM 包管理者和系统管理员通常可以叫这三个指示符为 **N-V-R** 或者 **NVR**，因为 RPM 包文件名的格式就是 `NAME-VERSION-RELEASE`。
+
+我们可以通过其他包名举一个例子：
+
+```shell
+$ rpm -q git
+git-2.27.0-1.el8.x86_64
+```
+
+我们以 git 包为例，名字构成中，`Name` 是 "git"，`Version` 是 "2.27.0"，`Release` 是 "1.el8"。  
+这里我们可能会认为与刚说的 NVR 不同，但其实是一样的，只是最后的 "x86_64" 不是由我们制作包的程序员直接控制的，其由 `rpmbuild` 的构建环境定义。不依赖构建环境的例外情况是 `noarch` 的包。
+
+
+
+\-
+
+
+
+`%{?dist}` 宏是很常见的，其表示分发标签(distribution tag)，其表示了我们正在构建的分发。
+
+例如：
+
+```shell
+# 在 RHEL 8.X 的机器上，比如 CentOS 8.2
+
+$ rpm --eval %{?dist}
+.el8
+```
+
+```shell
+# 在 Fedora 23 机器上
+
+$ rpm --eval %{?dist}
+.fc23
+```
+
+
+
+### 6.2. Body
+
+Body 部分的指示符均已 `%` 开头。
+
+下表列出了 RPM SPEC 文件中在 Body 部分使用的项。
+
+| Body 指示符    | 定义                                                         |
+| -------------- | ------------------------------------------------------------ |
+| `%description` | RPM 中包装的软件的完整描述。此描述可以跨越多行，可以分段落。 |
+| `%prep`        | 在构建的软件前需要执行的命令或一系列命令。例如，解压 `Source0` 中的归档。该指示符可以包含 shell 脚本。 |
+| `%build`       | 将软件实际构建到机器码（用于编译语言）或字节码（对于某些解释的语言）中的命令或一系列命令。 |
+| `%install`     | 从 `％builddir`（构建发生的地方）复制所需构建文件的命令或多个命令到 `％buildroot` 目录（其中包含带有要包装文件的目录结构）。这通常意味着将文件从 `〜/rpmbuild/build` 复制到 `〜/rpmbuild/buildroot`，并在 `〜/rpmbuild/buildroot` 中创建必要的目录。这仅在创建软件包时运行，而不是当终端用户安装软件包时运行。有关更详细的信息见 [Working with SPEC files](https://rpm-packaging-guide.github.io/#working-with-spec-files)。 |
+| `%check`       | 测试软件的命令或一系列命令。通常包括单位测试之类的内容。     |
+| `%files`       | 最将要安装在终端用户系统中的文件列表。其中写入的文件路径绝对路径是从 `$RPM_BUILD_ROOT` 开始。 |
+| `%changelog`   | 发生在不同 `Version` 或 `Release` 构建之间的改动记录         |
+
+
+
+### 6.3 更高级的项
+
+SPEC 文件还可以包含高级的项。
+
+例如，规格文件可以具有*脚本段(scriptlets)*和*触发器(triggers)*，它们可以在终端用户的安装过程中的某个点触发（而不是我们创建包的构建过程）。
+
+详见 [Scriptlets and Triggers](https://rpm-packaging-guide.github.io/#triggers-and-scriptlets)。
+
+## 7. 进阶：打包需要编译的程序案例
+
+我们前面的入门案例打包的是一个 shell 脚本。因为 shell 脚本不需要编译，所以省下了很多操作。
+
+现在我们试着制作一个需要编译的入门案例，我们写一个简单地 C++ 程序。
+
+
+
+我们现在有一个 c++ 源文件 “main.cpp” 如下：
+
+```cpp
+#include <iostream>
+
+int main(void) {
+    std::cout << "Wellcome to my blog https://gukaifeng.cn/ !" << std::endl;
+    return 0;
+}
+```
+
+现在，我们要把这段代码打包成一个 rpm 包。
+
+预期效果是，安装此 rpm 包以后，用户直接在命令行键入 `hello`，即可打印文字，像下面这样：
+
+```shell
+$ hello 
+Wellcome to my blog https://gukaifeng.cn/ !
+```
+
+现在开始打包过程，因为第 2 节已经提过此过程，这里从简：
+
+```shell
+$ mkdir hello-0.0.1
+$ mv main.cpp hello-0.0.1/
+$ tar --create --file hello-0.0.1.tar.gz hello-0.0.1
+$ rpmdev-setuptree
+$ mv hello-0.0.1.tar.gz  ~/rpmbuild/SOURCES/
+$ rpmdev-newspec hello
+$ mv hello.spec ~/rpmbuild/SPECS/
+```
+
+我们编辑 SPEC 文件 `~/rpmbuild/SPECS/hello.spec`，像下面这样，这里只说重点：
+
+```spec
+Name:           hello
+Version:        0.0.1
+Release:        1%{?dist}
+Summary:        a simple cpp program
+
+License:        GPL
+Source0:        %{name}-%{version}.tar.gz
+
+BuildRequires:  gcc-c++
+
+%description
+this program will print "Wellcome to my blog https://gukaifeng.cn/ !"
+
+%prep
+%setup -q
+
+
+%build
+g++ main.cpp -o %{name}
+
+%install
+rm -rf $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT/%{_bindir}
+cp %{name} $RPM_BUILD_ROOT/%{_bindir}
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%{_bindir}/%{name}
+
+
+%changelog
+* Sun Nov 27 2022 gukaifeng <892859816@qq.com>
+```
+
+我们看几个比较关键的：
+
+* `BuildRequires:  gcc-c++`：编译 c++ 需要 `g++` 命令，其所在的 rpm 包名为 `gcc-c++`。
+
+* 我在 `%build` 部分写了 g++ 编译命令，我们的可执行程序就叫 `%{name}`，即 "hello"。
+* `%{clean}` 里的命令就是删除掉 `$RPM_BUILD_ROOT`，就是 `~/rpmbuild/BUILDROOT` 中的内容，这里面存了我们打包的中间过程文件，打包完成以后就没用了。
+* `%files` 里的 `%{_bindir}/%{name}` 表示我们要把我们编译好的可执行程序 "hello"， 在终端用户安装的时候，放在其 `/usr/bin` 目录。这里要注意的是，`%files` 下面写的文件，路径应当与 `$RPM_BUILD_ROOT` 中的相对应。我们打包时的目录 `$RPM_BUILD_ROOT` 对应着终端用户安装时的 `/` 目录，所以下面的文件路径得是统一的。具体而言，我们在 `%install` 部分中，将我们编译好的可执行文件 "hello" 复制到了 `$RPM_BUILD_ROOT/%{_bindir}`，即此时该可执行文件有路径 `$RPM_BUILD_ROOT/%{_bindir}/%{name}`，那么如果想要拷贝这个可执行文件，在 `%files` 下应当写 `$RPM_BUILD_ROOT/` 后面的部分，即 `%{_bindir}/%{name}`。
+
+
+
+然后开始构建（这里加了参数 `--nodebuginfo` 表示不 debug）：
+
+```shell
+$ rpmbuild -ba ~/rpmbuild/SPECS/hello.spec --nodebuginfo
+Executing(%prep): /bin/sh -e /var/tmp/rpm-tmp.MBdSxb
++ umask 022
++ cd /home/gukaifeng/rpmbuild/BUILD
++ cd /home/gukaifeng/rpmbuild/BUILD
++ rm -rf hello-0.0.1
++ /usr/bin/tar -xof /home/gukaifeng/rpmbuild/SOURCES/hello-0.0.1.tar.gz
++ cd hello-0.0.1
++ /usr/bin/chmod -Rf a+rX,u+w,g-w,o-w .
++ exit 0
+Executing(%build): /bin/sh -e /var/tmp/rpm-tmp.GEUA59
++ umask 022
++ cd /home/gukaifeng/rpmbuild/BUILD
++ cd hello-0.0.1
++ g++ main.cpp -o hello
++ exit 0
+Executing(%install): /bin/sh -e /var/tmp/rpm-tmp.NYYlPc
++ umask 022
++ cd /home/gukaifeng/rpmbuild/BUILD
++ '[' /home/gukaifeng/rpmbuild/BUILDROOT/hello-0.0.1-1.el8.x86_64 '!=' / ']'
++ rm -rf /home/gukaifeng/rpmbuild/BUILDROOT/hello-0.0.1-1.el8.x86_64
+++ dirname /home/gukaifeng/rpmbuild/BUILDROOT/hello-0.0.1-1.el8.x86_64
++ mkdir -p /home/gukaifeng/rpmbuild/BUILDROOT
++ mkdir /home/gukaifeng/rpmbuild/BUILDROOT/hello-0.0.1-1.el8.x86_64
++ cd hello-0.0.1
++ rm -rf /home/gukaifeng/rpmbuild/BUILDROOT/hello-0.0.1-1.el8.x86_64
++ mkdir -p /home/gukaifeng/rpmbuild/BUILDROOT/hello-0.0.1-1.el8.x86_64//usr/bin
++ cp hello /home/gukaifeng/rpmbuild/BUILDROOT/hello-0.0.1-1.el8.x86_64//usr/bin
++ '[' '%{buildarch}' = noarch ']'
++ QA_CHECK_RPATHS=1
++ case "${QA_CHECK_RPATHS:-}" in
++ /usr/lib/rpm/check-rpaths
++ /usr/lib/rpm/check-buildroot
++ /usr/lib/rpm/redhat/brp-ldconfig
+/sbin/ldconfig: Warning: ignoring configuration file that cannot be opened: /etc/ld.so.conf: No such file or directory
++ /usr/lib/rpm/brp-compress
++ /usr/lib/rpm/brp-strip /usr/bin/strip
++ /usr/lib/rpm/brp-strip-comment-note /usr/bin/strip /usr/bin/objdump
++ /usr/lib/rpm/brp-strip-static-archive /usr/bin/strip
++ /usr/lib/rpm/brp-python-bytecompile '' 1
++ /usr/lib/rpm/brp-python-hardlink
++ PYTHON3=/usr/libexec/platform-python
++ /usr/lib/rpm/redhat/brp-mangle-shebangs
+Processing files: hello-0.0.1-1.el8.x86_64
+Provides: hello = 0.0.1-1.el8 hello(x86-64) = 0.0.1-1.el8
+Requires(rpmlib): rpmlib(CompressedFileNames) <= 3.0.4-1 rpmlib(FileDigests) <= 4.6.0-1 rpmlib(PayloadFilesHavePrefix) <= 4.0-1
+Requires: libc.so.6()(64bit) libc.so.6(GLIBC_2.2.5)(64bit) libgcc_s.so.1()(64bit) libm.so.6()(64bit) libstdc++.so.6()(64bit) libstdc++.so.6(GLIBCXX_3.4)(64bit) rtld(GNU_HASH)
+Checking for unpackaged file(s): /usr/lib/rpm/check-files /home/gukaifeng/rpmbuild/BUILDROOT/hello-0.0.1-1.el8.x86_64
+Wrote: /home/gukaifeng/rpmbuild/SRPMS/hello-0.0.1-1.el8.src.rpm
+Wrote: /home/gukaifeng/rpmbuild/RPMS/x86_64/hello-0.0.1-1.el8.x86_64.rpm
+Executing(%clean): /bin/sh -e /var/tmp/rpm-tmp.Xhwrwc
++ umask 022
++ cd /home/gukaifeng/rpmbuild/BUILD
++ cd hello-0.0.1
++ rm -rf /home/gukaifeng/rpmbuild/BUILDROOT/hello-0.0.1-1.el8.x86_64
++ exit 0
+```
+
+然后我们的目录结构如下：
+
+```shell
+$ tree ./rpmbuild/
+./rpmbuild/
+├── BUILD
+│   └── hello-0.0.1
+│       ├── hello
+│       └── main.cpp
+├── BUILDROOT
+├── RPMS
+│   └── x86_64
+│       └── hello-0.0.1-1.el8.x86_64.rpm
+├── SOURCES
+│   └── hello-0.0.1.tar.gz
+├── SPECS
+│   └── hello.spec
+└── SRPMS
+    └── hello-0.0.1-1.el8.src.rpm
+```
+
+我们安装试试看：
+
+```shell
+$ sudo dnf install ~/rpmbuild/RPMS/x86_64/hello-0.0.1-1.el8.x86_64.rpm
+[sudo] password for gukaifeng: 
+Last metadata expiration check: 0:34:04 ago on Mon 28 Nov 2022 12:35:23 AM CST.
+Dependencies resolved.
+======================================================================================================================================================================================================================================================================================================
+ Package                                                             Architecture                                                         Version                                                                    Repository                                                                  Size
+======================================================================================================================================================================================================================================================================================================
+Installing:
+ hello                                                               x86_64                                                               0.0.1-1.el8                                                                @commandline                                                                10 k
+
+Transaction Summary
+======================================================================================================================================================================================================================================================================================================
+Install  1 Package
+
+Total size: 10 k
+Installed size: 11 k
+Is this ok [y/N]: y
+Downloading Packages:
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                                                                                                                                                                                                                                              1/1 
+  Installing       : hello-0.0.1-1.el8.x86_64                                                                                                                                                                                                                                                     1/1 
+  Running scriptlet: hello-0.0.1-1.el8.x86_64                                                                                                                                                                                                                                                     1/1 
+  Verifying        : hello-0.0.1-1.el8.x86_64                                                                                                                                                                                                                                                     1/1 
+
+Installed:
+  hello-0.0.1-1.el8.x86_64                                                                                                                                                                                                                                                                            
+
+Complete!
+```
+
+为了节省篇幅，我这里就不适用那些花里胡哨的命令验证是否安装成功了，我们直接执行一下：
+
+```shell
+$ hello
+Wellcome to my blog https://gukaifeng.cn/ !
+```
+
+预期达成，直接在命令行键入 "hello"，输出了我们的期望的内容。
+
+
+
+关于卸载什么的这里就不说了。完结！
+
+## 8. 结语
+
+
+
+我刚开始尝试 RPM 打包工具的时候，以为会很简单轻松，但是现实让我认识到，想用好这个工具，还是需要付出一定的学习成本的。
+
+本文只是用来快速入门，大家看过本文以后大概可以搞出一些简单的东西。我在文章开头的时候给出了官方的指南链接，官方的指南可能复杂了一点，可能会让人一时间失去学习的兴趣。如果你是真正的对 RPM 打包有工作上的需求，建议在看过本文快速入门以后，继续看官方指南深入学习。
