@@ -231,8 +231,6 @@ the result of task(2, 3) is 5, and the thread id is 139965886650176
 
 
 
-
-
 本文也主要是笔记，有理解不全或不对的地方，欢迎指出！
 
 
@@ -241,3 +239,253 @@ the result of task(2, 3) is 5, and the thread id is 139965886650176
 
 ## 3. `std::promise`
 
+`std::promise<T>` 给出了一种异步求值的方法（类型为 `T`），某个 `std::future<T>` 对象与结果关联，能延后读出需要求取的值。配对的 `std::promise` 和 `std::future` 可实现下面的工作机制：等待数据的线程在 future 上阻塞，而提供数据的线程利用相配的 promise 设定关联的值，使 future 准备就绪。
+
+若需从给定的 `std::promise` 实例获取关联的 `std::future` 对象，调用前者的成员函数 `get_future()` 即可，这与 `std::packaged_task` 一样。promise 的值通过成员函数 `set_value()` 设置，只要设置好，future 即准备就绪，凭借它就能获取该值。如果 std::promise 在被销毁时仍未曾设置值，保存的数据则由异常代替。后面的小节会介绍线程间如何传递异常。
+
+> `std::promise` 可以在 future 中存储任意的值。在 `std::async` 和 `std::packaged_task` 中，future 中只能存储函数的返回值。
+
+
+
+
+
+下面通过一个例子简单解释，在该例中：
+
+
+
+* 线程 t1 负责计算 2 + 3 的值。
+* 线程 t2 负责接收 t1 的计算结果并打印。
+* 使用 `std::promise` 搭配 `std::future` 完成。
+
+
+
+```cpp
+#include <iostream>
+#include <future>
+
+void my_sum(int a, int b, std::promise<int> p)
+{
+    p.set_value(a + b);
+    std::cout << "my_sum()    's thread id is " 
+              << std::this_thread::get_id() 
+              << ", my_sum() finished, "
+              << std::endl;
+}
+
+void print_sum(std::future<int> f)
+{
+    std::cout << "print_sum() 's thread id is "
+              << std::this_thread::get_id()
+              << ", the sum of my_sum() is "
+              << f.get() << std::endl;
+}
+
+int main(int, char **)
+{
+
+    std::promise<int> p;
+    std::future f = p.get_future();
+
+    std::cout << "main()      's thread id is " 
+              << std::this_thread::get_id() 
+              << std::endl;
+
+    std::thread t1(my_sum, 2, 3, std::move(p));
+    std::thread t2(print_sum, std::move(f));
+
+    t1.join();
+    t2.join();
+
+    return 0;
+}
+```
+
+输出：
+
+```
+main()      's thread id is 140445886191424
+my_sum()    's thread id is 140445868152576, my_sum() finished, 
+print_sum() 's thread id is 140445859759872, the sum of my_sum() is 5
+```
+
+可以看出，`main()`、`my_sum()` 和 `print_sum()` 分别在三个不同的线程中执行，并且我们的程序结果符合预期。
+
+
+
+
+
+
+
+## 4. 将异常保存到 `std::future` 中
+
+
+
+
+
+使用 `std::async` 和 `std::packaged_task`，如果发生异常，那么异常将会被存储到对应 future 中，而不会立即抛出，调用其 `get()` 方法时才会抛出此异常。
+
+> C++ 标准没有明确规定应该重新抛出原来的异常，还是其副本；为此，不同编译器和库有不同的选择。
+
+
+
+对于 `std::promise`，因为其对应的 future 是调用 `set_value()` 方法设置的，所以不会自动存储异常，而需要我们使用 `set_expection()` 方法代替 `set_value()`，从而在 future 中存储异常。`set_exception()` 的调用可以放在 `catch` 段中，例如：
+
+```cpp
+extern std::promise<double> some_promise;
+
+try
+{
+    some_promise.set_value(calculate_value());
+}
+catch(...)
+{
+    some_promise.set_exception(std::current_exception());
+}
+```
+
+上述伪代码中可以看到，当程序正确运行时，我们使用 `set_value()` 设置值，当程序异常时在 `catch` 段使用`set_exception()` 存储异常。最后，该异常同样会在 future 上调用 `get()` 时抛出。
+
+这里的 `std::current_exception()` 用于捕获抛出的异常。此外，我们还能用 `` 直接保存新异常，而不触发抛出行为。
+
+```cpp
+some_promise.set_exception(std::make_exception_ptr(std::logic_error("foo ")));
+```
+
+如果我们能预知异常的类型，那么，相较 try/catch 块，后面的代替方法不仅简化了代码，还更有利于编译器优化代码，因而应优先采用。
+
+
+
+还有一种方法可将异常保存到 future 中：我们不调用 promise 的两个 set 成员函数，也不执行包装的任务，而是直接销毁与 future 关联的 `std::promise` 或 `std::packaged_task` 对象。如果关联的 future 未能准备就绪，无论销毁两者中的哪一个，其析构函数都会将异常 `std::future_error` 存储为异步任务的状态数据，它的值是错误代码 `std::future_errc::broken_promise`。我们一旦创建 future 对象，便是许诺会按异步方式给出值或异常，但可以销毁他们的生产来源，就无法提供所求的值或出现的异常，导致许诺被破坏。在这种情形下，倘若编译器不向 future 存入任何数据，则等待的线程有可能永远等不到结果。
+
+
+
+
+
+到目前位置，所有代码范例都使用了 `std::future`。然而，`std::future` 自身存在限制，关键问题是：它只容许一个线程等待结果。若我们要让多个线程等待同一个目标时间，则需要改用 `std::shared_future`。
+
+## 5. 多个线程一起等待 `std::shared_future`
+
+
+
+
+
+`std::future` 只能让一个线程等待结果，其 `get()` 只能调用一次，因为调用后会触发移动操作，其内的值将不存在。
+
+并且 `std::future` 不会自动同步，也就是多线程同时访问一个 `std::future` 且没有做任何同步处理的话，可能导致资源竞争，出现未定义的结果。
+
+
+
+`std::future` 仅支持移动构造和移动赋值，无法拷贝，所以虽然它可以在多个线程中移动，但同一时刻仅能有一个线程持有其实例。而 `std::shared_future` 就解决了这个问题，因为其支持拷贝。所以我们可以持有该类的多个对象，且全部指向同一异步任务的状态数据。
+
+
+
+这里需要注意的是，即便使用了 `std::shared_future`，但如果多个线程访问同一个对象而不做同步，依然会出现数据竞争，并且每个 `std::shared_future` 对象的 `get()` 同样只能调用一次，多次调用会报错。正确的方法是，**给每个线程传递一个 `std::shared_future` 副本，这样每个副本作为其线程内的局部变量，标准库会解决访问时的竞争问题。**通过线程自有的 `std::shared_future` 副本来访问状态数据是安全的。
+
+
+
+
+
+由于不论是 `std::async` 返回的，还是我们通过 `get_future()` 方法从 `std::packaged_task` 和 `std::promise` 中获取的都是 `std::future` 对象，而不是 `std::shared_future` 对象。所以我们要想使用 `std::shared_future`，就需要从 `std::future` 转换而来。
+
+
+
+从 `std::future` 转换到 `std::shared_future` 有几种方法，区别不大，这里举例说明：
+
+
+
+```cpp
+std::promise<int> p;
+std::shared_future sf = p.get_future();  // 隐式转换 std::future 为 std::shared_future
+std::shared_future sf = p.get_future().share();  // 显式转换
+
+// f is a std::future object
+std::shared_future sf = f; // 隐式转换，f 将失效，f.valid() 为 false
+std::shared_future sf = f.share();  // 显式转换，f 将失效，f.valid() 为 false
+```
+
+这里  `std::shared_future<T>` 中的 `T` 和 `std::future` 同样可自动推导，所以可以不写。
+
+
+
+我们修改第 3 小节中的示例代码，让两个线程打印计算的结果：
+
+```cpp
+#include <iostream>
+#include <future>
+
+void my_sum(int a, int b, std::promise<int> p)
+{
+    p.set_value(a + b);
+    std::cout << "my_sum()    's thread id is " 
+              << std::this_thread::get_id() 
+              << ", my_sum() finished, "
+              << std::endl;
+}
+
+// void print_sum(std::shared_future<int>& sf)  // 错误，每个线程内使用的都是同一个 std::shared_future 对象
+void print_sum(std::shared_future<int> sf)  // 正确，每个线程内使用的都是传入参数的副本
+{
+    std::cout << "print_sum() 's thread id is "
+              << std::this_thread::get_id()
+              << ", the sum of my_sum() is "
+              << sf.get() << std::endl;
+}
+
+int main(int, char **)
+{
+
+    std::promise<int> p;
+    std::shared_future sf = p.get_future().share();
+
+    std::cout << "main()      's thread id is " 
+              << std::this_thread::get_id() 
+              << std::endl;
+
+    std::thread t1(my_sum, 2, 3, std::move(p));
+    std::thread t2(print_sum, sf);
+    std::thread t3(print_sum, sf);
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    return 0;
+
+}
+```
+
+结果如下：
+
+```
+main()      's thread id is 140658286561088
+my_sum()    's thread id is 140658268522240, my_sum() finished, 
+print_sum() 's thread id is 140658260129536, the sum of my_sum() is 5
+print_sum() 's thread id is 140658117519104, the sum of my_sum() is 5
+```
+
+符合预期，两个执行 `print_sum()` 的线程都正确打印出了计算结果。
+
+
+
+
+
+### 6. 限时等待
+
+
+
+我们前面介绍的内容中，线程在等待 future 就绪前会阻塞，而且是无休止的阻塞。有时我们想设定一个超时时间，如果设定时间到达后 future 还没有就绪，那么就转而去做其他事情。
+
+C++ 有两种超时(timeout)机制可用：
+
+* 迟延超时(duration-based timeout)：线程根据指定的时长而继续等待（如 30 毫秒）。
+* 绝对超时(absolute timeout)：在某特定的时间点(time point)来临之前，线程一直等待、
+
+大部分等待函数都具有变体，专门处理这两种机制的超时。处理迟延超时的函数变体以 `_for` 为后缀，而处理绝对超时的函数变体以 `_until` 为后缀。
+
+例如，条件变量 `std::condition_variable` 含有成员函数 `wait_for()` 和 `wait_until()`，它们各自具备两个重载，分别对应 `wait()` 的两个重载：其中一个重载停止等待的条件是收到信号、超时、或发生伪唤醒；我们需要向另一个重载函数提供断言，在对应线程被唤醒之时，只有该断言城里（向条件变量发送信号），它才会返回，如果超时，这个重载函数也会返回。
+
+
+
+
+
+> TODO
