@@ -544,3 +544,9 @@ error: passing ‘std::lock_guard<const std::mutex>::mutex_type’ {aka ‘const
 大意是我们在 const 成员函数 `read_data()` 中调用了 `lock()`，`lock()` 是有可能修改 `_m` 的，我们的 const 限定符可能就没用了。在编译的时候加选项 `-fpermissive` 可以忽略这个错误，不过我们最好还是不要这样做。
 
 如果我们想要保持 `read_data()` 仍然是 const 的，那给 `std::mutex _m` 加上 `mutable` 关键字就是一个合理的解决方案。即 `mutable std::mutex _m`。
+
+
+
+
+
+### Q2. 什么是伪唤醒？
