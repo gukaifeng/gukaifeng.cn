@@ -136,42 +136,55 @@ template<typename _Tp>
 
 
 
-假定类型 `T` 为原始类型，`T&` 为其引用类型，`T&&` 为其右值引用类型；形参为 `t`。
+为了说明，这里引入 C++ 中的引用折叠规则：
+
+1. 当我们将一个左值传递给函数的右值引用参数，且此右值引用参数指向模板类型参数时，编译器推断模板类型参数为实参的左值引用类型。
+2. `X& &`、`X& &&` 和 `X&& &` 都会折叠为 `X&`。
+3. `X&& &&` 会折叠为 `X&&`。
+
+
+
+下面，假定类型 `T` 为原始类型，`T&` 为其引用类型，`T&&` 为其右值引用类型；参数为 `t`。
 
 
 
 ### 5.1. 情况一：传入的类型为原始类型（左值） `T`
 
-此时，调用 `std::move(t)`，其返回值为 `static_cast<typename std::remove_reference<T>::type&&>(t)`。
+此时，调用 `std::move(t)`，参数 `t` 的类型为 `T`。
 
-根据第 4 小节的内容，此处 `std::remove_reference<T>::type`  将等价为 `T`，`std::remove_reference<T>::type&&` 等价为 `T&&`。
+根据引用折叠规则第 1 条，在 `std::move(t)` 内部，模板类型 `_Tp` 将被推断为实参 `t` 的左值引用类型 `T&`，形参 `__t` 的类型就是 `T& &&`，根据折叠引用规则第 2 条，即为 `T&`。
 
-然后，通过 `static_cast` 将 `t` 由类型 `T` 转换为 `T&&`。
+然后由 `std::remove_reference<>` 摘掉 `T&` 的引用得到 `T`，通过 `static_cast` 转换为 `T&&` 类型并返回。
 
-即，`std::move(t)` 最终将类型 `T` 的形参 `t` 转换为右值引用类型 `T&&` 并返回。
+
+
+
 
 > **从一个左值 `static_cast` 到一个右值引用是允许的**
 > 通常情况下，`static_cast` 只能用于其他合法的类型转换。但是，这里又有一条针对右值引用的特许规则：虽然不能隐式地将一个左值转换为右值引用，但我们可以用 `static_cast` 显式地将一个左值转换为一个右值引用。
 
 ### 5.2. 情况二：传入的类型为左值引用类型 `T&`
 
-此时，调用 `std::move(t)`，其返回值为 `static_cast<typename std::remove_reference<T&>::type&&>(t)`。
+此时，调用 `std::move(t)`，参数 `t` 的类型为 `T&`。
 
-根据第 4 小节的内容，此处 `std::remove_reference<T&>::type`  将等价为 `T`，`std::remove_reference<T&>::type&&` 等价为 `T&&`。
+在 `std::move(t)` 内部，形参 `__t` 的类型是 `T&`，即 `_Tp&&` 等价 `T&`。
 
-然后，通过 `static_cast` 将 `t` 由类型 `T&` 转换为 `T&&`。
+根据引用折叠规则第 2 条，`_Tp` 等价 `T&`（因为 `T& &&` 才可折叠为 `T&`）。
 
-即，`std::move(t)` 最终将类型 `T&` 的形参 `t` 转换为右值引用类型 `T&&` 并返回。
+然后由 `std::remove_reference<>` 摘掉 `T&` 的引用得到 `T`，通过 `static_cast` 转换为 `T&&` 类型并返回。
+
+
+
+
 
 
 
 ### 5.3. 情况三：传入的类型为右值引用类型 `T&&`
 
-此时，调用 `std::move(t)`，其返回值为 `static_cast<typename std::remove_reference<T&&>::type&&>(t)`。
 
-根据第 4 小节的内容，此处 `std::remove_reference<T&&>::type`  将等价为 `T`，`std::remove_reference<T&&>::type&&` 等价为 `T&&`。
 
-由于 `t` 已经是 `T&&` 类型了，所以 `static_cast` 什么也不做。
+此时，调用 `std::move(t)`，参数 `t` 的类型为 `T&&`。
 
-即，`std::move(t)` 最终将类型 `T&&` 的形参 `t` 直接返回。
+在 `std::move(t)` 内部，形参 `__t` 的类型是 `T&&`，即 `_Tp&&` 等价 `T&&`，推断出 `_Tp` 类型即为 `T`。
 
+然后由 `std::remove_reference<>` 直接会得到 `T`，由于 `__t` 已经是 `T&&` 类型，所以 `static_cast` 什么也没做，直接返回。
