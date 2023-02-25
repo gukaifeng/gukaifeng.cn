@@ -31,7 +31,7 @@ $ ./a.out
 Hello World
 ```
 
-事实上，上述过程可以分解为 4 个步骤，分别是**预处理(Prepressing)**、**编译(Compilation)**、**汇编(Assembly)**和**链接(Linking)**，如下图所示：
+事实上，上述过程可以分解为 4 个步骤，分别是**预处理(Prepressing)** 、**编译(Compilation)** 、**汇编(Assembly) **和**链接(Linking)**，如下图所示：
 
 
 
@@ -45,14 +45,14 @@ Hello World
 
 首先是源代码文件 `hello.c` 和相关的头文件，如 `stdio.h` 等被预编译器 `cpp` （这里预编译器的名字就叫 “cpp”，下面示例中也使用了这个命令）预编译成一个 `.i` 文件。对于 C++ 程序来说，它的源代码文件的扩展名可能是 `.cpp`  或.`.cxx`，头文件的扩展名可能是 `.hpp`，而预编译后的文件扩展名是 `.i`。第一步预编译的过程相当于如下命令 （`-E` 表示只进行预编译）:
 
-```cpp
+```shell
 $ gcc -E hello.c -o hello.i
 ```
 
 
 或者:
 
-```cpp
+```shell
 $ cpp hello.c > hello.i
 ```
 
@@ -105,7 +105,7 @@ $ /usr/lib/gcc/i486-linux-gnu/4.1/cc1 hello.c
 
 或者使用如下命令:
 
-```cpp
+```shell
 $ gcc -S hello.c -o hello.s
 ```
 

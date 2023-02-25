@@ -366,7 +366,7 @@ bool compare_exchange_weak( T& expected, T desired,
 
 
 
-假设有两个线程共同操作一个数据结构，其中一个负责添加数据，一个负责读取数据。为了避免恶心条件竞争，写线程设置一个标志，用来表示数据已存储好，而读线程一直待命，等到标志成立才着手读取。下面的代码演示了这一点（例子中每个线程执行一个函数，并且仅执行一次）。
+假设有两个线程共同操作一个数据结构，其中一个负责添加数据，一个负责读取数据。为了避免恶性条件竞争，写线程设置一个标志，用来表示数据已存储好，而读线程一直待命，等到标志成立才着手读取。下面的代码演示了这一点（例子中每个线程执行一个函数，并且仅执行一次）。
 
 
 
@@ -382,20 +382,20 @@ std::atomic_bool data_ready(false);
 
 void reader_thread()
 {
-    while(!data_ready.load())  // ①
+    while (!data_ready.load()) // ①
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
-    std::cout<<"The answer="<<data[0]<<"\n";  // ②
+    std::cout << "The answer=" << data[0] << "\n"; // ②
 }
 void writer_thread()
 {
-    data.push_back(42);  // ③
-    data_ready=true;  // ④
+    data.push_back(42); // ③
+    data_ready = true;  // ④
 }
 ```
 
-我们认真分析一下这段代码：首先，① 和 ③ 操作的是一个名为 `data_ready` 的原子变量，所以这两处的执行不会引起竞争；但是，② 和 ④ 操作的变量 `data` 既不是原子变量，也没有加锁！但我可以提前告知，该代码可正确运行，且不会引起关于 `data` 的竞争。下面解释。
+我们认真分析一下这段代码：首先，① 和 ④ 操作的是一个名为 `data_ready` 的原子变量，所以这两处的执行不会引起竞争；但是，② 和 ③ 操作的变量 `data` 既不是原子变量，也没有加锁！但我可以提前告知，该代码可正确运行，且不会引起关于 `data` 的竞争。下面解释。
 
 
 
