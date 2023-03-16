@@ -24,40 +24,42 @@ tags: [Cpp,协程]
 
 如果一个函数的定义中包含下面至少任意一种，则这个函数是一个协程：
 
-* `co_await` 表达式 —— 暂停执行。
 
-  ```cpp
-  task<> tcp_echo_server()
-  {
-      char data[1024];
-      while (true)
-      {
-          std::size_t n = co_await socket.async_read_some(buffer(data));
-          co_await async_write(socket, buffer(data, n));
-      }
-  }
-  ```
 
-* `co_yield` 表达式 —— 暂停执行并返回一个值。
+1\. `co_await` 表达式 —— 暂停执行。
 
-  ```cpp
-  generator<int> iota(int n = 0)
-  {
-      while (true)
-          co_yield n++;
-  }
-  ```
+```cpp
+task<> tcp_echo_server()
+{
+    char data[1024];
+    while (true)
+    {
+        std::size_t n = co_await socket.async_read_some(buffer(data));
+        co_await async_write(socket, buffer(data, n));
+    }
+}
+```
 
-* `co_return` 语句 —— 完成执行并返回一个值。
+2\. `co_yield` 表达式 —— 暂停执行并返回一个值。
 
-  ```cpp
-  lazy<int> f()
-  {
-      co_return 7;
-  }
-  ```
+```cpp
+generator<int> iota(int n = 0)
+{
+    while (true)
+        co_yield n++;
+}
+```
 
-  
+3\. `co_return` 语句 —— 完成执行并返回一个值。
+
+```cpp
+lazy<int> f()
+{
+    co_return 7;
+}
+```
+
+
 
 
 
