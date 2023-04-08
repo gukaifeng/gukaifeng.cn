@@ -440,7 +440,7 @@ Last login: Fri Apr  7 23:46:55 2023 from 192.168.31.241
 
 
 
-![Step 1](https://gukaifeng.cn/posts/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji_2.png)
+<img src="https://gukaifeng.cn/posts/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji_2.png" alt="Step 1" style="zoom: 50%;" />
 
 
 
@@ -448,7 +448,7 @@ Last login: Fri Apr  7 23:46:55 2023 from 192.168.31.241
 
 
 
-![Step 2](https://gukaifeng.cn/posts/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji_3.png)
+<img src="https://gukaifeng.cn/posts/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji_3.png" alt="Step 2" style="zoom:50%;" />
 
 
 
@@ -456,7 +456,7 @@ Last login: Fri Apr  7 23:46:55 2023 from 192.168.31.241
 
 
 
-![Step 3](https://gukaifeng.cn/posts/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji_4.png)
+<img src="https://gukaifeng.cn/posts/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji_4.png" alt="Step 3" style="zoom: 50%;" />
 
 
 
@@ -464,7 +464,7 @@ Last login: Fri Apr  7 23:46:55 2023 from 192.168.31.241
 
 
 
-![Step 4](https://gukaifeng.cn/posts/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji_5.png)
+<img src="https://gukaifeng.cn/posts/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji_5.png" alt="Step 4" style="zoom:50%;" />
 
 
 
@@ -472,7 +472,7 @@ Last login: Fri Apr  7 23:46:55 2023 from 192.168.31.241
 
 
 
-![Step 5](https://gukaifeng.cn/posts/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji_6.png)
+<img src="https://gukaifeng.cn/posts/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji_6.png" alt="Step 5" style="zoom:50%;" />
 
 
 
@@ -480,4 +480,4 @@ Last login: Fri Apr  7 23:46:55 2023 from 192.168.31.241
 
 
 
-![Step 6](https://gukaifeng.cn/posts/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji_7.png)
+<img src="https://gukaifeng.cn/posts/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji_7.png" alt="Step 6" style="zoom:50%;" />
