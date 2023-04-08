@@ -322,7 +322,7 @@ Last login: Fri Apr  7 19:43:21 2023 from 192.168.17.1
 
 
 
-![虚拟机设置 -> 网络适配器 -> 桥接模式](D:\Profession\xiaomi\配置 VMware 虚拟机为开发机\1.png)
+![虚拟机设置 -> 网络适配器 -> 桥接模式](https://gukaifeng.cn/posts/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji_1.png)
 
 
 
@@ -440,7 +440,7 @@ Last login: Fri Apr  7 23:46:55 2023 from 192.168.31.241
 
 
 
-![Step 1](D:\Profession\xiaomi\配置 VMware 虚拟机为开发机\2.png)
+![Step 1](https://gukaifeng.cn/posts/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji_2.png)
 
 
 
@@ -448,7 +448,7 @@ Last login: Fri Apr  7 23:46:55 2023 from 192.168.31.241
 
 
 
-![Step 2](D:\Profession\xiaomi\配置 VMware 虚拟机为开发机\3.png)
+![Step 2](https://gukaifeng.cn/posts/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji_3.png)
 
 
 
@@ -456,7 +456,7 @@ Last login: Fri Apr  7 23:46:55 2023 from 192.168.31.241
 
 
 
-![Step 3](D:\Profession\xiaomi\配置 VMware 虚拟机为开发机\4.png)
+![Step 3](https://gukaifeng.cn/posts/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji_4.png)
 
 
 
@@ -464,7 +464,7 @@ Last login: Fri Apr  7 23:46:55 2023 from 192.168.31.241
 
 
 
-![Step 4](D:\Profession\xiaomi\配置 VMware 虚拟机为开发机\5.png)
+![Step 4](https://gukaifeng.cn/posts/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji_5.png)
 
 
 
@@ -472,7 +472,7 @@ Last login: Fri Apr  7 23:46:55 2023 from 192.168.31.241
 
 
 
-![Step 5](D:\Profession\xiaomi\配置 VMware 虚拟机为开发机\6.png)
+![Step 5](https://gukaifeng.cn/posts/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji_6.png)
 
 
 
@@ -480,4 +480,4 @@ Last login: Fri Apr  7 23:46:55 2023 from 192.168.31.241
 
 
 
-![Step 6](D:\Profession\xiaomi\配置 VMware 虚拟机为开发机\7.png)
+![Step 6](https://gukaifeng.cn/posts/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji/pei-zhi-vmware-xu-ni-ji-wei-kai-fa-ji_7.png)
