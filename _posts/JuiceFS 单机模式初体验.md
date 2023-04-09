@@ -248,7 +248,7 @@ $ juicefs format sqlite3://myjfs.db myjfs
 
 
 
-![myjfs.db](D:\Profession\hexo\_posts\JuiceFS 单机模式初体验\1.png)
+![myjfs.db](https://gukaifeng.cn/posts/juicefs-dan-ji-mo-shi-chu-ti-yan/juicefs-dan-ji-mo-shi-chu-ti-yan_1.png)
 
 
 
@@ -631,7 +631,7 @@ $ juicefs format --storage oss \
 
 
 
-![2](D:\Profession\hexo\_posts\JuiceFS 单机模式初体验\2.png)
+![阿里云 OSS - Bucket - 文件列表](https://gukaifeng.cn/posts/juicefs-dan-ji-mo-shi-chu-ti-yan/juicefs-dan-ji-mo-shi-chu-ti-yan_2.png)
 
 
 
@@ -698,7 +698,7 @@ $ vim juicefs_oss_test.txt
 
 
 
-![3](D:\Profession\hexo\_posts\JuiceFS 单机模式初体验\3.png)
+![阿里云 OSS - Bucket - 文件列表](https://gukaifeng.cn/posts/juicefs-dan-ji-mo-shi-chu-ti-yan/juicefs-dan-ji-mo-shi-chu-ti-yan_3.png)
 
 
 
