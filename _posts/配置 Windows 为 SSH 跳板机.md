@@ -120,7 +120,7 @@ Windows IP 配置
 在命令行通过 SSH 登录到 Windows，这里用我们刚刚查到的 Windows 跳板机的内网 IP：
 
 ```shell
-sh gukaifeng@10.189.62.0
+% ssh gukaifeng@10.189.62.0
 gukaifeng@10.189.62.0's password:
 
 ```
@@ -172,4 +172,4 @@ Last login: Mon Apr 10 20:36:55 2023 from 192.168.80.1
 
 > 一点题外话：
 >
-> 如果你要把 Windows 始终开着跑这个虚拟机，但当前人又不在 Windows 机器前，建议设置下 Windows 机器锁屏但不休眠。锁屏还是有必要的，避免公司内其他人动你的电脑。避免休眠能够保持虚拟机始终可以登录。
+> 如果你要把 Windows 始终开着跑这个虚拟机，但人又不在 Windows 机器前，建议设置下 Windows 机器锁屏但不休眠。锁屏还是有必要的，避免公司内其他人动你的电脑。避免休眠能够保持虚拟机始终可以登录。
