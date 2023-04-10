@@ -40,7 +40,7 @@ JuiceFS 客户端只有一个二进制文件，我们可以下载官方预编译
 
 
 
-我这里直接使用官方预编译的二进制文件。如果你想自己编译，可以看 [JuiceFS 编译](https://gukaifeng.cn/posts/juicefs-bian-yi/)，最终都是得到一个二进制文件。
+我这里直接使用官方预编译的二进制文件。如果你想自己编译，可以看 [JuiceFS 编译与安装](https://gukaifeng.cn/posts/juicefs-bian-yi-yu-an-zhuang/)，最终都是得到一个二进制文件。
 
 
 

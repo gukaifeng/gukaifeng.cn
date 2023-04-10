@@ -30,7 +30,7 @@ Windows 里 OpenSSH 客户端通常是自带的，但是 OpenSSH 服务器需要
 
 **Step 1：**我们打开 Windows 设置 -> 应用 -> 应用和功能，选择“可选功能”，如下：
 
-![Step 1](D:\Profession\hexo\_posts\配置 Windows 为 SSH 跳板机\1.png)
+![Step 1](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_1.png)
 
 
 
@@ -40,13 +40,13 @@ Windows 里 OpenSSH 客户端通常是自带的，但是 OpenSSH 服务器需要
 
 
 
-![Step2](D:\Profession\hexo\_posts\配置 Windows 为 SSH 跳板机\2.png)
+![Step2](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_2.png)
 
 
 
 **Step 3：**搜索并安装“OpenSSH 服务器”：
 
-![3](D:\Profession\hexo\_posts\配置 Windows 为 SSH 跳板机\3.png)
+![Step 3](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_3.png)
 
 
 
@@ -54,7 +54,7 @@ Windows 里 OpenSSH 客户端通常是自带的，但是 OpenSSH 服务器需要
 
 到这里就需要的功能就安装完了，可以在“已安装功能”里搜索看一下，像下面这样就是正确的：
 
-![“已安装功能”应当已有 “OpenSSH 服务器”](D:\Profession\hexo\_posts\配置 Windows 为 SSH 跳板机\4.png)
+![“已安装功能”应当已有 “OpenSSH 服务器”](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_4.png)
 
 
 
