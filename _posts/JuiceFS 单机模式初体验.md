@@ -611,7 +611,7 @@ $ juicefs format --storage oss \
   "UUID": "e1fe6a19-3813-4aed-b34c-f11f813362d1",
   "Storage": "oss",
   "Bucket": "juicefs-myjfs-test.oss-cn-beijing.aliyuncs.com",
-  "AccessKey": "LTAI5tFrCchDYqXdzmpmsovg",
+  "AccessKey": "ABCDEFGHIJKLMNopqXYZ",
   "SecretKey": "removed",
   "BlockSize": 4096,
   "Compression": "none",
@@ -706,11 +706,222 @@ $ vim juicefs_oss_test.txt
 
 
 
+
+
+## 7. 进阶 2：将 SQLite 替换为单机 Redis
+
+
+
+这小节在上一小节之上，再将存储元数据的 SQLite 替换为单机 Redis，数据存储依然采用阿里云 OSS。
+
+
+
+注意下面的介绍过程，全部是当做创建一个全新的 JuiceFS 文件系统来操作，不会复用前面小节的结果，仅是不再重复介绍前文已经说过的配置操作。
+
+
+
+### 7.1. 安装并启动单机 Redis
+
+
+
+JuiceFS 要求使用 4.0 及以上版本的 Redis，`yum` 中的 Redis 的版本是 5.0.3，满足要求。
+
+为了方便，这里就直接用 `yum` 里的 Redis 了：
+
+```shell
+yum install redis
+```
+
+使用命令 `redis-server`：
+
+```shell
+$ redis-server 
+2336:C 10 Apr 2023 22:52:58.285 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+2336:C 10 Apr 2023 22:52:58.285 # Redis version=5.0.3, bits=64, commit=00000000, modified=0, pid=2336, just started
+2336:C 10 Apr 2023 22:52:58.285 # Warning: no config file specified, using the default config. In order to specify a config file use redis-server /path/to/redis.conf
+2336:M 10 Apr 2023 22:52:58.286 * Increased maximum number of open files to 10032 (it was originally set to 1024).
+                _._
+           _.-``__ ''-._
+      _.-``    `.  `_.  ''-._           Redis 5.0.3 (00000000/0) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._
+ (    '      ,       .-`  | `,    )     Running in standalone mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6379
+ |    `-._   `._    /     _.-'    |     PID: 2336
+  `-._    `-._  `-./  _.-'    _.-'
+ |`-._`-._    `-.__.-'    _.-'_.-'|
+ |    `-._`-._        _.-'_.-'    |           http://redis.io
+  `-._    `-._`-.__.-'_.-'    _.-'
+ |`-._`-._    `-.__.-'    _.-'_.-'|
+ |    `-._`-._        _.-'_.-'    |
+  `-._    `-._`-.__.-'_.-'    _.-'
+      `-._    `-.__.-'    _.-'
+          `-._        _.-'
+              `-.__.-'
+
+2336:M 10 Apr 2023 22:52:58.286 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
+2336:M 10 Apr 2023 22:52:58.286 # Server initialized
+2336:M 10 Apr 2023 22:52:58.286 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to t
+ake effect.
+2336:M 10 Apr 2023 22:52:58.286 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' as root, 
+and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.
+2336:M 10 Apr 2023 22:52:58.286 * DB loaded from disk: 0.000 seconds
+2336:M 10 Apr 2023 22:52:58.286 * Ready to accept connections
+```
+
+因为这里的重点是 JuiceFS，而不是 Redis，所以就不对 Redis 做过多配置了，都默认就好了。
+
+我们没有配置 Redis 后台运行和守护进程等内容，上面的命令是在前台启动 Redis 的，所以我们需要另起一个终端进行后面的操作。
+
+
+
+我们可以通过 `redis-cli` 命令验证一下我们的 Redis 是否已经正确运行了：
+
+
+
+```shell
+$ redis-cli        
+127.0.0.1:6379> PING
+PONG            
+```
+
+我们上面的 `redis-cli` 命令是省略了 Redis 服务的 IP 和端口的，因为我们在本机运行，并且没有修改 Redis 服务默认的 6379 端口。
+
+
+
+### 7.2. 创建并挂载文件系统
+
+这里假定你已经有一个满足要求的对象存储，并且已经准备好需要的信息了。详见 [6.1 准备一个对象存储](#6-1-准备一个对象存储)。
+
+
+
+然后就可以创建文件系统了：
+
+```shell
+juicefs format --storage oss \
+    --bucket juicefs-myjfs-redis-oss.oss-cn-beijing.aliyuncs.com  \
+    --access-key ABCDEFGHIJKLMNopqXYZ \
+    --secret-key ZYXwvutsrqpoNMLkJiHgfeDCBA \
+    "redis://:@127.0.0.1:6379/0" \
+    myjfs-redis-oss
+```
+
+
+
+注意这里指定元数据存储为 Redis 的字符串格式：
+
+
+
+```shell
+redis[s]://[<username>:<password>@]<host>[:<port>]/<db>
+```
+
+其中，`[]` 括起来的是可选项，其它部分为必选项。
+
+* `redis[s]://`：如果开启了 Redis 的 [TLS](https://redis.io/docs/manual/security/encryption) 特性，协议头需要使用 `rediss://`，否则使用 `redis://`。
+* `username`：用户名，Redis 6.0 之后引入的，如果没有用户名可以忽略，但密码前面的 `:` 冒号需要保留。
+* `password`：密码，本例没给 Redis 设置密码，所以也留空了。
+* `host`：Redis 地址，本例为本机 `127.0.0.1`。
+* `port`：Redis 服务端口，默认为 6379，本例里写上了，但如果没有改端口的话，省略也行。
+* `db`：数据库编号，指定使用哪个数据库。
+
+
+
+JuiceFS 也支持在环境变量 `META_PASSWORD` 或 `REDIS_PASSWORD` 里传递数据库密码，避免像上面那样在命令行里明文传递密码，不过这不是本文重点，就不说了。
+
+
+
+执行上述命令后，输出与之前类似：
+
+```shell
+$ juicefs format --storage oss \
+>     --bucket juicefs-myjfs-redis-oss.oss-cn-beijing.aliyuncs.com  \  
+>     --access-key ABCDEFGHIJKLMNopqXYZ \
+>     --secret-key ZYXwvutsrqpoNMLkJiHgfeDCBA \              
+>     "redis://:@127.0.0.1:6379/0" \                                   
+>     myjfs-redis-oss                                                  
+2023/04/10 23:12:51.550345 juicefs[2399] <INFO>: Meta address: redis://:****@127.0.0.1:6379/0 [interface.go:401]
+2023/04/10 23:12:51.551432 juicefs[2399] <WARNING>: AOF is not enabled, you may lose data if Redis is not shutdown properly. [info.go:83]
+2023/04/10 23:12:51.551592 juicefs[2399] <INFO>: Ping redis: 112.607µs [redis.go:2904]                                                   
+2023/04/10 23:12:51.552130 juicefs[2399] <INFO>: Data use oss://juicefs-myjfs-redis-oss/myjfs-redis-oss/ [format.go:434]                 
+2023/04/10 23:12:51.787938 juicefs[2399] <INFO>: Volume is formatted as {
+  "Name": "myjfs-redis-oss",                                             
+  "UUID": "18f1edf0-2b26-40a6-9b91-49ffb649e418",                        
+  "Storage": "oss",                                                      
+  "Bucket": "juicefs-myjfs-redis-oss.oss-cn-beijing.aliyuncs.com",       
+  "AccessKey": "ABCDEFGHIJKLMNopqXYZ",                               
+  "SecretKey": "removed",                                                
+  "BlockSize": 4096,                                                     
+  "Compression": "none",                                                 
+  "KeyEncrypted": true,                                                  
+  "TrashDays": 1,                                                        
+  "MetaVersion": 1                                                       
+} [format.go:471]          
+```
+
+这里有个警告 `<WARNING>: AOF is not enabled, xxx...` 我们暂时不用管，这里指的是 Redis 没有开启 AOF，可能会丢数据。
+
+
+
+到这里，采用单机 Redis 存储元数据，阿里云 OSS 存储数据的 JuiceFS 文件系统就创建成功了。
+
+
+
+然后就是挂载了，先创建个挂载点：
+
+```shell
+mkdir ~/jfs-redis-oss
+```
+
+
+
+挂载文件系统也很简单，关于 Redis 部分的格式是一样的，例如：
+
+
+
+```shell
+juicefs mount -d "redis://:@127.0.0.1:6379/0" ~/jfs-redis-oss
+```
+
+
+
+挂载文件系统也支持用 `META_PASSWORD` 或 `REDIS_PASSWORD` 环境变量传递密码。
+
+
+
+使用命令 `df -Th` 查看一下挂载的情况：
+
+```shell
+$ df -Th
+Filesystem                 Type          Size  Used Avail Use% Mounted on
+devtmpfs                   devtmpfs      3.8G     0  3.8G   0% /dev
+tmpfs                      tmpfs         3.8G     0  3.8G   0% /dev/shm
+tmpfs                      tmpfs         3.8G  9.0M  3.8G   1% /run
+tmpfs                      tmpfs         3.8G     0  3.8G   0% /sys/fs/cgroup
+/dev/mapper/almalinux-root xfs            17G   14G  3.1G  83% /
+/dev/sda1                  xfs          1014M  168M  847M  17% /boot
+tmpfs                      tmpfs         774M     0  774M   0% /run/user/1000
+JuiceFS:myjfs-redis-oss    fuse.juicefs  1.0P     0  1.0P   0% /home/gukaifeng/jfs-redis-oss
+```
+
+
+
+最后一行就是我们刚刚挂载的文件系统，说明成功了 ~
+
+
+
+完结撒花 ~
+
+
+
+
+
+
+
 \-
 
 
 
-另外，关于 “OSS 中具体是怎样存储我们的数据的” 以及 “SQLite 数据库内是如何存储我们的元数据的” 这两个问题，本文是不关注的。
+另外，关于 “对象存储（如阿里云 OSS）中具体是怎样存储我们的数据的” 以及 “SQLite/Redis 数据库内是如何存储我们的元数据的” 这两个问题，本文是不关注的。
 
 所以本文到这里就结束了 ~
 
