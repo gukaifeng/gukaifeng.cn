@@ -1,0 +1,175 @@
+---
+title: "配置 Windows 为 SSH 跳板机"
+date: 2023-04-10 20:07:00
+updated: 2023-04-10 20:07:00
+categories: [技术杂谈]
+tags: [SSH,Windows]
+---
+
+
+
+## 1. 场景
+
+本文以 Windows 10 为例，10/11 均适用。
+
+我在 Windows 上装了 VMware，里面运行着一个 Linux 虚拟机。
+
+我有另外一台**内网上的**机器，想通过 SSH 登录到这个 Linux 虚拟机上开发。
+
+由于某些原因（我这里是公司内网分配 IP 需要一些这个场景下无法完成的验证），虚拟机的桥接模式设定不适用，无法给 Linux 虚拟机一个单独的内网 IP 地址，也就无法在其他机器上通过内网直接登录此虚拟机。
+
+但是 Windows 宿主机是有内网的 IP 的，所以我们可以先 SSH 登录到此 Windows 宿主机，再以 Windwos 宿主机作为跳板，登录到虚拟机（Windows 宿主机与虚拟机也组成一个内网）。
+
+此方案同样适用从内网某机器以 Windows 作为跳板机登录宿主机所在其他内网的其他机器。
+
+
+
+## 2. 安装 OpenSSH 服务器
+
+Windows 里 OpenSSH 客户端通常是自带的，但是 OpenSSH 服务器需要手动安装。
+
+**Step 1：**我们打开 Windows 设置 -> 应用 -> 应用和功能，选择“可选功能”，如下：
+
+![Step 1](D:\Profession\hexo\_posts\配置 Windows 为 SSH 跳板机\1.png)
+
+
+
+
+
+**Step 2：**点击“添加功能”。
+
+
+
+![Step2](D:\Profession\hexo\_posts\配置 Windows 为 SSH 跳板机\2.png)
+
+
+
+**Step 3：**搜索并安装“OpenSSH 服务器”：
+
+![3](D:\Profession\hexo\_posts\配置 Windows 为 SSH 跳板机\3.png)
+
+
+
+
+
+到这里就需要的功能就安装完了，可以在“已安装功能”里搜索看一下，像下面这样就是正确的：
+
+![“已安装功能”应当已有 “OpenSSH 服务器”](D:\Profession\hexo\_posts\配置 Windows 为 SSH 跳板机\4.png)
+
+
+
+## 3. 启动 OpenSSH 服务
+
+以管理员身份打开 PowerShell 或 CMD，输入命令：
+
+```powershell
+net start sshd
+```
+
+输出如下信息，表示 OpenSSH 服务启动成功：
+
+```powershell
+PS C:\Windows\system32> net start sshd
+OpenSSH SSH Server 服务正在启动 ..
+OpenSSH SSH Server 服务已经启动成功。
+```
+
+\-
+
+如果后面不需要了，关闭的命令为：
+
+```powershell
+net stop sshd
+```
+
+
+
+
+
+## 4. SSH 登录 Windows 跳板机
+
+首先我们要知道 Window 的内网地址，在 PowerShell 或 CMD 中可以使用 `ipconfig` 命令查看：
+
+```powershell
+PS C:\Windows\system32> ipconfig
+
+Windows IP 配置
+
+
+以太网适配器 以太网:
+
+   连接特定的 DNS 后缀 . . . . . . . : mioffice.cn
+   临时 IPv6 地址. . . . . . . . . . : fdec:5623:de91:5c00:258a:46af:62c3:9b08
+   IPv6 地址 . . . . . . . . . . . . : fdec:5623:de91:5c00:c94d:5d7b:818:640c
+   本地链接 IPv6 地址. . . . . . . . : fe80::c94d:5d7b:818:640c%6
+   IPv4 地址 . . . . . . . . . . . . : 10.189.62.0
+   子网掩码  . . . . . . . . . . . . : 255.255.224.0
+   默认网关. . . . . . . . . . . . . : 10.189.32.1
+  
+...
+...
+...
+```
+
+可以看到我这里的 Windows 宿主机的内网 IP 地址为 `10.189.62.0`。
+
+
+
+现在掏出我们处于 Windows 宿主机所在内网内的另一台机器，我这里是一台 mac 笔记本 ~
+
+在命令行通过 SSH 登录到 Windows，这里用我们刚刚查到的 Windows 跳板机的内网 IP：
+
+```shell
+sh gukaifeng@10.189.62.0
+gukaifeng@10.189.62.0's password:
+
+```
+
+这里输入你 Windows 的用户密码，就会进入到下面这个页面：
+
+```powershell
+Microsoft Windows [版本 10.0.19044.1766]
+(c) Microsoft Corporation。保留所有权利。
+
+gukaifeng@DESKTOP-78H2KFL C:\Users\gukaifeng>
+```
+
+到这里我们就成功登录 Windows 跳板机了！
+
+
+
+## 5. 从 Windows 跳板机 SSH 登录虚拟机
+
+我们得知道 Linux 虚拟机的内网 IP，我们在虚拟机内使用命令 `hostname -I` 查看：
+
+```shell
+$ hostname -I
+192.168.80.132 
+```
+
+可以看到我这里 Linux 虚拟机的内网 IP 为 `192.168.80.132`。
+
+其实这个场景就是，Windows 宿主机处于两个局域网当中，但这两个局域网是不通的。
+
+我们上一节已经成功从一台内网上的 mac 笔记本登录到了这个 Window 机器，后面就很简单了，就直接 SSH 登录虚拟机就 OK 了。例如：
+
+```shell
+Microsoft Windows [版本 10.0.19044.1766]
+(c) Microsoft Corporation。保留所有权利。
+
+gukaifeng@DESKTOP-78H2KFL C:\Users\gukaifeng> ssh gukaifeng@192.168.80.132
+Last login: Mon Apr 10 20:36:55 2023 from 192.168.80.1
+[gukaifeng@localhost ~]$
+```
+
+（我这里已经配置好了 SSH 免密登录）
+
+
+
+登录成功，完结撒花 ~
+
+
+
+> 一点题外话：
+>
+> 如果你要把 Windows 始终开着跑这个虚拟机，但当前人又不在 Windows 机器前，建议设置下 Windows 机器锁屏但不休眠。锁屏还是有必要的，避免公司内其他人动你的电脑。避免休眠能够保持虚拟机始终可以登录。
