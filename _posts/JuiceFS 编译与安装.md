@@ -72,8 +72,8 @@ sudo yum install golang gcc
 
 
 
-* [（CentOS/RedHat 系）Linux 安装最新版 Golang]()
-* [（CentOS/RedHat 系）Linux 安装最新版 GCC]()
+* [（CentOS/RedHat 系）Linux 安装最新版 Golang](https://gukaifeng.cn/posts/centos-redhat-xi-linux-an-zhuang-zui-xin-ban-golang/)
+* [（CentOS/RedHat 系）Linux 安装最新版 GCC](https://gukaifeng.cn/posts/centos-redhat-xi-linux-an-zhuang-zui-xin-ban-gcc/)
 
 
 
