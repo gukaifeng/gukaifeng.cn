@@ -88,7 +88,7 @@ net stop sshd
 
 ## 4. SSH 登录 Windows 跳板机
 
-首先我们要知道 Window 的内网地址，在 PowerShell 或 CMD 中可以使用 `ipconfig` 命令查看：
+首先我们要知道 Windows 的内网地址，在 PowerShell 或 CMD 中可以使用 `ipconfig` 命令查看：
 
 ```powershell
 PS C:\Windows\system32> ipconfig
