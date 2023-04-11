@@ -1,7 +1,7 @@
 ---
 title: "JuiceFS 单机模式初体验"
 date: 2023-04-09 09:32:00
-updated: 2023-04-09 23:49:00
+updated: 2023-04-10 23:36:00
 categories: [分布式文件系统]
 tags: [JuiceFS,分布式文件系统]
 ---
