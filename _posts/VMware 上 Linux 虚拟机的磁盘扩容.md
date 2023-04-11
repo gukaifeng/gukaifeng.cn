@@ -61,15 +61,15 @@ VMware 上的操作很简单，我们按照前文说的步骤进行就可以：
 
    首先打开虚拟机设置，选择 磁盘 -> 扩展：
 
-   ![](D:\Profession\hexo\_posts\VMware 上 Linux 虚拟机的磁盘扩容\1.png)
+   ![](https://gukaifeng.cn/posts/vmware-shang-linux-xu-ni-ji-de-ci-pan-kuo-rong/vmware-shang-linux-xu-ni-ji-de-ci-pan-kuo-rong_1.png)
 
    指定新的磁盘大小，我这里是从 20 GB 扩容到 60 GB，然后点击“扩展”：
 
-   ![](D:\Profession\hexo\_posts\VMware 上 Linux 虚拟机的磁盘扩容\2.png)
+   ![](https://gukaifeng.cn/posts/vmware-shang-linux-xu-ni-ji-de-ci-pan-kuo-rong/vmware-shang-linux-xu-ni-ji-de-ci-pan-kuo-rong_2.png)
 
    这里会有个提示，告诉我们在虚拟机内需要对磁盘重新分区和扩展文件系统（这就是我们下一节要做的事）：
 
-   ![](D:\Profession\hexo\_posts\VMware 上 Linux 虚拟机的磁盘扩容\3.png)
+   ![](https://gukaifeng.cn/posts/vmware-shang-linux-xu-ni-ji-de-ci-pan-kuo-rong/vmware-shang-linux-xu-ni-ji-de-ci-pan-kuo-rong_3.png)
 
    
 
