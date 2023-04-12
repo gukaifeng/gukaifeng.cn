@@ -173,3 +173,50 @@ Last login: Mon Apr 10 20:36:55 2023 from 192.168.80.1
 > 一点题外话：
 >
 > 如果你要把 Windows 始终开着跑这个虚拟机，但人又不在 Windows 机器前，建议设置下 Windows 机器锁屏但不休眠。锁屏还是有必要的，避免公司内其他人动你的电脑。避免休眠能够保持虚拟机始终可以登录。
+
+
+
+
+
+## 6. 扩展：配置开机自启
+
+之前的做法是手动启动 Windows 的 SSH 服务和 VMware 虚拟机的，  
+如果 Windows 重启的话，我们还得再手动开，比较麻烦，有必要设置一下自动启动。
+
+
+
+### 6.1. Windows SSH 服务开机自启
+
+
+
+首先在开始菜单里搜索“服务”并打开：
+
+
+
+![打开“服务”](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_5.png)
+
+找到 OpenSSH SSH Server 项，右键选择“属性”：
+
+![打开 OpenSSH SSH Server 的属性](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_6.png)
+
+
+
+选择“启动类型”为“自动”，然后点击“确定”。
+
+![选择“启动类型”为“自动”](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_7.png)
+
+这样 SSH 服务就可以开机自启了。
+
+
+
+### 6.2. VMware 虚拟机开机自启
+
+
+
+这里墙裂建议使用 17.x 及以上版本的 VMware Workstation Pro，因为这个版本开始，VMware 自带了开机自启虚拟机功能。
+
+如果你用的是旧版本的 VMware，可以看看网上的其他资料（比较麻烦），这里以 VMware 自带的自启虚拟机功能来说。
+
+
+
+TODO
