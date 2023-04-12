@@ -1,9 +1,9 @@
 ---
 title: "配置 Windows 为 SSH 跳板机"
 date: 2023-04-10 20:07:00
-updated: 2023-04-10 20:07:00
+updated: 2023-04-12 13:17:00
 categories: [技术杂谈]
-tags: [SSH,Windows]
+tags: [SSH,Windows,Linux]
 ---
 
 
@@ -243,7 +243,7 @@ Last login: Mon Apr 10 20:36:55 2023 from 192.168.80.1
 
 
 
-这里墙裂建议使用 17.x 及以上版本的 VMware Workstation，因为这个版本开始，VMware 自带了开机自启虚拟机功能。
+这里墙裂建议使用 17.x 及以上版本的 VMware Workstation，因为从这个版本开始，VMware 自带了开机自启虚拟机功能。
 
 如果你用的是旧版本的 VMware，可以看看网上的其他资料（比较麻烦），这里以 VMware 自带的自启虚拟机功能来说。
 
@@ -267,7 +267,11 @@ Last login: Mon Apr 10 20:36:55 2023 from 192.168.80.1
 
 **Step 4：**以**管理员身份**启动 VMware，以**管理员身份**启动 VMware，以**管理员身份**启动 VMware。
 
+
+
 如果不是管理员的话会有权限问题，也只有配置虚拟机开机自启的时候需要以管理员身份启动，后面正常使用就不需要了。
+
+
 
 >这里的权限要求，严格来说是我们的用户必须具有以下权限：
 >
@@ -275,6 +279,10 @@ Last login: Mon Apr 10 20:36:55 2023 from 192.168.80.1
 >- vmAutoStart.xml 文件中指定的 VMX 文件的所有权。
 >
 >直接用管理员身份启动 VMware 是最省事的。
+
+
+
+
 
 **Step 5：**选择“文件” -> “配置自动启动虚拟机”：
 
@@ -300,7 +308,7 @@ Last login: Mon Apr 10 20:36:55 2023 from 192.168.80.1
 
 ![启动虚拟机失败](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_17.png)
 
-但是不用担心，**我们的虚拟机是正确运行了的，是可以在 Windows  宿主机上  SSH  直接或跳板登录的。**
+但是不用担心，**我们的虚拟机是正确运行了的，是可以在 Windows  宿主机上  SSH  直接或跳板登录的。**这里就不演示了。
 
 虽然我们无法在 VMware 控制面板里再操作我们的虚拟机，但我们虚拟机内的任何变化都是会正确写入虚拟机目录的，我们不用担心对虚拟机的修改消失。
 
@@ -312,15 +320,15 @@ Last login: Mon Apr 10 20:36:55 2023 from 192.168.80.1
 
 在这个情况下，我们无法通过 VMware 控制台对我们的虚拟机做任何事，例如制作快照也会失败：
 
-![制作快照失败](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_17.png)
+![制作快照失败](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_18.png)
 
-当我想要对虚拟机做些操作的时候（例如制作快照、修改属性、备份虚拟机等）我的做法是，先 SSH 登录到虚拟机内部，然后执行命令关机：
+当我想要对虚拟机做些操作的时候（例如制作快照、修改属性、备份虚拟机等），我的做法是，先 SSH 登录到 Linux 虚拟机内部，然后执行命令关机：
 
 ```shell
 sudo shutdown -h now
 ```
 
-关机后，VMware 控制页面对虚拟机进行操作了，这时就恢复到了和没有配置虚拟机自启时一样的状态，后面可以在 VWware 控制面板里再次手动启动虚拟机。
+关机后，就可以在 VMware 控制页面对虚拟机进行操作了，这时就恢复到了和没有配置虚拟机自启时一样的状态，后面可以在 VMware 控制面板里再次手动启动虚拟机。
 
 （直接在任务管理器里杀掉虚拟机进程是不理智的。。。）
 
