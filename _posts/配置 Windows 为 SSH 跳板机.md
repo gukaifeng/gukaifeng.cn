@@ -227,7 +227,7 @@ Last login: Mon Apr 10 20:36:55 2023 from 192.168.80.1
 
 找到 OpenSSH SSH Server 项，右键选择“属性”：
 
-![打开 OpenSSH SSH Server 的属性](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_7.png)
+![打开 “OpenSSH SSH Server” 的属性](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_7.png)
 
 注意这里 SSH 服务得是“正在运行”的状态。重启 Windows 前 SSH 服务正在运行，下面设置自启后才会自启。如果重启 Windows 前 SSH 服务是停止状态，那么即便配置了自启，也不会生效。
 
@@ -249,19 +249,33 @@ Last login: Mon Apr 10 20:36:55 2023 from 192.168.80.1
 
 我这里以 VMware Workstation 17.0.0 Pro 为例。
 
-**Step 1：**以**管理员身份**启动 VMware，以**管理员身份**启动 VMware，以**管理员身份**启动 VMware。
+**Step 1：**再次打开“服务”，找到 “VMware 自动启动服务”，点击左边的“启动”：
+
+![启动 “VMware 自动启动服务”](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_9.png)
+
+**Step 2：**打开 “VMware 自动启动服务” 属性：
+
+![打开 “VMware 自动启动服务” 的属性](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_10.png)
+
+**Step 3：**选择“启动类型”为“自动”
+
+![选择“启动类型”为“自动”](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_11.png)
+
+注意配置这里时同样 VMware 自动启动服务 得是“正在运行”的状态。
+
+
+
+**Step 4：**以**管理员身份**启动 VMware，以**管理员身份**启动 VMware，以**管理员身份**启动 VMware。
 
 如果不是管理员的话会有权限问题，也只有配置虚拟机开机自启的时候需要以管理员身份启动，后面正常使用就不需要了。
 
-**Step 2：**选择“文件” -> “配置自动启动虚拟机”：
+**Step 5：**选择“文件” -> “配置自动启动虚拟机”：
 
-![配置自动启动虚拟机](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_9.png)
+![配置自动启动虚拟机](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_12.png)
 
-**Step 3：** 给我们要设置自启的虚拟机的 “自动启动” 下面打勾：
+**Step 6：** 给我们要设置自启的虚拟机的 “自动启动” 下面打勾：
 
-![“自动启动” 下面打勾](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_10.png)
-
-
+![“自动启动” 下面打勾](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_13.png)
 
 如果你有多个虚拟机要自启，可以设置下右边的“启动顺序”，我这里就这一个，就不演示了。
 
