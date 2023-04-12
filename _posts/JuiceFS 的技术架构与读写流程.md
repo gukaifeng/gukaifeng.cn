@@ -14,7 +14,7 @@ tags: [JuiceFS,分布式文件系统]
 
 ### 1.1. 简介
 
-JuiceFS 是一款面向云原生设计的分布式文件系统。
+[JuiceFS](https://juicefs.com/) 是一款面向云原生设计的分布式文件系统。
 
 
 
@@ -99,6 +99,48 @@ JuiceFS 为海量数据存储设计，可以作为很多分布式文件系统和
 ## 2. JuiceFS 的技术架构
 
 
+
+### 2.1. 架构图梳理
+
+
+
+JuiceFS 的技术架构图如下：
+
+![JuiceFS 的技术架构（图源官网）](https://gukaifeng.cn/posts/juicefs-de-ji-zhu-jia-gou-yu-du-xie-liu-cheng/juicefs-de-ji-zhu-jia-gou-yu-du-xie-liu-cheng_1.png)
+
+
+
+可以看到，JuiceFS 的架构上主要分为三个部分：**客户端(Client)**、**元数据引擎(Metadata Engine)** 和 **数据存储(Data Storage)**。
+
+
+
+* **客户端(Client)**：所有的文件读写，包括碎片合并、回收站文件过期删除等后台任务，均在客户端中发生。客户端同时与对象存储（即数据存储）和元数据引擎打交道。客户端支持多种接入方式：
+
+  - **FUSE**：JuiceFS 与 POSIX 兼容，可以挂载到服务器，将海量云端存储直接当做本地存储来使用。
+
+  - **Hadoop Java SDK**：JuiceFS 能够直接替代 HDFS，为 Hadoop 提供低成本的海量存储。
+
+  - **Kubernetes CSI 驱动**：JuiceFS 能够直接为 Kubernetes 提供海量存储。
+
+  - **S3 网关**：使用 S3 作为存储层的应用可直接接入，同时可使用 AWS CLI、s3cmd、MinIO client 等工具访问 JuiceFS 文件系统。
+
+  - **WebDAV 服务**：使用 HTTP 协议，以类似 RESTful API 的方式接入 JuiceFS 并直接操作其中的文件。
+
+* **数据存储(Data Storage)**：JuiceFS 会将文件切分后上传并保存在对象存储服务中。JuiceFS 既可以使用公有云提供的对象存储服务，也可以接入私有部署的自建对象存储服务。JuiceFS 支持几乎所有的公有云上的对象存储，同时也支持 OpenStack Swift、Ceph、MinIO 等私有化的对象存储。
+
+* **元数据引擎(Metadata Engine)**：用于存储文件元数据(metadata)。JuiceFS 采用多引擎设计，目前已支持 Redis、TiKV、MySQL/MariaDB、PostgreSQL、SQLite 等作为元数据服务引擎，也将陆续实现更多元数据存储引擎。
+
+  元数据包含以下内容：
+
+  - 常规文件系统的元数据，如文件名、文件大小、权限信息、创建修改时间、目录结构、文件属性、符号链接、文件锁等。
+
+  - JuiceFS 独有的元数据，如文件的 Chunk 和 Slice 的映射关系、客户端 Session 等。
+
+
+
+
+
+### 2.2. 如何存储文件
 
 
 
