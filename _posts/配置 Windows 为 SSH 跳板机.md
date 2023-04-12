@@ -60,6 +60,36 @@ Windows 里 OpenSSH 客户端通常是自带的，但是 OpenSSH 服务器需要
 
 ## 3. 启动 OpenSSH 服务
 
+
+
+这里图形界面和命令行都能完成，随便选个就 OK。
+
+
+
+### 3.1. 图形界面方式
+
+首先在开始菜单里搜索“服务”并打开：
+
+
+
+![打开“服务”](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_5.png)
+
+
+
+在右侧找到 OpenSSH SSH Server 项，点击左面的“启动”。
+
+
+
+![启动 SSH 服务](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_6.png)
+
+\-
+
+如果后面不需要了，关闭的方法也是一样的，启动后上图的“启动”的位置会变成“停止”，点一下就关了。
+
+
+
+### 3.2. 命令行方式
+
 以管理员身份打开 PowerShell 或 CMD，输入命令：
 
 ```powershell
@@ -197,13 +227,13 @@ Last login: Mon Apr 10 20:36:55 2023 from 192.168.80.1
 
 找到 OpenSSH SSH Server 项，右键选择“属性”：
 
-![打开 OpenSSH SSH Server 的属性](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_6.png)
+![打开 OpenSSH SSH Server 的属性](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_7.png)
 
 
 
 选择“启动类型”为“自动”，然后点击“确定”。
 
-![选择“启动类型”为“自动”](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_7.png)
+![选择“启动类型”为“自动”](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_8.png)
 
 这样 SSH 服务就可以开机自启了。
 
