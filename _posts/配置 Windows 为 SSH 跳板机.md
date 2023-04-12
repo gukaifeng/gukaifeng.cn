@@ -229,7 +229,7 @@ Last login: Mon Apr 10 20:36:55 2023 from 192.168.80.1
 
 ![打开 OpenSSH SSH Server 的属性](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_7.png)
 
-
+注意这里 SSH 服务得是“正在运行”的状态。重启 Windows 前 SSH 服务正在运行，下面设置自启后才会自启。如果重启 Windows 前 SSH 服务是停止状态，那么即便配置了自启，也不会生效。
 
 选择“启动类型”为“自动”，然后点击“确定”。
 
@@ -243,10 +243,30 @@ Last login: Mon Apr 10 20:36:55 2023 from 192.168.80.1
 
 
 
-这里墙裂建议使用 17.x 及以上版本的 VMware Workstation Pro，因为这个版本开始，VMware 自带了开机自启虚拟机功能。
+这里墙裂建议使用 17.x 及以上版本的 VMware Workstation，因为这个版本开始，VMware 自带了开机自启虚拟机功能。
 
 如果你用的是旧版本的 VMware，可以看看网上的其他资料（比较麻烦），这里以 VMware 自带的自启虚拟机功能来说。
 
+我这里以 VMware Workstation 17.0.0 Pro 为例。
+
+**Step 1：**以**管理员身份**启动 VMware，以**管理员身份**启动 VMware，以**管理员身份**启动 VMware。
+
+如果不是管理员的话会有权限问题，也只有配置虚拟机开机自启的时候需要以管理员身份启动，后面正常使用就不需要了。
+
+**Step 2：**选择“文件” -> “配置自动启动虚拟机”：
+
+![配置自动启动虚拟机](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_9.png)
+
+**Step 3：** 给我们要设置自启的虚拟机的 “自动启动” 下面打勾：
+
+![“自动启动” 下面打勾](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_10.png)
 
 
-TODO
+
+如果你有多个虚拟机要自启，可以设置下右边的“启动顺序”，我这里就这一个，就不演示了。
+
+
+
+\- 
+
+到这里自动启动相关的就都配置好了，现在重启 Windows，SSH 服务和虚拟机都会自启了，可以愉快的开发了 ~
