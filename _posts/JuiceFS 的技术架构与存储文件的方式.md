@@ -1,7 +1,7 @@
 ---
-title: "JuiceFS 的技术架构与读写流程"
+title: "JuiceFS 的技术架构与存储文件的方式"
 date: 2023-04-12 15:03:00
-updated: 2023-04-13 00:12:00
+updated: 2023-04-14 00:26:00
 categories: [分布式文件系统]
 tags: [JuiceFS,分布式文件系统]
 ---
@@ -100,13 +100,15 @@ JuiceFS 为海量数据存储设计，可以作为很多分布式文件系统和
 
 
 
-### 2.1. 架构图梳理
+
 
 
 
 JuiceFS 的技术架构图如下：
 
-![JuiceFS 的技术架构（图源官网）](https://gukaifeng.cn/posts/juicefs-de-ji-zhu-jia-gou-yu-du-xie-liu-cheng/juicefs-de-ji-zhu-jia-gou-yu-du-xie-liu-cheng_1.png)
+
+
+![JuiceFS 的技术架构](https://gukaifeng.cn/posts/juicefs-de-ji-zhu-jia-gou-yu-du-xie-liu-cheng/juicefs-de-ji-zhu-jia-gou-yu-du-xie-liu-cheng_1.png)
 
 
 
@@ -140,11 +142,53 @@ JuiceFS 的技术架构图如下：
 
 
 
-### 2.2. 如何存储文件
+## 3. JuiceFS 存储文件的方式
+
+
+
+传统的文件系统将数据和对应的元数据存储在本地磁盘，而 JuiceFS 则是将数据格式化以后存储在对象存储（云存储），将文件的元数据存储在专门的元数据服务中，这样的架构让 JuiceFS 成为一个强一致性的高性能分布式文件系统。
+
+具体而言，JuiceFS 的文件存储方式如图：
+
+
+
+![JuiceFS 如何存储文件](https://gukaifeng.cn/posts/juicefs-de-ji-zhu-jia-gou-yu-du-xie-liu-cheng/juicefs-de-ji-zhu-jia-gou-yu-du-xie-liu-cheng_2.png)
+
+
+
+* 任何存入 JuiceFS 的文件都会被拆分成一个或多个**「Chunk」**（最大 64 MiB）。
+* 每个 Chunk 由一个或多个**「Slice」**组成。
+* Chunk 的存在是为了对文件做切分，优化大文件性能，Slice 则是为了进一步优化各类文件写操作，二者同为 JuiceFS 文件系统内部的逻辑概念。
+* Slice 的长度不固定，取决于文件写入的方式。
+* 每个 Slice 又会被进一步拆分成**「Block」**（默认大小上限为 4 MiB），Block 是最终上传至对象存储的最小存储单元。
+
+
+
+因此，你会发现在对象存储平台的文件浏览器中找不到存入 JuiceFS 的源文件，存储桶中只有一个 `chunks` 目录和一堆数字编号的目录和文件，这正是经过 JuiceFS 拆分存储的数据块。如下图：
+
+
+
+![JuiceFS 中文件在对象存储中存储的是很多 blocks](https://gukaifeng.cn/posts/juicefs-de-ji-zhu-jia-gou-yu-du-xie-liu-cheng/juicefs-de-ji-zhu-jia-gou-yu-du-xie-liu-cheng_3.png)
+
+
+
+可以看到一个文件，经由 JuiceFS，到了对象村处理，就变成一个或多个 blocks 存储了，是看不出源文件长啥样子的。
+
+
+
+与此同时，文件与 Chunks、Slices、Blocks 的对应关系等元数据信息存储被在元数据引擎中。正是这样的分离设计，让 JuiceFS 文件系统得以高性能运作。
+
+
+
+JuiceFS 的存储设计，还有以下技术特点：
+
+- 对于任意大小的文件，JuiceFS 都不进行合并存储，这也是为了性能考虑，避免读放大。
+- 提供强一致性保证，但也可以根据场景需要与缓存功能一起调优，比如通过设置出更激进的元数据缓存，牺牲一部分一致性，换取更好的性能。
+- 支持并默认开启「回收站」功能，删除文件后保留一段时间才彻底清理，最大程度避免误删文件导致事故。
 
 
 
 
 
-## 3. JuiceFS 的读写流程
+
 
