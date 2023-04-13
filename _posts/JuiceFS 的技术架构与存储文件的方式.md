@@ -108,7 +108,7 @@ JuiceFS 的技术架构图如下：
 
 
 
-![JuiceFS 的技术架构](https://gukaifeng.cn/posts/juicefs-de-ji-zhu-jia-gou-yu-du-xie-liu-cheng/juicefs-de-ji-zhu-jia-gou-yu-du-xie-liu-cheng_1.png)
+![JuiceFS 的技术架构](https://gukaifeng.cn/posts/juicefs-de-ji-zhu-jia-gou-yu-cun-chu-wen-jian-de-fang-shi/juicefs-de-ji-zhu-jia-gou-yu-cun-chu-wen-jian-de-fang-shi_1.png)
 
 
 
@@ -152,7 +152,7 @@ JuiceFS 的技术架构图如下：
 
 
 
-![JuiceFS 如何存储文件](https://gukaifeng.cn/posts/juicefs-de-ji-zhu-jia-gou-yu-du-xie-liu-cheng/juicefs-de-ji-zhu-jia-gou-yu-du-xie-liu-cheng_2.png)
+![JuiceFS 如何存储文件](https://gukaifeng.cn/posts/juicefs-de-ji-zhu-jia-gou-yu-cun-chu-wen-jian-de-fang-shi/juicefs-de-ji-zhu-jia-gou-yu-cun-chu-wen-jian-de-fang-shi_2.png)
 
 
 
@@ -168,7 +168,7 @@ JuiceFS 的技术架构图如下：
 
 
 
-![JuiceFS 中文件在对象存储中存储的是很多 blocks](https://gukaifeng.cn/posts/juicefs-de-ji-zhu-jia-gou-yu-du-xie-liu-cheng/juicefs-de-ji-zhu-jia-gou-yu-du-xie-liu-cheng_3.png)
+![JuiceFS 中文件在对象存储中存储的是很多 blocks](https://gukaifeng.cn/posts/juicefs-de-ji-zhu-jia-gou-yu-cun-chu-wen-jian-de-fang-shi/juicefs-de-ji-zhu-jia-gou-yu-cun-chu-wen-jian-de-fang-shi_3.png)
 
 
 
