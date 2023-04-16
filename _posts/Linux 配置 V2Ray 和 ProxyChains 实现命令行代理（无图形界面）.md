@@ -69,7 +69,11 @@ sudo vim /usr/local/etc/v2ray/config.json
 ### 1.3. 启动 V2Ray
 
 
+先配置允许 V2Ray 自启：
 
+```shell
+systemctl enable v2ray
+```
 
 
 最后启动 V2Ray：
