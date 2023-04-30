@@ -33,7 +33,7 @@ VSCode 支持设定垂直标尺，即在编辑器中，在指定字符数的位�
 
 
 
-![1](D:\Profession\hexo\_posts\VSCode 在编辑器中显示垂直标尺\1.png)
+![在 80 和 120 字符处显示垂直标尺](https://gukaifeng.cn/posts/vscode-zai-bian-ji-qi-zhong-xian-shi-chui-zhi-biao-chi/vscode-zai-bian-ji-qi-zhong-xian-shi-chui-zhi-biao-chi_1.png)
 
 
 
@@ -43,7 +43,7 @@ VSCode 支持设定垂直标尺，即在编辑器中，在指定字符数的位�
 
 
 
-![2](D:\Profession\hexo\_posts\VSCode 在编辑器中显示垂直标尺\2.png)
+![File -> Perferences -> Setting](https://gukaifeng.cn/posts/vscode-zai-bian-ji-qi-zhong-xian-shi-chui-zhi-biao-chi/vscode-zai-bian-ji-qi-zhong-xian-shi-chui-zhi-biao-chi_2.png)
 
 
 
@@ -51,13 +51,13 @@ VSCode 支持设定垂直标尺，即在编辑器中，在指定字符数的位�
 
 
 
-![3](D:\Profession\hexo\_posts\VSCode 在编辑器中显示垂直标尺\3.png)
+![Editor.rulers](https://gukaifeng.cn/posts/vscode-zai-bian-ji-qi-zhong-xian-shi-chui-zhi-biao-chi/vscode-zai-bian-ji-qi-zhong-xian-shi-chui-zhi-biao-chi_3.png)
 
 点击 "Edit in setting.json"，在里面修改 `editor.rulers` 字段，像下面这样就是在 80 和 120 字符处显示垂直标尺：
 
 
 
-![4](D:\Profession\hexo\_posts\VSCode 在编辑器中显示垂直标尺\4.png)
+![settings.json](https://gukaifeng.cn/posts/vscode-zai-bian-ji-qi-zhong-xian-shi-chui-zhi-biao-chi/vscode-zai-bian-ji-qi-zhong-xian-shi-chui-zhi-biao-chi_4.png)
 
 
 
