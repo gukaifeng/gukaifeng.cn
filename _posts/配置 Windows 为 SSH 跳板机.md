@@ -1,7 +1,7 @@
 ---
 title: "配置 Windows 为 SSH 跳板机"
 date: 2023-04-10 20:07:00
-updated: 2023-04-12 13:17:00
+updated: 2023-04-30 13:23:00
 categories: [技术杂谈]
 tags: [SSH,Windows,Linux]
 ---
@@ -335,3 +335,101 @@ sudo shutdown -h now
 \- 
 
 到这里自动启动相关的就都配置好了，现在重启 Windows，SSH 服务和虚拟机都会自启了，可以愉快的开发了 ~
+
+
+
+
+
+
+
+### 6.3. SSH 免密登录 Windows
+
+
+
+SSH 免密登录 Windows 的配置和免密登录 Linux 的配置是差不多的，主要是关注一下几点：
+
+1. sshd 的配置，是否允许 SSH 免密登录。
+2. 将公钥放到 authorized_keys 文件中。
+3. 注意 autorized_keys 文件的权限，除了自己的用户、管理员用户、系统用户，其他用户不能有读写权限。
+
+
+
+
+
+这里假定你已经完成了前面小节说的 SSH 登录 Windows 的步骤。
+
+
+
+我们逐个解决上面提到的关注点。
+
+
+
+\-
+
+
+
+我们先看 sshd 的配置，Windows 里 sshd 的配置文件是 `C:\ProgramData\ssh\sshd.config`，注意这里 ProgramData 是个隐藏文件夹。打开这个文件，注意以下字段：
+
+```shell
+# 确保以下几个字段的值正确并且没有被注释掉
+
+PubkeyAuthentication yes  # yes 表示允许使用公钥登录
+AuthorizedKeysFile	.ssh/authorized_keys  # 公钥位置
+PasswordAuthentication no  # （可选）默认值为 yes，设置为 no 的话就 SSH 无法再使用密码登录，必须使用公钥登录
+```
+
+```shell
+# 确保以下字段有注释掉
+
+#Match Group administrators
+#  AuthorizedKeysFile __PROGRAMDATA__/ssh/administrators_authorized_keys
+```
+
+
+
+\-
+
+
+
+我们使用文本编辑器（如记事本、Notepads 都可以）打开 `~/.ssh/authorized_keys`（`.ssh` 目录和 `authorized_keys` 文件都有可能不存在，不存在的话就创建一下），将我们的公钥写入到文件末尾，像下面这样：
+
+
+
+```
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDUl17U1zOb17gW6hPLaHO+MBzhBAxiF1OKVwnwpSWLetrIHCR7uqOriGSJWq3FnXZfh2tFfrbbvfKME7IoEEwEpOAx3Fn7nsto5fBBIsq5WLEUgHSrwV+Hjmtkce5hvV8Ex2gk9jKGMncW05gUjM9nFBmHtbdOqF+j9tzv3cSEEgUUK9Rfq8V4zXPhRj+f6Sux9jLHE4s4r2VLs5WkE2qJd8IKftMg/ntQqRhuq/unl232e/BgMeseA2UH+1YARYsv+se5LwBpd21DgUhsxIvk5eV41d6PXVWCqbIE6oPauwHJZIxfnYrFqEt483GDmARuxeH3n46/WdKUcowjTj2R example@email.cn
+```
+
+然后退出并保存。
+
+
+
+\-
+
+最后我们需要设置一下 `~/.ssh/authorized_keys` 文件的权限。
+
+
+
+
+
+右键 `.ssh\authorized_keys` 文件，选择 属性 -> 安全 -> 高级，点击“禁用继承”，当出现提示时，选择“将继承的权限转换为此对象的显式权限”。然后将权限条目删除至只剩“SYSTEM”、自己的账户、“Administrators”。我这里最终效果如图：
+
+
+
+
+
+![.ssh\authorized_keys 的权限设置](https://gukaifeng.cn/posts/pei-zhi-windows-wei-ssh-tiao-ban-ji/pei-zhi-windows-wei-ssh-tiao-ban-ji_19.png)
+
+
+
+然后按照[第 3 小节](#3-启动-OpenSSH-服务)的方式，重启 ssh 服务，我这里图简单了，使用命令行（CMD 或者 PowerShell）输入以下命令：
+
+
+
+```powershell
+net stop sshd
+net start sshd
+```
+
+
+
+然后就可以在其他机器上 SSH 免密登录此虚拟机了 ~
