@@ -4,8 +4,8 @@ date: 2022-01-10 16:59:11
 updated: 2022-01-10 16:59:11
 categories:
 - 编程语言基础
-- Go
-tags: [Go]
+- Golang
+tags: [Golang]
 ---
 
 
