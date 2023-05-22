@@ -1,7 +1,7 @@
 ---
 title: 我的 Git 常用命令笔记
 date: 2022-11-10 18:46:20
-updated: 2022-11-18 19:05:20
+updated: 2023-05-22 16:33:20
 categories: [技术杂谈]
 tags: [Git]
 ---
@@ -14,7 +14,13 @@ tags: [Git]
 
 
 
-修改本地分支名字：
+这篇文章并不是一次性写完的，而是我想到什么就加进来什么的，所以下面的顺序并不重要。
+
+
+
+### 1.1. 修改本地分支名字
+
+
 
 ```shell
 git branch -m <old_branch_name> <new_branch_name>
@@ -32,8 +38,6 @@ git push origin HEAD:master
 
 
 
-
-
 修改本地分支关联的远程分支：
 
 ```shell
@@ -47,6 +51,85 @@ git branch --set-upstream-to=origin/main main
 ```
 
 将本地分支 main 的与远程仓库 origin 的 main 分支关联。
+
+
+
+### 1.2. 删除本地分支
+
+```shell
+git branch -d <local_branch_name>
+```
+
+`-d` 与 `--delete` 等价
+
+例如：
+
+```shell
+git branch -d dev
+```
+
+```shell
+git branch --delete dev
+```
+
+
+
+### 1.3. 删除远程仓库分支
+
+```shell
+git push <remote_rep_name> -d <remote_branch_name>
+```
+
+`-d` 与 `--delete` 等价
+
+例如：
+
+```shell
+git push origin -d dev
+```
+
+```shell
+git push origin --delete dev
+```
+
+### 1.4. 同时删除本地与远程分支
+
+没有 git 命令来同时删除本地和远程分支，毕竟本地分支和远程分支是多对多的关系，而非一对一。
+
+所以要想同时删除，就需要分别执行本地分支的删除和远程分支的删除，即上面两小节。
+
+\-
+
+如果不知道本地分支与远程分支的对应关系（因为分支名可能不同），可以通过下一小节查看。
+
+### 1.5. 查看本地分支和远程分支的对应关系
+
+
+
+```shell
+git branch -vv
+```
+
+这个命令会显示 **所有** 本地分支和它们对应的远程分支。
+
+上面的输出中，可以看到本地分支 `main` 对应的远程分支是 `origin/main`，本地分支 `feature` 对应的远程分支是 `origin/feature`，本地分支 `fix` 对应的远程分支是 `origin/fix`。
+
+`origin/fix` 后面的 `ahead 1` 表示本地的 `fix` 分支比远程的 `fix` 分支多了一个提交。
+
+例如：
+
+```shell
+$ git branch -vv
+  main     12345ef [origin/main] A main branch commit
+* feature  67890ab [origin/feature] A feature branch commit
+  fix      23456cd [origin/fix: ahead 1] A fix branch commit
+```
+
+
+
+
+
+
 
 ## 2. 场景
 
