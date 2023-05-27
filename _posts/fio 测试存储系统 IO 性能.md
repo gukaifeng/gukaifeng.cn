@@ -297,7 +297,7 @@ fio 有三种常用的使用方法。
 2. 一种是仅使用作业文件：
 
    ```shell
-   $ fio [jobfile] ...
+   $ fio [jobfile]
    ```
 
 3. 也可以混合使用，就如一开始说的那样：
@@ -342,7 +342,7 @@ fio --name=seqwrite --ioengine=sync --rw=write --bs=1M --size=10G --numjobs=1 --
 
 先编写一个 fio 作业文件，我这里名为 `seqwrite.fio`：
 
-```yaml
+```ini
 [global]
 ioengine=sync
 direct=1
@@ -382,7 +382,7 @@ fio seqwrite.fio
 
 2. 作业文件内可以有多组测试，例如我们可以把 `seqwrite.fio` 修改为：
 
-   ```yaml
+   ```ini
    [global]
    ioengine=sync
    direct=1
@@ -444,9 +444,17 @@ fio seqwrite.fio
 
 ## 4. fio 的测试存储系统的相关属性（参数）
 
-fio 的可选参数相当多，这里仅列出测试存储系统性能的相关属性。
+fio 的可选参数相当多，这里仅列出测试存储系统性能的相关属性，更多选项与用法见 [fio 官方文档](https://fio.readthedocs.io/en/latest/fio_doc.html)。
 
 
+
+
+
+
+
+
+
+## 5. fio 的测试存储系统的结果分析
 
 
 
