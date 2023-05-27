@@ -442,19 +442,34 @@ fio seqwrite.fio
 
 
 
-## 4. fio 的测试存储系统的相关属性（参数）
+## 4. fio 测试存储系统的相关属性（参数）
 
-fio 的可选参数相当多，这里仅列出测试存储系统性能的相关属性，更多选项与用法见 [fio 官方文档](https://fio.readthedocs.io/en/latest/fio_doc.html)。
-
-
+fio 的可选参数相当多，这里仅列出与测试存储系统性能相关的，更多选项与用法见 [fio 官方文档](https://fio.readthedocs.io/en/latest/fio_doc.html)。
 
 
 
+下面给出 fio 测试存储系统性能的必要参数与可选值：
 
 
 
 
-## 5. fio 的测试存储系统的结果分析
+
+1. **direct**=bool：布尔值（默认为 false）。如果为 true，则使用非缓冲 I/O，反之使用缓冲 I/O。
+2. **readwrite**=str, **rw**=str：指定 I/O 模式，常用取值有以下几个：
+   * **read**: 顺序读。
+   * **write**: 顺序写。
+   * **randread**: 随机读。
+   * **randwrite**: 随机写。
+   * **rw,readwrite**: 混合顺序读写，读写占比默认各 50%。
+   * **randrw**: 混合随机读写，读写占比默认各 50%。
+
+
+
+
+
+
+
+## 5. fio 测试存储系统的结果分析
 
 
 
