@@ -254,6 +254,12 @@ make[1]: Nothing to be done for 'check-am'.
 
 ### 3.1. IOR 的参数列表
 
+
+
+TODO
+
+
+
 命令 `ior -h` 可以打印出 IOR 的参数列表，如下：
 
 
@@ -494,7 +500,7 @@ Flags
 
 mdtest 有两类参数，一类是标记参数 Flags，一类是可选参数 Optional arguments。
 
-这两类参数很好区别。Flags 参数是没有值的，例如 `-C`；而可选参数是有值的，例如 `-a=STRING  `。我们下面逐个介绍。
+这两类参数很好区别。Flags 参数是没有值的，例如 `-C`；而 Optional arguments 是有值的，例如 `-a=STRING  `。我们下面逐个介绍。
 
 
 
@@ -504,32 +510,34 @@ mdtest 有两类参数，一类是标记参数 Flags，一类是可选参数 Opt
 
 **Flags：**
 
-1. `-C`：仅创建文件/目录。即无此 Flag 时，mdtest 会将测试时创建的文件/目录删除，有此 Flag 则会保留这些文件/目录。
-2. `-T`                            only stat files/dirs
-3. `-E`                            only read files/dir
-4. `-r`                            only remove files or directories left behind by previous runs
-5. `-D`                            perform test on directories only (no files)
-6. `-F`                            perform test on files only (no directories)
-7. `-k`                            use mknod to create file
-8. `-L`                            files only at leaf level of tree
-9. `-P`                            print rate AND time
-10. `--print-all-procs`             all processes print an excerpt of their results
-11. `-R`                            random access to files (only for stat)
-12. `-S`                            shared file access (file only, no directories)
-13. `-c`                            collective creates: task 0 does all creates
-14. `-t`                            time unique working directory overhead
-15. `-u`                            unique working directory for each task
-16. `-v`                            verbosity (each instance of option increments by one)
-17. `-X`, `--verify-read`             Verify the data read
-18. `--verify-write`                Verify the data after a write by reading it back immediately
-19. `-y`                            sync file after writing
-20. `-Y`                            call the sync command after each phase (included in the timing; note it causes all IO to be flushed from your node)
-21. `-Z`                            print time instead of rate
-22. `--allocateBufferOnGPU`         Allocate the buffer on the GPU.
-23. `--warningAsErrors`             Any warning should lead to an error.
-24. `--showRankStatistics`          Include statistics per rank
 
 
+| No   | Flag                       | 含义                                                         |
+| ---- | -------------------------- | ------------------------------------------------------------ |
+| 1    | `-C`                       | 仅创建文件/目录。即无此 Flag 时，mdtest 会将测试时创建的文件/目录删除，有此 Flag 则会保留这些文件/目录。 |
+| 2    | `-T`                       | 仅统计文件/目录。                                            |
+| 3    | `-E`                       | 仅读取文件/目录。                                            |
+| 4    | `-r`                       | 仅删除由之前的测试留下的文件或目录。                         |
+| 5    | `-D`                       | 对目录进行性能测试（不涉及文件）。                           |
+| 6    | `-F`                       | 对文件进行性能测试（不涉及目录）。                           |
+| 7    | `-k`                       | 使用 `mknod` 创建文件。                                      |
+| 8    | `-L`                       | 文件仅在目录树的叶子层。                                     |
+| 9    | `-P`                       | 打印速率和时间。                                             |
+| 10   | `--print-all-procs`        | 所有进程都打印其结果的摘要。                                 |
+| 11   | `-R`                       | 随机访问文件（仅用于统计）。                                 |
+| 12   | `-S`                       | 共享文件访问（只有文件，没有目录）。                         |
+| 13   | `-c`                       | collective creates: task 0 does all creates.                 |
+| 14   | `-t`                       | time unique working directory overhead.                      |
+| 15   | `-u`                       | 每个任务一个工作目录。                                       |
+| 16   | `-v`                       | 增加输出的详细程度。增加命令行上 `-v` 的数量会使详细程度更高，一共 6 个级别。 <br />* `0`：默认值；只显示基本要素。<br />* `1`：max clock deviation, participating tasks, free space, access pattern, commence/verify access notification with time.<br />* `2`：rank/hostname, machine name, timer used, individual repetition performance results, timestamp used for data signature.<br />* `3`：full test details, transfer block/offset compared, individual data checking errors, environment variables, task writing/reading file name, all test operation times.<br />* `4`：task id and offset for each transfer.<br />* `5`：each 8-byte data signature comparison (WARNING: more data to STDOUT than stored in file, use carefully). |
+| 17   | `-X` <br />`--verify-read` | 验证读取的数据。                                             |
+| 18   | `--verify-write`           | 写入后立即读回数据来验证数据。                               |
+| 19   | `-y`                       | 写入完成后 sync 文件。                                       |
+| 20   | `-Y`                       | 在每个阶段后调用 sync 命令（包含在计时中；注意这会导致从你的结点 flush 所有 IO）。 |
+| 21   | `-Z`                       | 打印时间，而不是速率。                                       |
+| 22   | `--allocateBufferOnGPU`    | 在 GPU 上分配缓冲区。                                        |
+| 23   | `--warningAsErrors`：      | 任何警告都会导致错误（即将所有警告都视为错误）。             |
+| 24   | `--showRankStatistics`     | 包括每个排名的统计信息。                                     |
 
 
 
@@ -537,13 +545,36 @@ mdtest 有两类参数，一类是标记参数 Flags，一类是可选参数 Opt
 
 **Optional arguments：**
 
-
+| 序号 | Optional arguments                    | 含义                                                         |
+| ---- | ------------------------------------- | ------------------------------------------------------------ |
+| 1    | `-a`=STRING                           | I/O 的 API，取值 `POSIX` 或 `DUMMY`。                        |
+| 2    | `-b`=1                                | 层次目录结构的分支因子。                                     |
+| 3    | `-d`=./out                            | 运行测试的目录，可以有多个，用`@` 隔开，如 `-d=./out1@test/out2@~/out3`。 |
+| 4    | `-B`=0                                | no barriers between phases.                                  |
+| 5    | `-e`=0                                | 从每个文件读取的字节数。                                     |
+| 6    | `-f`=1                                | 测试将运行的任务的起始编号。                                 |
+| 7    | `-G`=-1                               | 读/写缓冲区中数据的偏移量，如果未设置，则使用随机值。        |
+| 8    | `-i`=1                                | 测试将运行的迭代次数。                                       |
+| 9    | `-I`=0                                | 每个目录中的项目数。                                         |
+| 10   | `-l`=0                                | 测试将运行的任务的最后编号。                                 |
+| 11   | `-n`=0                                | 每个进程都会 创建/统计/读取/删除 目录和文件。                |
+| 12   | `-N`=0                                | 每个文件/目录操作之间的任务步长（local=0；设置为 1 以避免客户端缓存）。 |
+| 13   | `-p`=0                                | 迭代前延迟（以秒为单位）。                                   |
+| 14   | `--random-seed`=0                     | `-R` 的随机数种子。                                          |
+| 15   | `-s`=1                                | stride between the number of tasks for each test.            |
+| 16   | `-V`=0                                | 详细程度值。与上面 Flag 中的 `-v` 一样，只是直接设定数字。   |
+| 17   | `-w`=0                                | 创建每个文件后写入每个文件的字节数。                         |
+| 18   | `-W`=0                                | 以秒为单位的数字；stonewall 计时器，写入尽可能多的秒数并确保所有进程执行相同数量的操作（目前仅在创建阶段和文件期间停止） |
+| 19   | `-x`=STRING                           | StoneWallingStatusFile，这是一个包含创建阶段迭代次数的文件，可用于在多次运行中拆分阶段。 |
+| 20   | `-z`=0                                | 层次目录结构的深度。                                         |
+| 21   | `--dataPacketType`=t                  | 将要创建的数据包类型，`[offset|incompressible|timestamp|random|o|i|t|r]`。 |
+| 22   | `--run-cmd-before-phase`=STRING       | 在每个阶段之前调用此外部命令（不计入计时）。                 |
+| 23   | `--run-cmd-after-phase`=STRING        | 在每个阶段之后调用此外部命令（计入计时）。                   |
+| 24   | `--saveRankPerformanceDetails`=STRING | 将各个排名信息保存到此 CSV 文件中。                          |
 
 
 
 \-
-
-
 
 
 
@@ -618,7 +649,7 @@ MPI（Message Passing Interface）是一种编程标准和库，用于编写并�
 
 
 
-**注：**  `mpiexec` 命令由 MPI 标准规定，并且是 MPI-2 和 MPI-3 标准的一部分。`mpirun` 命令是一种常见的 `mpiexec` 的实现，由某些 MPI 发行版提供。在我们这里（安装的 OpenMPI），使用这两个命令是完全一样的，本文倾向都使用 `mpiexec`，也会以 `mpiexec` 作示例。
+**注：**  `mpiexec` 命令由 MPI 标准规定，并且是 MPI-2 和 MPI-3 标准的一部分。`mpirun` 命令是一种常见的 `mpiexec` 的实现，由某些 MPI 发行版提供。在新版本的 OpenMPI 中（我们上边安装的就是新版），这两个命令已经完全等价了，但在旧版本中，`mpiexec` 能够支持一些 `mpirun` 不支持的选项。本文以 `mpiexec` 作示例。
 
 ### 4.2. mpiexec 的参数说明
 
@@ -665,6 +696,17 @@ Report bugs to http://www.open-mpi.org/community/help/
 
 
 
-
+TODO
 
 ### 4.4. 使用 mpiexec 启动 mdtest
+
+
+
+
+
+
+
+## 5. mdtest 最常用的方法
+
+
+
