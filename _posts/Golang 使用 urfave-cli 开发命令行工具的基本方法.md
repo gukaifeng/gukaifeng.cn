@@ -65,7 +65,7 @@ func main() {
 
 
 ```shell
-go get -u github.com/urfave/cli
+go get -u github.com/urfave/cli/v2
 ```
 
 
