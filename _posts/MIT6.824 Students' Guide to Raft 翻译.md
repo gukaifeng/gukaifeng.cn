@@ -1,10 +1,3 @@
----
-title: "MIT6.824 Students' Guide to Raft 翻译"
-date: 2022-04-24 23:30:00
-updated: 2022-05-02 23:38:00
-categories: [技术杂谈]
-tags: [MIT6.824,Raft,论文,分布式]
----
 
 
 

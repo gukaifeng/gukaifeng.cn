@@ -1,10 +1,3 @@
----
-title: "fio 测试存储系统 I/O 性能"
-date: 2023-05-26 00:25:00
-updated: 2023-05-28 18:21:00
-categories: [技术杂谈]
-tags: [fio]
----
 
 
 

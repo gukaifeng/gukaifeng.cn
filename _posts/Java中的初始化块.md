@@ -1,12 +1,3 @@
----
-title: Java中的初始化块
-mathjax: false
-date: 2020-03-16 23:43:21
-updated: 2020-03-16 23:43:21
-tags: [Java]
-categories: [编程语言基础]
-toc: true
----
 
 ## 1. 初始化块（代码块）的作用
 

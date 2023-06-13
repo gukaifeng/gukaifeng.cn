@@ -1,12 +1,3 @@
----
-title: 基于bs4库的HTML内容遍历方法
-mathjax: false
-date: 2020-03-07 09:47:51
-updated: 2020-03-07 09:47:51
-tags: [bs4,爬虫]
-categories: [爬虫]
-toc: true
----
 
 ## 1. HTML基本格式
 

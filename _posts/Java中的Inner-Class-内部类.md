@@ -1,12 +1,3 @@
----
-title: Java中的Inner Class(内部类)
-mathjax: false
-date: 2020-03-16 23:46:54
-updated: 2020-03-16 23:46:54
-tags: [Java]
-categories: [编程语言基础]
-toc: true
----
 
 ## 1. 什么是内部类
 

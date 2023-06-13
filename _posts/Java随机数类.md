@@ -1,12 +1,3 @@
----
-title: Java随机数类
-mathjax: false
-date: 2020-03-19 22:24:47
-updated: 2020-03-19 22:24:47
-tags: [Java]
-categories: [编程语言基础]
-toc: true
----
 
 
 

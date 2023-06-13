@@ -1,12 +1,3 @@
----
-title: 使用 PicGo + GitHub 搭建个人免费图床
-mathjax: false
-date: 2020-12-30 09:36:29
-updated: 2020-12-30 09:36:29
-tags: [GitHub, PicGo]
-categories: [技术杂谈]
-toc: true
----
 PicGo 是一个用于快速上传图片并获取图片 URL 链接的工具。
 PicGo 的 Github 地址为 https://github.com/Molunerfinn/PicGo
 

@@ -1,12 +1,3 @@
----
-title: Java面向对象编程
-mathjax: false
-date: 2020-03-16 22:51:55
-updated: 2020-03-16 22:51:55
-tags: [Java]
-categories: [编程语言基础]
-toc: true
----
 
 面向对象编程（OOP：Object Oriented Programming）。
 

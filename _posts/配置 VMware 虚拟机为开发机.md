@@ -1,10 +1,3 @@
----
-title: "配置 VMware 虚拟机为开发机"
-date: 2023-04-08 17:35:00
-updated: 2023-04-08 17:35:00
-categories: [技术杂谈]
-tags: [Linux]
----
 
 
 

@@ -1,10 +1,3 @@
----
-title: Linux 配置 ProxyChains 本地代理
-date: 2022-11-29 23:33:20
-updated: 2022-11-29 23:33:20
-categories: [技术杂谈]
-tags: [Linux]
----
 
 
 

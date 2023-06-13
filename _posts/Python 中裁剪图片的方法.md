@@ -1,11 +1,3 @@
----
-title: Python 中裁剪图片的方法
-date: 2021-10-19 17:53:57
-updated: 2021-10-19 17:53:57
-categories: [技术杂谈]
-tags: [Python]
-toc: true
----
 
 之前用代码生成的图片，两侧有较宽的空白，试着用 python 裁剪掉白边。
 

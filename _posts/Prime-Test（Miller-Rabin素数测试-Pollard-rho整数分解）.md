@@ -1,12 +1,3 @@
----
-title: Prime Test（Miller-Rabin素数测试+Pollard rho整数分解）
-mathjax: true
-date: 2018-10-07 17:25:39
-updated: 2018-10-07 17:25:39
-tags: [POJ,素数测试,因数分解,数论]
-categories: [算法题解]
-toc: true
----
 
 **传送门：**[POJ 1811 - Prime Test](http://poj.org/problem?id=1811)
 

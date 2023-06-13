@@ -1,10 +1,3 @@
----
-title: "Linux 创建新用户并赋权"
-date: 2023-04-30 14:15:00
-updated: 2023-04-30 14:15:00
-categories: [技术杂谈]
-tags: [Linux]
----
 
 
 

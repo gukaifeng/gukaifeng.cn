@@ -1,10 +1,3 @@
----
-title: 配置 NFS 实现 Linux 之间的目录共享
-date: 2022-12-03 14:47:00
-updated: 2022-12-03 20:44:00
-categories: [技术杂谈]
-tags: [Linux, NFS]
----
 
 **网络文件系统**（英语：**Network File System**，缩写作 **NFS**）是一种[分布式文件系统](https://en.wikipedia.org/wiki/Distributed_data_store)，力求客户端主机可以访问服务器端文件，并且其过程与访问本地存储时一样，它由[Sun Microsystems](https://en.wikipedia.org/wiki/Sun_Microsystems)（已被甲骨文公司收购）开发，于1984年发布。NFS 的实现基于 ONC RPC（一个开放、标准的[RFC](https://en.wikipedia.org/wiki/Request_for_Comments)系统，任何人或组织都可以依据标准实现它）。
 

@@ -1,10 +1,3 @@
----
-title: "解决 mysqld: /usr/lib64/libstdc++.so.6: version `GLIBCXX_3.4.30' not found"
-date: 2022-10-27 17:07:45
-updated: 2022-10-27 17:07:45
-categories: [技术杂谈]
-tags: [Linux,CentOS,MySQL,数据库]
----
 
 
 

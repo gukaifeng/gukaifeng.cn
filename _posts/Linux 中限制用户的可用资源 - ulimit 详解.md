@@ -1,10 +1,3 @@
----
-title: "Linux 中限制用户的可用资源 - ulimit 详解"
-date: 2023-04-30 15:51:00
-updated: 2023-05-01 00:17:00
-categories: [技术杂谈]
-tags: [Linux]
----
 
 
 

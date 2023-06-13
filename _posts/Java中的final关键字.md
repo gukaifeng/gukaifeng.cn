@@ -1,12 +1,3 @@
----
-title: Java中的final关键字
-mathjax: false
-date: 2020-03-16 23:40:17
-updated: 2020-03-16 23:40:17
-tags: [Java]
-categories: [编程语言基础]
-toc: true
----
 
 在 Java 中声明类、属性和方法时，可使用关键字 final 来修饰，表示“最终”。
 

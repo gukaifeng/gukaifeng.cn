@@ -1,11 +1,3 @@
----
-title: Linux 中 nohup 命令的用法
-date: 2022-09-07 00:37:00
-updated: 2022-09-07 00:37:00
-categories: [技术杂谈]
-tags: [Linux]
-toc: true
----
 
 ## 1. `nohup` 命令的作用和语法
 

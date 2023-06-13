@@ -1,10 +1,3 @@
----
-title: "在 VSCode 中配置使用 CMake 的 Linux C/C++ 开发环境"
-date: 2022-11-28 17:02:32
-updated: 2022-11-28 23:49:32
-categories: [技术杂谈]
-tags: [VSCode, C, Cpp, Cmake]
----
 
 
 

@@ -1,11 +1,3 @@
----
-title: Python 缩放图片（保持宽高比）
-date: 2022-01-04 22:50:40
-updated: 2022-01-04 22:50:40
-mathjax: true
-categories: [技术杂谈]
-tags: [Python]
----
 
 
 

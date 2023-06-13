@@ -1,11 +1,3 @@
----
-title: 快速幂模m算法
-mathjax: true
-date: 2018-09-07 20:34:31
-updated: 2018-09-07 20:34:31
-tags: [快速幂]
-categories: [基础算法]
----
 
 当数据过大且需要取模的时候，[快速幂](https://gukaifeng.cn/posts/kuai-su-mi/)便无法再满足需求了，我们这里介绍快速幂模 m 算法，通常使用 long long 数据类型。
 

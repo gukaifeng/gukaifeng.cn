@@ -1,11 +1,3 @@
----
-title: Rust -- 集合 HashSet
-date: 2021-10-27 23:08:06
-updated: 2021-10-27 23:08:06
-categories: [编程语言基础]
-tags: [Rust,数据结构]
-toc: true
----
 
 和大多编程语言一样，Rust 中的集合也是存 key 的，key 不可重复。
 

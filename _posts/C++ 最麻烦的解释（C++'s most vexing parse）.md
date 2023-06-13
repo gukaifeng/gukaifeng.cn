@@ -1,14 +1,4 @@
 
----
-title: "C++ 最麻烦的解释（C++'s most vexing parse）"
-date: 2022-09-09 02:07:00
-updated: 2022-09-09 02:07:00
-categories: 
-- 编程语言基础
-- Cpp
-tags: [Cpp]
----
-
 
 ## 1. 什么是 C++ 最麻烦的解释？
 

@@ -1,10 +1,3 @@
----
-title: "VMware 上 Linux 虚拟机的磁盘扩容"
-date: 2023-04-12 00:34:00
-updated: 2023-04-12 00:34:00
-categories: [技术杂谈]
-tags: [Linux,虚拟机]
----
 
 
 

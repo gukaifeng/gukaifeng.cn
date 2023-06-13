@@ -1,12 +1,3 @@
----
-title: Requests库和Scrapy框架的比较
-mathjax: false
-date: 2020-03-15 11:08:27
-updated: 2020-03-15 11:08:27
-tags: [Requests,Scrapy,爬虫]
-categories: [爬虫]
-toc: true
----
 
 Requests库和Scrapy框架都是Python中非常重要的第三方爬虫库（框架）。
 

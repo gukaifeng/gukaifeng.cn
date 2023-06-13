@@ -1,11 +1,3 @@
----
-title: 在 Linux 终端输出带颜色文字的方法
-date: 2022-09-03 18:49:00
-updated: 2023-04-27 15:28:00
-categories: [技术杂谈]
-tags: [Linux]
-toc: true
----
 
 我们经常会看到一些程序在 Linux 终端的输出是带有颜色的。
 

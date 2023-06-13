@@ -1,12 +1,3 @@
----
-title: Java中的反射机制
-mathjax: false
-date: 2020-03-17 19:15:51
-updated: 2020-03-17 19:15:51
-tags: [Java]
-categories: [编程语言基础]
-toc: true
----
 
 Java Reflection：Reflection（反射）是被视为动态语言的关键，反射机制允许程序在执行期借助于 Reflection API 取得任何类的内部信息，并能直接操作任何对象的内部属性及方法。
 

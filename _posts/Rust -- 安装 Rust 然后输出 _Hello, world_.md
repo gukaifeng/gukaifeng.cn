@@ -1,11 +1,3 @@
----
-title: Rust -- 安装 Rust 然后输出 "Hello, world"
-date: 2021-09-09 22:06:39
-updated: 2021-09-09 22:06:39
-categories: [编程语言基础]
-tags: [Rust]
-toc: true
----
 
 
 

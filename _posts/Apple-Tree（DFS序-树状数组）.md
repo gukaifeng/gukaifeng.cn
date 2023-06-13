@@ -1,12 +1,3 @@
----
-title: Apple Tree（DFS序+树状数组）
-mathjax: true
-date: 2018-10-23 23:32:01
-updated: 2018-10-23 23:32:01
-tags: [POJ,DFS序,树状数组]
-categories: [算法题解]
-toc: true
----
 
 
 **传送门：** [POJ 3321 - Apple Tree](http://poj.org/problem?id=3321)

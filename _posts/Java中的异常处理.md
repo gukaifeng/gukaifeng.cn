@@ -1,12 +1,3 @@
----
-title: Java中的异常处理
-mathjax: false
-date: 2020-03-17 18:17:50
-updated: 2020-03-17 18:17:50
-tags: [Java]
-categories: [编程语言基础]
-toc: true
----
 
 捕获错误最理想的是在编译期间，但有的错误只有运行时才会发生。
 

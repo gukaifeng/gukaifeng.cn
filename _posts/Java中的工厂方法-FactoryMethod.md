@@ -1,12 +1,3 @@
----
-title: Java中的工厂方法(FactoryMethod)
-mathjax: false
-date: 2020-03-16 23:56:15
-updated: 2020-03-16 23:56:15
-tags: [Java,设计模式]
-categories: [设计模式]
-toc: true
----
 
 FactoryMethod 模式是设计模式中应用最为广泛的模式。
 

@@ -1,10 +1,3 @@
----
-title: "（CentOS/RedHat 系）Linux 安装最新版 Golang"
-date: 2023-04-10 15:05:00
-updated: 2023-04-10 15:05:00
-categories: [技术杂谈]
-tags: [Linux,CentOS,AlmaLinux]
----
 
 
 

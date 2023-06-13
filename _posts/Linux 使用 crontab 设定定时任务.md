@@ -1,10 +1,3 @@
----
-title: "Linux 使用 crontab 设定定时任务"
-date: 2023-04-30 02:09:00
-updated: 2023-04-30 02:09:00
-categories: [技术杂谈]
-tags: [Linux]
----
 
 
 

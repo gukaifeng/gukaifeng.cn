@@ -1,13 +1,3 @@
----
-title: C++11 中 lambda 的使用方法
-date: 2022-08-30 17:07:10
-updated: 2022-08-30 17:07:10
-categories:
-- 编程语言基础
-- Cpp
-tags: [Cpp]
-toc: true
----
 
 lambda 是 C++11 中的特性，可以简化我们的代码，非常好用。
 

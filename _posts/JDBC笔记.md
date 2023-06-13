@@ -1,12 +1,3 @@
----
-title: JDBC笔记
-mathjax: false
-date: 2020-03-17 00:07:23
-updated: 2020-03-17 00:07:23
-tags: [Java]
-categories: [技术杂谈]
-toc: true
----
 
 ## 1. MySQL补充笔记
 

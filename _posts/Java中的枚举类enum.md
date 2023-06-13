@@ -1,12 +1,3 @@
----
-title: Java中的枚举类enum
-mathjax: false
-date: 2020-03-17 18:52:17
-updated: 2020-03-17 18:52:17
-tags: [Java]
-categories: [编程语言基础]
-toc: true
----
 
 枚举类和普通类的区别：
 

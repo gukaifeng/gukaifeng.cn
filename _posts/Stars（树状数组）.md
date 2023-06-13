@@ -1,12 +1,3 @@
----
-title: POJ-2352 Stars (树状数组)
-mathjax: true
-date: 2018-10-25 08:50:22
-updated: 2018-10-25 08:50:22
-tags: [POJ,树状数组]
-categories: [编程语言基础]
-toc: true
----
 
 <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
 

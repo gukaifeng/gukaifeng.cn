@@ -1,12 +1,3 @@
----
-title: Go 语言读取或写入 Json
-date: 2022-01-11 14:23:40
-updated: 2023-05-23 11:34:00
-categories:
-- 编程语言基础
-- Golang
-tags: [Golang,json]
----
 
 Go 语言提供了关于 json 的标准库包 `encoding/json`。
 

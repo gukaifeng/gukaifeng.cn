@@ -1,11 +1,3 @@
----
-title: Rust -- 错误处理
-date: 2021-11-30 22:52:13
-updated: 2021-12-01 09:50:45
-categories: [编程语言基础]
-tags: [Rust]
-toc: true
----
 
 程序中的错误是不可避免的。
 

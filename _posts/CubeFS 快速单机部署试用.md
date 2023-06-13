@@ -1,10 +1,3 @@
----
-title: "CubeFS 快速单机部署试用"
-date: 2023-05-03 17:09:00
-updated: 2023-05-03 17:09:00
-categories: [分布式文件系统]
-tags: [CubeFS,分布式文件系统]
----
 
 
 

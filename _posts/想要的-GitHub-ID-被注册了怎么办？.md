@@ -1,12 +1,3 @@
----
-title: 想要的 GitHub ID 被注册了怎么办？
-mathjax: false
-date: 2018-10-16 19:52:44
-updated: 2018-10-16 19:52:44
-tags: [GitHub]
-categories: [技术杂谈]
-toc: true
----
 
 作为一名计算机专业的学生，加入 GitHub 已经有一段时间了。
 

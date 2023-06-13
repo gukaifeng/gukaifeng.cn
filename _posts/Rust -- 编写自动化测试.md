@@ -1,11 +1,3 @@
----
-title: Rust -- 编写自动化测试
-date: 2021-12-09 18:11:11
-updated: 2021-12-10 16:40:50
-categories: [编程语言基础]
-tags: [Rust]
-toc: true
----
 
 Rust 是一个相当注重正确性的编程语言。
 

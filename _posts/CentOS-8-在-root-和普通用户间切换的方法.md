@@ -1,12 +1,3 @@
----
-title: CentOS 8 在 root 和普通用户间切换的方法
-mathjax: false
-date: 2020-12-31 10:39:11
-updated: 2020-12-31 10:39:11
-tags: [Linux,CentOS]
-categories: [技术杂谈]
-toc: true
----
 
 
 ## 从普通用户切换到 root 用户

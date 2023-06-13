@@ -1,11 +1,3 @@
----
-title: 使用 mmap 函数的用户级内存映射
-date: 2022-07-31 23:22:00
-updated: 2022-07-31 23:22:00
-categories: [技术杂谈]
-tags: [Linux,CentOS,mmap]
-toc: true
----
 
 > 本文参考：《深入理解计算机系统》第 9.8.4 小节。
 

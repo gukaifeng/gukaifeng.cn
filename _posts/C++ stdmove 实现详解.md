@@ -1,12 +1,3 @@
----
-title: "C++ std::move() 实现详解"
-date: 2023-02-09 14:48:00
-updated: 2023-02-09 14:48:00
-categories:
-- 编程语言基础
-- Cpp
-tags: [Cpp]
----
 
 本文不介绍 `std::move()` 的功能与用法，有了解需要可参考 [std::move - cppreference.com](https://en.cppreference.com/w/cpp/utility/move)。
 

@@ -1,11 +1,3 @@
----
-title: Linux 挂载磁盘的相关操作
-date: 2022-09-08 01:09:00
-updated: 2022-09-08 22:13:00
-categories: [技术杂谈]
-tags: [Linux]
-toc: true
----
 
 ## 1. 常用操作简介
 
