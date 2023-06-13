@@ -1,12 +1,3 @@
----
-title: Trailing Zeroes (III)（算术基本定理+二分查找）
-mathjax: true
-date: 2018-10-08 21:35:55
-updated: 2018-10-08 21:35:55
-tags: [LightOJ,算术基本定理,二分查找,数论]
-categories: [算法题解]
-toc: true
----
 
 **传送门：**[LightOJ 1138 - Trailing Zeroes (III)](https://vjudge.net/problem/LightOJ-1138)
 

@@ -1,10 +1,3 @@
----
-title: "（CentOS/RedHat 系）Linux 安装最新版 GCC"
-date: 2023-04-10 15:47:00
-updated: 2023-04-10 15:47:00
-categories: [技术杂谈]
-tags: [Linux,CentOS,AlmaLinux]
----
 
 
 

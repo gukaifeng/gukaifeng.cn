@@ -1,10 +1,3 @@
----
-title: 如何创建一个 Linux RPM 包
-date: 2022-11-14 01:40:30
-updated: 2022-11-28 01:26:30
-categories: [技术杂谈]
-tags: [RPM]
----
 
 
 

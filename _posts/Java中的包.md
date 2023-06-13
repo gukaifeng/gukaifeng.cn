@@ -1,12 +1,3 @@
----
-title: Java中的包
-mathjax: false
-date: 2020-03-16 23:22:26
-updated: 2020-03-16 23:22:26
-tags: [Java]
-categories: [编程语言基础]
-toc: true
----
 
 包帮助管理大型软件系统，将语义近似的类组织到包中，解决命名冲突问题。
 

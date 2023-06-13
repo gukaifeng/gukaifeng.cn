@@ -1,12 +1,3 @@
----
-title: Java中的注释
-mathjax: false
-date: 2020-03-16 23:57:47
-updated: 2020-03-16 23:57:47
-tags: [Java]
-categories: [编程语言基础]
-toc: true
----
 
 ## 1. 单行注释 
 

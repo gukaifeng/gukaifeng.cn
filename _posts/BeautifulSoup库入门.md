@@ -1,12 +1,3 @@
----
-title: BeautifulSoup库入门
-mathjax: false
-date: 2020-03-07 00:33:44
-updated: 2020-03-07 00:33:44
-tags: [bs4,爬虫]
-categories: [爬虫]
-toc: true
----
 
 **[Beautiful Soup](http://www.crummy.com/software/BeautifulSoup/)** is a Python library for pulling data out of HTML and XML files. It works with your favorite parser to provide idiomatic ways of navigating, searching, and modifying the parse tree. It commonly saves programmers hours or days of work.
 

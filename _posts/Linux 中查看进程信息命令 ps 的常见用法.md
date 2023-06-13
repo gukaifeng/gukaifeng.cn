@@ -1,10 +1,3 @@
----
-title: "Linux 中查看进程信息命令 ps 的常见用法"
-date: 2022-12-06 02:33:00
-updated: 2022-12-08 00:48:00
-categories: [技术杂谈]
-tags: [Linux]
----
 
 
 

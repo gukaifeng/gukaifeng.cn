@@ -1,10 +1,3 @@
----
-title: "VSCode 在编辑器中显示垂直标尺"
-date: 2023-04-30 11:48:00
-updated: 2023-04-30 11:48:00
-categories: [技术杂谈]
-tags: [VSCode]
----
 
 
 

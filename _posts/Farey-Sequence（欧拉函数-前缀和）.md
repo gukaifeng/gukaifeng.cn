@@ -1,12 +1,3 @@
----
-title: Farey Sequence（欧拉函数+前缀和）
-mathjax: true
-date: 2018-10-03 19:35:51
-updated: 2018-10-03 19:35:51
-tags: [POJ,欧拉函数,前缀和,数论]
-categories: [算法题解]
-toc: true
----
 
 
 **传送门：**[POJ 2478 - Farey Sequence](http://poj.org/problem?id=2478)

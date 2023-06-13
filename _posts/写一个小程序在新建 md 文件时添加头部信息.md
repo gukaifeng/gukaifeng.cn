@@ -1,11 +1,3 @@
----
-title: 写一个小程序在新建 md 文件时添加头部信息
-date: 2021-09-07 00:05:23
-updated: 2021-09-07 00:05:23
-categories: [技术杂谈]
-tags: [Markdown,Blog]
-toc: true
----
 
 在我用 typecho 写博客之前，曾用过一段时间的 hexo，hexo 在用命令创建 markdown 文件的时候，可以使用模板，然后创建出来的 markdown 就会带了一些模板中预设的内容，比如头部说明，并且 hexo 使用头部说明来辅助解析 markdown。
 

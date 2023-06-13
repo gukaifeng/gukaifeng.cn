@@ -1,12 +1,3 @@
----
-title: Requests库入门
-mathjax: false
-date: 2020-03-05 22:46:01
-updated: 2020-03-05 22:46:01
-tags: [Python,Requests,爬虫]
-categories: [爬虫]
-toc: true
----
 
 **Requests** is an elegant and simple HTTP library for Python, built for human beings.
 

@@ -1,12 +1,3 @@
----
-title: Primes（素数测试）
-mathjax: true
-date: 2018-10-03 18:07:03
-updated: 2018-10-03 18:07:03
-tags: [HDU,素数测试,数论]
-categories: [算法题解]
-toc: true
----
 
 **传送门：**[HDU 2161 - Primes](http://acm.hdu.edu.cn/showproblem.php?pid=2161)
 

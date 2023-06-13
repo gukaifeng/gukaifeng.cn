@@ -1,12 +1,3 @@
----
-title: Tomcat入门
-mathjax: false
-date: 2020-03-18 11:03:53
-updated: 2020-03-18 11:03:53
-tags: [Java,Tomcat]
-categories: [网络编程]
-toc: true
----
 
 ## 1. 什么是服务器？
 

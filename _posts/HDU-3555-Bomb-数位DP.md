@@ -1,12 +1,3 @@
----
-title: HDU-3555 Bomb (数位DP)
-mathjax: false
-date: 2018-10-30 15:56:31
-updated: 2018-10-30 15:56:31
-tags: [HDU,动态规划,数位DP]
-categories: [算法题解]
-toc: true
----
 
 
 描述

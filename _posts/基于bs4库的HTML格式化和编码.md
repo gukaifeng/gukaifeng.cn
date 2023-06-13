@@ -1,12 +1,3 @@
----
-title: 基于bs4库的HTML格式输出和编码
-mathjax: false
-date: 2020-03-07 09:50:05
-updated: 2020-03-07 09:50:05
-tags: [bs4,爬虫]
-categories: [爬虫]
-toc: true
----
 
 ## 1. 基于bs4库的HTML格式输出
 

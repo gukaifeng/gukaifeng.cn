@@ -1,12 +1,3 @@
----
-title: Linux 下的 ANSI 标准 I/O 函数
-mathjax: false
-date: 2021-01-01 08:37:39
-updated: 2021-01-01 08:37:39
-tags: [Linux]
-categories: [技术杂谈]
-toc: true
----
 
 
 ## 打开文件 fopen()

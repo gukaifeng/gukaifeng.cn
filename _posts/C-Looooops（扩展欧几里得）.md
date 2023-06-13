@@ -1,12 +1,3 @@
----
-title: C Looooops（扩展欧几里得）
-mathjax: true
-date: 2018-10-03 11:09:32
-updated: 2018-10-03 11:09:32
-tags: [POJ,欧几里得,数论]
-categories: [算法题解]
-toc: true
----
 
 
 **传送门：**[POJ 2115 - C Looooops](http://poj.org/problem?id=2115)

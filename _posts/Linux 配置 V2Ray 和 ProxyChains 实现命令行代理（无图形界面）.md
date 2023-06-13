@@ -1,10 +1,3 @@
----
-title: Linux 配置 V2Ray 和 ProxyChains 实现命令行代理（无图形界面）
-date: 2022-11-30 11:27:20
-updated: 2022-11-30 11:27:20
-categories: [技术杂谈]
-tags: [Linux]
----
 
 
 

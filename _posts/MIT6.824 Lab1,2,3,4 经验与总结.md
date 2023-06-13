@@ -1,11 +1,3 @@
----
-title: "MIT6.824 Lab1,2,3,4 经验与总结"
-date: 2022-04-09 18:05:00
-updated: 2022-05-03 01:49:00
-categories: [技术杂谈]
-tags: [MIT6.824,GFS,MapReduce,Raft,论文,分布式]
-mathjax: true
----
 
 
 

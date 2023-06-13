@@ -1,10 +1,3 @@
----
-title: "Linux 中查看网络连接信息命令 netstat 的常见用法"
-date: 2022-12-08 01:02:00
-updated: 2022-12-08 02:49:00
-categories: [技术杂谈]
-tags: [Linux]
----
 
 
 

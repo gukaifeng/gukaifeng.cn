@@ -1,12 +1,3 @@
----
-title: MacOS上的实用小工具
-mathjax: false
-date: 2020-04-05 22:41:29
-updated: 2020-04-05 22:41:29
-tags: [macOS]
-categories: [技术杂谈]
-toc: true
----
 
 用了一年多 Macbook pro，整理了几个很好用的小程序。
 

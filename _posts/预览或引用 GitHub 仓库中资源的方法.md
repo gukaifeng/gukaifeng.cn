@@ -1,10 +1,3 @@
----
-title: 预览或引用 GitHub 仓库中资源的方法
-date: 2022-01-14 16:54:55
-updated: 2022-01-14 16:54:55
-categories: [技术杂谈]
-tags: [GitHub]
----
 
 
 

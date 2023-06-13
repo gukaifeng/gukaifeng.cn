@@ -1,12 +1,3 @@
----
-title: Python中yield关键字的使用
-mathjax: false
-date: 2020-03-15 12:10:29
-updated: 2020-03-15 12:10:29
-tags: [Python]
-categories: [编程语言基础]
-toc: true
----
 
 关键字`yield`与一个概念相关，即生成器。
 

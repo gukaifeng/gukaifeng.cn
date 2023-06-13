@@ -1,11 +1,3 @@
----
-title: Rust -- 所有权(Ownership)
-date: 2021-09-13 21:57:16
-updated: 2021-12-07 22:07:16
-categories: [编程语言基础]
-tags: [Rust]
-toc: true
----
 
 **所有权(Ownership)** 是 Rust 最独特的特性，它使 Rust 能够在不需要垃圾回收器(Garbage collector)的情况下保证内存安全。
 

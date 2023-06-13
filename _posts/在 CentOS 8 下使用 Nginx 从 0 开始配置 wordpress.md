@@ -1,11 +1,3 @@
----
-title: 在 CentOS 8 下使用 Nginx 从 0 开始配置 wordpress
-date: 2021-09-03 20:32
-updated: 2021-09-03 20:32
-categories: [技术杂谈]
-tags: [CentOS,WordPress,Nginx,Blog]
-toc: true
----
 
 
 

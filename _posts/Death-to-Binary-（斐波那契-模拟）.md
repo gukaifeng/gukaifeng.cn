@@ -1,12 +1,3 @@
----
-title: Death to Binary?（斐波那契+模拟）
-mathjax: true
-date: 2018-10-03 14:45:14
-updated: 2018-10-03 14:45:14
-tags: [POJ,斐波那契]
-categories: [算法题解]
-toc: true
----
 
 
 **传送门：**[POJ 2116 - Death to Binary?](http://poj.org/problem?id=2116)

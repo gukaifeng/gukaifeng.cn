@@ -1,12 +1,3 @@
----
-title: Java中的Object类
-mathjax: false
-date: 2020-03-16 23:34:19
-updated: 2020-03-16 23:34:19
-tags: [Java]
-categories: [编程语言基础]
-toc: true
----
 
 Object 类是所有 Java 类的根父类；
 

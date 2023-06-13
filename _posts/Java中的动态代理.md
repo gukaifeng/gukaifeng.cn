@@ -1,12 +1,3 @@
----
-title: Java中的动态代理
-mathjax: false
-date: 2020-03-17 19:21:20
-updated: 2020-03-17 19:21:20
-tags: [Java]
-categories: [网络编程]
-toc: true
----
 
 `Proxy` ：专门完成代理的操作类，是所有动态代理类的父类。通过此类为一个或多个接口动态地生成实现类。
 

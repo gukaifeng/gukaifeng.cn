@@ -1,12 +1,3 @@
----
-title: Java中的字符串类
-mathjax: false
-date: 2020-03-19 23:44:34
-updated: 2020-03-19 23:44:34
-tags: [Java]
-categories: [编程语言基础]
-toc: true
----
 
 Java中有多个字符串类，其中最常用的是String类。
 

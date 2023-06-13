@@ -1,12 +1,3 @@
----
-title: Bi-shoe and Phi-shoe（欧拉函数+素数筛）
-mathjax: true
-date: 2018-10-02 17:41:55
-updated: 2018-10-02 17:41:55
-tags: [LightOJ,欧拉函数,素数测试,数论]
-categories: [算法题解]
-toc: true
----
 
 **传送门：**[LightOJ 1370 - Bi-shoe and Phi-shoe](https://vjudge.net/problem/LightOJ-1370)
 

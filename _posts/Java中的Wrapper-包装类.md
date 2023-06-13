@@ -1,12 +1,3 @@
----
-title: Java中的Wrapper(包装类)
-mathjax: false
-date: 2020-03-16 23:35:43
-updated: 2020-03-16 23:35:43
-tags: [Java]
-categories: [编程语言基础]
-toc: true
----
 
 Java中针对八种基本数据类型定义相应的引用类型——包装类（封装类）。
 

@@ -1,12 +1,3 @@
----
-title: 'LeetCode: 172. 阶乘后的零'
-mathjax: true
-date: 2019-04-26 14:50:53
-updated: 2019-04-26 14:50:53
-tags: [LeetCode, 数论]
-categories: [算法题解]
-toc: true
----
 
 
 

@@ -1,11 +1,3 @@
----
-title: 在自己的服务器上搭建 Hexo 博客
-date: 2021-11-07 00:58:32
-updated: 2021-11-07 00:58:32
-categories: [技术杂谈]
-tags: [Hexo, Blog]
-toc: true
----
 
 以前用 Hexo 是搭载 GitHub Page 上的，但是确实稳定性很迷。
 于是尝试在自己的服务器上搭建 Hexo 博客。

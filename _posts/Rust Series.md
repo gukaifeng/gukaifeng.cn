@@ -1,11 +1,3 @@
----
-title: Rust Series
-date: 2021-07-18
-updated: 2021-07-18
-categories: [编程语言基础]
-tags: [Rust]
-toc: true
----
 
 Rust 毕竟还是一门年轻的语言，优秀的学习资料并不是很好找，遇到问题也不那么容易解决。  
 所以我记录下了我学习 Rust 的过程，希望其不仅是我复习查阅的笔记，也可是大家学习 Rust 的参考。

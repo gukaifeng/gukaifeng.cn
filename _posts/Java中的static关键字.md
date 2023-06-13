@@ -1,12 +1,3 @@
----
-title: Java中的static关键字
-mathjax: false
-date: 2020-03-16 23:38:51
-updated: 2020-03-16 23:38:51
-tags: [Java]
-categories: [编程语言基础]
-toc: true
----
 
 类属性（静态变量）作为该类各个对象之间共享的变量。
 

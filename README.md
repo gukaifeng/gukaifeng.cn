@@ -1,3 +1,11 @@
+
+## 2023-06-14 更新 ※
+1\. 为了在 GitHub 内查看或修改文章更符合直觉，文章头部用于 Hexo 解析的 YAML Front Matter 已被移除，文章信息统一存在 `/headers.json` 中。  
+2\. 本博客站的文章信息记录形式（文章信息存储在 `/headers.json`）与 Hexo 要求 source/ 目录要求的形式（文章信息存储在 YAML Front Matter）的相互转化工具已初步开发完成，当前仓库的转化即使用此工具完成。转化工具项目地址为 [hexo-source-tool](https://github.com/gukaifeng/hexo-source-tool-2023)，此工具未来会加入更多功能。  
+
+
+---
+
 Hi there 👋，这是我的博客 gukaifeng.cn 的资源仓库。
 
 博客主页 https://gukaifeng.cn  

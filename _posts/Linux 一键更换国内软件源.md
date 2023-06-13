@@ -1,10 +1,3 @@
----
-title: Linux 一键更换国内软件源
-date: 2022-11-29 23:10:20
-updated: 2022-11-29 23:10:20
-categories: [技术杂谈]
-tags: [Linux]
----
 
 
 

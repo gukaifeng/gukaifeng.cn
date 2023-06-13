@@ -1,10 +1,3 @@
----
-title: "在 CentOS 上编译 Ceph"
-date: 2023-04-17 14:49:00
-updated: 2023-04-17 14:49:00
-categories: [技术杂谈]
-tags: [Linux,CentOS,Ceph]
----
 
 
 

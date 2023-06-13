@@ -1,13 +1,3 @@
----
-title: 'LeetCode: 98. 验证二叉搜索树'
-mathjax: true
-reward: false
-date: 2019-04-26 13:06:44
-updated: 2019-04-26 13:06:44
-tags: [LeetCode, 树, 深度优先搜索]
-categories: [算法题解]
-toc: true
----
 
 原题链接（英文）：https://leetcode.com/problems/validate-binary-search-tree/
 原题链接（中文）：https://leetcode-cn.com/problems/validate-binary-search-tree/

@@ -1,10 +1,3 @@
----
-title: 解决 CentOS 中 LD_LIBRARY_PATH 配置正确却找不到动态链接库的问题
-date: 2022-10-30 16:46:49
-updated: 2022-10-30 16:46:49
-categories: [技术杂谈]
-tags: [CentOS,Linux]
----
 
 
 
