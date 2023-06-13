@@ -1,7 +1,8 @@
 
 ## 2023-06-14 更新 ※
-1\. 为了在 GitHub 内查看或修改文章更符合直觉，文章头部用于 Hexo 解析的 YAML Front Matter 已被移除，文章信息统一存在 `/headers.json` 中。  
-2\. 本博客站的文章信息记录形式（文章信息存储在 `/headers.json`）与 Hexo 要求 source/ 目录要求的形式（文章信息存储在 YAML Front Matter）的相互转化工具已初步开发完成，当前仓库的转化即使用此工具完成。转化工具项目地址为 [hexo-source-tool](https://github.com/gukaifeng/hexo-source-tool-2023)，此工具未来会加入更多功能。  
+1. 为了在 GitHub 内查看或修改文章更符合直觉，文章头部用于 Hexo 解析的 YAML Front Matter 已被移除，文章信息统一存在 `headers.json` 中。
+2. 本博客站的文章信息记录形式（文章信息存储在 `headers.json`）与 Hexo 要求 `source` 目录要求的形式（文章信息存储在 YAML Front Matter）的相互转化工具已初步开发完成，当前仓库的转化即使用此工具完成。转化工具项目地址为 [hexo-source-tool](https://github.com/gukaifeng/hexo-source-tool-2023)，此工具未来会加入更多功能。
+3. 目前，若某文章在 `headers.json` 缺少信息，则 hexo-source-tool 会在将文章转化为 Hexo 要求的 `source` 形式时，将缺少的文章信息从其 Git 信息中补全。目前支持标题 `title`、发布时间 `date` 和更新时间 `updated` 字段，当 `header.json` 中缺少某文章的这些字段时，`title` 将补全为文件名（`.md` 前的部分），`date` 为此文章第一次 commit 的时间，`updated` 为此文章最后一次 commit 的时间。
 
 
 ---
