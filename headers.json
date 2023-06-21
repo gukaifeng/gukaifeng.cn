@@ -2591,9 +2591,10 @@
         {
             "filename": "about",
             "header": {
-                "date": "2021-11-07 20:23:45",
-                "title": "关于我",
-                "updated": "2021-11-15 15:32:54"
+                "title": "关于本站",
+                "aside": "false",
+                "comments": "false",
+                "type": "about"
             }
         },
         {
