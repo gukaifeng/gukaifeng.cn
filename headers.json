@@ -2600,26 +2600,13 @@
         {
             "filename": "categories",
             "header": {
-                "date": "2022-01-04 15:41:43",
                 "title": "分类",
                 "type": "categories"
             }
         },
         {
-            "filename": "links",
-            "header": {
-                "categories": "[]",
-                "date": "2021-09-24 01:07:19",
-                "tags": "[]",
-                "title": "友情链接",
-                "toc": "true",
-                "updated": "2021-12-22 08:48:40"
-            }
-        },
-        {
             "filename": "tags",
             "header": {
-                "date": "2022-01-04 15:40:54",
                 "title": "标签",
                 "type": "tags"
             }

@@ -1,35 +1,41 @@
 - class_name: 开启创造力
   creativity_list:
-    - name: Vue
-      color: "#b8f0ae"
-      icon: https://cdn.bywind.xyz/img/banners/vue.webp
-    - name: Java
+    - name: Cpp
+      color: "#6f9acd"
+      icon: /img/creativity/cpp.svg
+    - name: Golang
       color: "#fff"
-      icon: https://cdn.bywind.xyz/img/banners/Java.webp
+      icon: /img/creativity/golang.svg
     - name: Docker
       color: "#57b6e6"
-      icon: https://cdn.bywind.xyz/img/banners/docker.webp
-    - name: Webpack
-      color: "#2e3a41"
-      icon: https://cdn.bywind.xyz/img/banners/webpack.webp
+      icon: /img/creativity/docker.webp
+    - name: VSCode
+      color: "#fff"
+      icon: /img/creativity/vscode.svg
+    - name: linux
+      color: "#eb6840"
+      icon: /img/creativity/linux.svg
+    - name: VMware
+      color: "#f4af7f"
+      icon: /img/creativity/vmware.svg
     - name: Photoshop
       color: "#4082c3"
-      icon: https://cdn.bywind.xyz/img/banners/PS.webp
-    - name: Swift
-      color: "#eb6840"
-      icon: https://cdn.bywind.xyz/img/banners/swift.webp
+      icon: /img/creativity/PS.webp
     - name: Python
-      color: "#fff"
-      icon: https://cdn.bywind.xyz/img/banners/python.webp
-    - name: Node
-      color: "#333"
-      icon: https://cdn.bywind.xyz/img/banners/node-logo.svg
+      color: "#26415c"
+      icon: /img/creativity/python.svg
+    - name: Jetbrains
+      color: "#27282c"
+      icon: /img/creativity/jetbrains.svg
     - name: Git
       color: "#df5b40"
-      icon: https://cdn.bywind.xyz/img/banners/git.webp
+      icon: /img/creativity/git.webp
+    - name: HTML
+      color: "#d45736"
+      icon: /img/creativity/html.webp
     - name: Css
       color: "#2c51db"
-      icon: https://cdn.bywind.xyz/img/banners/css.webp
+      icon: /img/creativity/css.webp
     - name: Js
-      color: "#f7cb4f"
-      icon: https://cdn.bywind.xyz/img/banners/js.webp
+      color: "#f7df1e"
+      icon: /img/creativity/javascript.svg
