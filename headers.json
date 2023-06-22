@@ -2610,6 +2610,12 @@
                 "title": "标签",
                 "type": "tags"
             }
+        },
+        {
+            "filename": "img"
+        },
+        {
+            "filename": "_data"
         }
     ]
 }
