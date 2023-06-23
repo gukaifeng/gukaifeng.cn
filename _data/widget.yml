@@ -1,0 +1,6 @@
+top:
+  - class_name: visitors
+    id_name:
+    name: 来访者
+    icon: fa-solid fa-door-open
+    html: <div id="welcome-info"></div>
