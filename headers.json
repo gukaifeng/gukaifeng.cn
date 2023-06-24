@@ -2601,14 +2601,16 @@
             "filename": "categories",
             "header": {
                 "title": "分类",
-                "type": "categories"
+                "type": "categories",
+                "comments": "false"
             }
         },
         {
             "filename": "tags",
             "header": {
                 "title": "标签",
-                "type": "tags"
+                "type": "tags",
+                "comments": "false"
             }
         },
         {
