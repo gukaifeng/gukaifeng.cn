@@ -2614,6 +2614,12 @@
             }
         },
         {
+            "filename": "messages",
+            "header": {
+                "title": "留言板"
+            }
+        },
+        {
             "filename": "img"
         },
         {
