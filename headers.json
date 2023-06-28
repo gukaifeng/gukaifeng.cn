@@ -2593,7 +2593,6 @@
             "header": {
                 "title": "关于本站",
                 "aside": "false",
-                "comments": "false",
                 "type": "about"
             }
         },
@@ -2611,12 +2610,6 @@
                 "title": "标签",
                 "type": "tags",
                 "comments": "false"
-            }
-        },
-        {
-            "filename": "messages",
-            "header": {
-                "title": "留言板"
             }
         },
         {
