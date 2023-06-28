@@ -2613,6 +2613,14 @@
             }
         },
         {
+            "filename": "link",
+            "header": {
+                "title": "友链",
+                "type": "link",
+                "aside": "false"
+            }
+        },
+        {
             "filename": "img"
         },
         {
