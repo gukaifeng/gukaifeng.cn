@@ -1,5 +1,5 @@
-- class_name: 技术
-  class_desc: 让每个人都能享受科技的乐趣
+- class_name:
+  class_desc:
   link_list:
     - name: 安知鱼`Blog
       link: https://anheyu.com/
