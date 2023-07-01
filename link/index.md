@@ -11,7 +11,7 @@
   link: https://gukaifeng.cn/
   avatar: https://gukaifeng.cn/img/avatar.webp
   descr: 一个刚入门的分布式存储研发工程师
-  siteshot:
+  siteshot: https://gukaifeng.cn/img/siteshot.webp
 ```
 
 
