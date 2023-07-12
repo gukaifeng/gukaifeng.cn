@@ -1,6 +1,14 @@
 {
     "posts": [
         {
+            "filename": "Linux 增量文件传输工具 rsync 的常用方法.md",
+            "header": {
+                "categories": "[技术杂谈]",
+                "tags": "[Linux, rsync]",
+                "title": "Linux 增量文件传输工具 rsync 的常用方法"
+            }
+        },
+        {
             "filename": "ACM-ICPC 2018 南京赛区网络预赛 E 题 AC Challenge（状压DP）.md",
             "header": {
                 "categories": "[算法题解]",
