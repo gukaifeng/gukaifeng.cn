@@ -1109,26 +1109,6 @@
             }
         },
         {
-            "filename": "Linux 配置 ProxyChains 本地代理.md",
-            "header": {
-                "categories": "[技术杂谈]",
-                "date": "2022-11-29 23:33:20",
-                "tags": "[Linux]",
-                "title": "Linux 配置 ProxyChains 本地代理",
-                "updated": "2022-11-29 23:33:20"
-            }
-        },
-        {
-            "filename": "Linux 配置 V2Ray 和 ProxyChains 实现命令行代理（无图形界面）.md",
-            "header": {
-                "categories": "[技术杂谈]",
-                "date": "2022-11-30 11:27:20",
-                "tags": "[Linux]",
-                "title": "Linux 配置 V2Ray 和 ProxyChains 实现命令行代理（无图形界面）",
-                "updated": "2022-11-30 11:27:20"
-            }
-        },
-        {
             "filename": "Linux-下-C-语言网络地址初始化.md",
             "header": {
                 "categories": "[网络编程]",
