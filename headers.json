@@ -2523,16 +2523,6 @@
             }
         },
         {
-            "filename": "配置 Windows 为 SSH 跳板机.md",
-            "header": {
-                "categories": "[技术杂谈]",
-                "date": "2023-04-10 20:07:00",
-                "tags": "[SSH,Windows,Linux]",
-                "title": "配置 Windows 为 SSH 跳板机",
-                "updated": "2023-04-30 13:23:00"
-            }
-        },
-        {
             "filename": "青蛙的约会-POJ-1061.md",
             "header": {
                 "categories": "[算法题解]",
