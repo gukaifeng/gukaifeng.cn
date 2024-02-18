@@ -2563,6 +2563,15 @@
                 "title": "（CentOS/RedHat 系）Linux 安装最新版 Golang",
                 "updated": "2023-04-10 15:05:00"
             }
+        },
+        {
+            "filename": "各个系统配置命令行代理的方式.md",
+            "header": {
+                "categories": "[技术杂谈]",
+                "date": "2024-02-18 23:25:00",
+                "tags": "",
+                "title": "各个系统配置命令行代理的方式"
+            }
         }
     ],
     "pages": [
