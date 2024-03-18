@@ -1,6 +1,14 @@
 {
     "posts": [
         {
+            "filename": "解决 rm 命令报错参数过多的问题.md",
+            "header": {
+                "categories": "[技术杂谈]",
+                "tags": "[Linux]",
+                "title": "解决 rm 命令报错参数过多的问题"
+            }
+        },
+        {
             "filename": "Linux 增量文件传输工具 rsync 的常用方法.md",
             "header": {
                 "categories": "[技术杂谈]",
