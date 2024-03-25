@@ -1,6 +1,14 @@
 {
     "posts": [
         {
+            "filename": "Ubuntu 22.04 中根目录空间小于实际磁盘空间问题解决.md",
+            "header": {
+                "categories": "[技术杂谈]",
+                "tags": "[Linux]",
+                "title": "Ubuntu 22.04 中根目录 / 空间小于实际磁盘空间问题解决"
+            }
+        },
+        {
             "filename": "解决 rm 命令报错参数过多的问题.md",
             "header": {
                 "categories": "[技术杂谈]",
