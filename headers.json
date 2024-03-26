@@ -1,6 +1,14 @@
 {
     "posts": [
         {
+            "filename": "Ubuntu 20.04 编译运行 Ceph v16.2.15.md",
+            "header": {
+                "categories": "[技术杂谈]",
+                "tags": "[Linux,Ceph]",
+                "title": "Ubuntu 20.04 编译运行 Ceph v16.2.15"
+            }
+        },
+        {
             "filename": "Ubuntu 22.04 中根目录空间小于实际磁盘空间问题解决.md",
             "header": {
                 "categories": "[技术杂谈]",
