@@ -1,6 +1,15 @@
 {
     "posts": [
         {
+            "filename": "Ceph Pacific(16.2.z) Pool 常用操作.md",
+            "header": {
+                "categories": "[分布式存储系统]",
+                "tags": "[Linux,Ceph]",
+                "title": "Ceph Pacific(16.2.z) Pool 常用操作",
+                "mathjax": "true"
+            }
+        },
+        {
             "filename": "Ubuntu 20.04 物理机集群部署 Ceph Pacifix (16.2.z).md",
             "header": {
                 "categories": "[分布式存储系统]",
