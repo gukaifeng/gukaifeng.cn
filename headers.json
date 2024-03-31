@@ -1,6 +1,14 @@
 {
     "posts": [
         {
+            "filename": "Ubuntu 20.04 物理机集群部署 Ceph Pacifix (16.2.z).md",
+            "header": {
+                "categories": "[分布式存储系统]",
+                "tags": "[Linux,Ceph]",
+                "title": "Ubuntu 20.04 物理机集群部署 Ceph Pacifix (16.2.z)"
+            }
+        },
+        {
             "filename": "fio smalloc OOM 问题记录.md",
             "header": {
                 "categories": "[技术杂谈]",
@@ -305,7 +313,7 @@
         {
             "filename": "CubeFS 快速单机部署试用.md",
             "header": {
-                "categories": "[分布式文件系统]",
+                "categories": "[分布式存储系统]",
                 "date": "2023-05-03 17:09:00",
                 "tags": "[CubeFS,分布式文件系统]",
                 "title": "CubeFS 快速单机部署试用",
@@ -974,7 +982,7 @@
         {
             "filename": "JuiceFS 单机模式初体验.md",
             "header": {
-                "categories": "[分布式文件系统]",
+                "categories": "[分布式存储系统]",
                 "date": "2023-04-09 09:32:00",
                 "tags": "[JuiceFS,分布式文件系统]",
                 "title": "JuiceFS 单机模式初体验",
@@ -984,7 +992,7 @@
         {
             "filename": "JuiceFS 的技术架构与存储文件的方式.md",
             "header": {
-                "categories": "[分布式文件系统]",
+                "categories": "[分布式存储系统]",
                 "date": "2023-04-12 15:03:00",
                 "tags": "[JuiceFS,分布式文件系统]",
                 "title": "JuiceFS 的技术架构与存储文件的方式",
@@ -994,7 +1002,7 @@
         {
             "filename": "JuiceFS 编译与安装.md",
             "header": {
-                "categories": "[分布式文件系统]",
+                "categories": "[分布式存储系统]",
                 "date": "2023-04-10 15:56:00",
                 "tags": "[JuiceFS,分布式文件系统]",
                 "title": "JuiceFS 编译与安装",
