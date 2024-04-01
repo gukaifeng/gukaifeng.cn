@@ -259,12 +259,12 @@ ceph osd pool create {pool-name} [{pg-num} [{pgp-num}]]   erasure \
 
 | 序号 | 参数及说明                                                   |
 | ---- | ------------------------------------------------------------ |
-| 1    | `pool-name`<br/>* 描述：Pool 的名称，必须是唯一的。<br />* 类型：字符串。<br>* 必填：是。 |
-| 2    | `pg-num`<br/>* 描述：Pool 的 PG 总数。注意默认值不适合大多数场景，参照上面 3.1 设置。<br />* 类型：整数。<br/>* 必填：否。<br />* 默认值：8。 |
-| 3    | `pgp-num`<br/>* 描述：Pool 的 PPG 总数。大部分场景下**应等于 PG 总数**，<br />* 类型：整数<br/>* 必填：否。<br />* 默认值：8。 |
-| 4    | `replicated` `erasure`<br/>* 描述：Pool 类型。指定是副本池（`replicated`）还是纠删码池（`erasure`）。<br />* 类型：字符串<br/>* 必填：否。<br />* 默认值：`replicated`。 |
-| 5    | `crush-rule-name`<br/>* 描述：要用于此池的 CRUSH 规则的名称。指定的规则必须存在。<br />* 类型：字符串<br/>* 必填：否。<br />* 默认值：副本池由 config 变量指定，指定的规则必须存在。 纠删码池，指的是是否使用纠删码配置文件。如果没有设置过任何规则，则将隐式创建 `osd pool default crush rule erasure-code default{pool-name}`。 |
-| 6    | `erasure-code-profile=profile`<br/>* 描述：仅适用纠删码池，使用纠删码配置文件。这个必须是 `osd erasure-code-profile set` 已经定义过的存在的配置。<br />* 类型：字符串。<br/>* 必填：否。 |
-| 7    | `--autoscale-mode=<on,off,warn>`<br/>* 描述：自动调整 PG 数量的模式。<br />* 类型：字符串。<br/>* 必填：否。<br />* 默认值：默认行为由选项 `osd_pool_default_pg_autoscale_mode` 控制。 |
-| 8    | `expected-num-objects`<br/>* 描述：池的预期对象数量。通过设置这个值（和一个负文件存储合并阈值一起），在池创建的时候就会预先划分创建好 PG 文件夹，避免在运行时增加延迟。<br />* 类型：整数。<br/>* 必填：否。<br />* 默认值：0，不在池创建时划分 PG 文件夹。 |
+| 1    | `pool-name`<br/>\* 描述：Pool 的名称，必须是唯一的。<br />\* 类型：字符串。<br>\* 必填：是。 |
+| 2    | `pg-num`<br/>\* 描述：Pool 的 PG 总数。注意默认值不适合大多数场景，参照上面 3.1 设置。<br />\* 类型：整数。<br/>\* 必填：否。<br />\* 默认值：8。 |
+| 3    | `pgp-num`<br/>\* 描述：Pool 的 PPG 总数。大部分场景下**应等于 PG 总数**，<br />\* 类型：整数<br/>\* 必填：否。<br />\* 默认值：8。 |
+| 4    | `replicated` `erasure`<br/>\* 描述：Pool 类型。指定是副本池（`replicated`）还是纠删码池（`erasure`）。<br />\* 类型：字符串<br/>\* 必填：否。<br />\* 默认值：`replicated`。 |
+| 5    | `crush-rule-name`<br/>\* 描述：要用于此池的 CRUSH 规则的名称。指定的规则必须存在。<br />\* 类型：字符串<br/>\* 必填：否。<br />\* 默认值：副本池由 config 变量指定，指定的规则必须存在。 纠删码池，指的是是否使用纠删码配置文件。如果没有设置过任何规则，则将隐式创建 `osd pool default crush rule erasure-code default{pool-name}`。 |
+| 6    | `erasure-code-profile=profile`<br/>\* 描述：仅适用纠删码池，使用纠删码配置文件。这个必须是 `osd erasure-code-profile set` 已经定义过的存在的配置。<br />\* 类型：字符串。<br/>\* 必填：否。 |
+| 7    | `--autoscale-mode=<on,off,warn>`<br/>\* 描述：自动调整 PG 数量的模式。<br />\* 类型：字符串。<br/>\* 必填：否。<br />\* 默认值：默认行为由选项 `osd_pool_default_pg_autoscale_mode` 控制。 |
+| 8    | `expected-num-objects`<br/>\* 描述：池的预期对象数量。通过设置这个值（和一个负文件存储合并阈值一起），在池创建的时候就会预先划分创建好 PG 文件夹，避免在运行时增加延迟。<br />\* 类型：整数。<br/>\* 必填：否。<br />\* 默认值：0，不在池创建时划分 PG 文件夹。 |
 
