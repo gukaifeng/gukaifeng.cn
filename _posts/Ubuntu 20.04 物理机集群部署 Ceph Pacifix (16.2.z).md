@@ -769,6 +769,62 @@ hostname2.cn  /dev/sdm  hdd   MR-SAS3316_6f80f41ffa0bf0002d9812281cc1119d      3
 
 
 
+#### 2.6.5. 启用 libstoragemgmt （可选）
+
+
+
+如果我们执行：
+
+```shell
+ceph orch device ls --wide
+```
+
+可能会看到这样的结果：
+
+```shell
+# ceph orch device ls --wide
+HOST                                PATH      TYPE  TRANSPORT  RPM  DEVICE ID                                         SIZE  HEALTH  IDENT  FAULT  AVAILABLE  REFRESHED  REJECT REASONS                                                                 
+...
+tj5-s1-v6-tj5-128473-2yqgrsr3.kscn  /dev/sdg  hdd                   PERC_H730P_Adp_64cd98f0a4fe92002d9812431cd0b398  3725G          N/A    N/A               24m ago    Has a FileSystem, Insufficient space (<10 extents) on vgs, LVM detected
+...
+```
+
+其中，`HEALTH` 列为空，`IDENT` 和 `FAULT` 列为 `N/A`。这些字段由  [libstoragemgmt](https://github.com/libstorage/libstoragemgmt) 提供，在 Ceph 默认是禁用的（官方原因是与硬件并非 100% 兼容）。这几个字段在 Ceph DashBoard 中也会有。
+
+在启用 libstoragemgmt 之前，我们需要先测试与我们硬件的兼容性，执行：
+
+```shell
+cephadm shell lsmcli ldl
+```
+
+如果结果形如（`Link Type` 和 `Health Status` 列可以正常显示值），则兼容：
+
+```shell
+Path     | SCSI VPD 0x83    | Link Type | Serial Number      | Health Status
+----------------------------------------------------------------------------
+/dev/sda | 50000396082ba631 | SAS       | 15P0A0R0FRD6       | Good
+/dev/sdb | 50000396082bbbf9 | SAS       | 15P0A0YFFRD6       | Good
+...
+```
+
+如果结果形如（`Link Type` 是 `No Support  `，`Health Status` 列是 `Unknown`），则不兼容：
+
+```shell
+Path     | SCSI VPD 0x83                    | Link Type  | Serial Number                    | Health Status
+-----------------------------------------------------------------------------------------------------------
+/dev/sda | 64cd98f0a4fe92002d9812391c3489f3 | No Support | 00f389341c3912982d0092fea4f098cd | Unknown      
+/dev/sdb | 64cd98f0a4fe92002d9812401ca4d590 | No Support | 0090d5a41c4012982d0092fea4f098cd | Unknown      
+...
+```
+
+如果兼容，我们可以启用 libstoragemgmt：
+
+```shell
+ceph config set mgr mgr/cephadm/device_enhanced_scan true
+```
+
+
+
 
 
 
