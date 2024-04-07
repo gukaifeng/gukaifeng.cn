@@ -1,6 +1,14 @@
 {
     "posts": [
         {
+            "filename": "Ceph Rados 性能测试方法.md",
+            "header": {
+                "categories": "[分布式存储系统]",
+                "tags": "[Linux,Ceph]",
+                "title": "Ceph Rados 性能测试方法"
+            }
+        },
+        {
             "filename": "Linux 清理系统缓存.md",
             "header": {
                 "categories": "[技术杂谈]",
