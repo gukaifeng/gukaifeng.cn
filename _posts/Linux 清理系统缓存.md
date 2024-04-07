@@ -1,10 +1,16 @@
-参考资料：https://www.kernel.org/doc/Documentation/sysctl/vm.txt
 
 
+先说一个总结，彻底（尽可能的）清理干净 Linux 缓存：
+
+```shell
+sync ; echo 3 | sudo tee /proc/sys/vm/drop_caches
+```
+
+\-
+
+下面是关于 Linux 清理系统缓存方法的介绍。
 
 我们可以通过操作写入 `/proc/sys/vm/drop_caches` 文件来清理 Linux 的缓存。
-
-使用方法如下：
 
 1. 释放 Pagecache：
 
@@ -46,5 +52,8 @@
   ...
   ```
 
-  
+
+
+
+参考资料：https://www.kernel.org/doc/Documentation/sysctl/vm.txt
 
