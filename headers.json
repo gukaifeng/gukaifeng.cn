@@ -1,6 +1,14 @@
 {
     "posts": [
         {
+            "filename": "Ceph Dashboard 重置密码.md",
+            "header": {
+                "categories": "[分布式存储系统]",
+                "tags": "[Linux,Ceph]",
+                "title": "Ceph Dashboard 重置密码"
+            }
+        },
+        {
             "filename": "Ceph Pacific(16.2.z) Pool 常用操作.md",
             "header": {
                 "categories": "[分布式存储系统]",
