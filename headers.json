@@ -1,6 +1,14 @@
 {
     "posts": [
         {
+            "filename": "Linux 清理系统缓存.md",
+            "header": {
+                "categories": "[技术杂谈]",
+                "tags": "[Linux]",
+                "title": "Linux 清理系统缓存"
+            }
+        },
+        {
             "filename": "Ceph Dashboard 重置密码.md",
             "header": {
                 "categories": "[分布式存储系统]",
