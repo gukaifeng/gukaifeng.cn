@@ -1,6 +1,14 @@
 {
     "posts": [
         {
+            "filename": "Windows 使用 Go + Wails 构建第一个桌面程序.md",
+            "header": {
+                "categories": "[桌面开发,Golang]",
+                "tags": "[Windows,Golang,Wails]",
+                "title": "Windows 使用 Go + Wails 构建第一个桌面程序"
+            }
+        },
+        {
             "filename": "Ceph Rados 性能测试方法.md",
             "header": {
                 "categories": "[分布式存储系统]",
