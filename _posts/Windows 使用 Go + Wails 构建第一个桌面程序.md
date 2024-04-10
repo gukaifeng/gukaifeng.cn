@@ -112,7 +112,7 @@ Wails 使用了 Vite 前端工具，当我们的代码修改时，浏览器中�
 
 
 
-
+![Wails 桌面窗口](https://gukaifeng.cn/posts/windows-shi-yong-go-wails-gou-jian-di-yi-ge-zhuo-mian-cheng-xu/windows-shi-yong-go-wails-gou-jian-di-yi-ge-zhuo-mian-cheng-xu_1.png)
 
 ## 4. 编译项目
 
