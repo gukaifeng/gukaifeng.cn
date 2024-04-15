@@ -1,6 +1,14 @@
 {
     "posts": [
         {
+            "filename": "Linux 删除磁盘设备上的 LVM.md",
+            "header": {
+                "categories": "[技术杂谈]",
+                "tags": "[Linux]",
+                "title": "Linux 删除磁盘设备上的 LVM"
+            }
+        },
+        {
             "filename": "Windows 使用 Go + Wails 构建第一个桌面程序.md",
             "header": {
                 "categories": "[桌面开发,Golang]",
