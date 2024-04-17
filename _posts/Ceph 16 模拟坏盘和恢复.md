@@ -55,7 +55,7 @@ echo 1 > /sys/block/sdc/device/delete
 
 
 
-这里完成后，稍等几分钟，对应的 OSD 就 `down` 掉了：
+如果集群有写入，对应的 OSD 就很快 `down` 掉了：
 
 ```shell
 # ceph osd tree | grep osd.1
@@ -102,9 +102,9 @@ osd.1 down out weight 0 ...
 
 >如果我们想保留 OSD 的编号，比如我这里复用 id 1，那么需要先 destory 这个 OSD，然后其编号就会被复用。
 >
->```shell
->ceph osd destroy <osd.id> [--force]
->```
+> ```shell
+> ceph osd destroy <osd.id> [--force]
+> ```
 >
 >因为已经坏盘了，所以也没必要去判断 `ceph osd safe-to-destroy <osd.id>` 了。 
 
@@ -209,7 +209,31 @@ ID  CLASS  WEIGHT     TYPE NAME                               STATUS  REWEIGHT  
 
 到这里坏盘的替换就完成了。
 
+没有复用 osd id 的情况下，可能还需要清一下失效了的 osd daemon，可以先命令看一下：
+
+```
+# ceph orch ps
+NAME                                           HOST                                PORTS        STATUS          REFRESHED   AGE  MEM USE  MEM LIM  VERSION    IMAGE ID      CONTAINER ID  
+...
+osd.1                                          tj5-s1-v6-tj5-128473-2yqgrsr3.kscn               error              6m ago    2w        -    5751M  <unknown>  <unknown>     <unknown>     
+...
+```
+
+删除这个 daemon 就好：
+
+```shell
+ceph orch daemon rm osd.<id> [--force]
+```
+
 
 
 > 如果前面 destroy 了 osd.1，那么这里新 osd 的 id 会复用 1。
+>
+> 但是复用了 id 以后，由于 osd daemon 还是以前那个，所以跑起来一样会 error。
+>
+> 需要重新部署：
+>
+> ```shell
+> ceph orch daemon redeploy osd.<id>
+> ```
 
