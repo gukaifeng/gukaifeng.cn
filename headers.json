@@ -1,6 +1,22 @@
 {
     "posts": [
         {
+            "filename": "Linux 不关机添加或删除设备.md",
+            "header": {
+                "categories": "[技术杂谈]",
+                "tags": "[Linux]",
+                "title": "Linux 不关机添加或删除设备"
+            }
+        },
+        {
+            "filename": "Ceph 16 模拟坏盘和恢复.md",
+            "header": {
+                "categories": "[分布式存储系统]",
+                "tags": "[Linux,Ceph]",
+                "title": "Ceph 16 模拟坏盘和恢复"
+            }
+        },
+        {
             "filename": "Linux 删除磁盘设备上的 LVM.md",
             "header": {
                 "categories": "[技术杂谈]",
