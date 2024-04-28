@@ -1,6 +1,22 @@
 {
     "posts": [
         {
+            "filename": "Ceph 16 命令 ceph osd pool autoscale-status 无输出问题排查和解决.md",
+            "header": {
+                "categories": "[分布式存储系统]",
+                "tags": "[Linux,Ceph]",
+                "title": "Ceph 16 命令 ceph osd pool autoscale-status 无输出问题排查和解决"
+            }
+        },
+        {
+            "filename": "解决 Ceph 给 Host 添加标签 _admin 不同步 key 和配置的问题.md",
+            "header": {
+                "categories": "[分布式存储系统]",
+                "tags": "[Linux,Ceph]",
+                "title": "解决 Ceph 给 Host 添加标签 _admin 不同步 key 和配置的问题"
+            }
+        },
+        {
             "filename": "Linux 不关机添加或删除设备.md",
             "header": {
                 "categories": "[技术杂谈]",
