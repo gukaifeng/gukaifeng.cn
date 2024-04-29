@@ -1,6 +1,14 @@
 {
     "posts": [
         {
+            "filename": "记一次严重的 Ceph backfill_toofull 处理.md",
+            "header": {
+                "categories": "[分布式存储系统]",
+                "tags": "[Linux,Ceph]",
+                "title": "记一次严重的 Ceph backfill_toofull 处理"
+            }
+        },
+        {
             "filename": "Ceph 16 命令 ceph osd pool autoscale-status 无输出问题排查和解决.md",
             "header": {
                 "categories": "[分布式存储系统]",
