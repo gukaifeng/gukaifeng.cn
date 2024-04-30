@@ -212,3 +212,13 @@ ec                      3161G                1.5        88232G  0.0537          
 我们手动给设成 Let Ceph decide 即可不再出现此问题：
 
 ![](https://gukaifeng.cn/posts/ceph-16-ming-ling-ceph-osd-pool-autoscale-status-wu-shu-chu-wen-ti-pai-cha-he-jie-jue/ceph-16-ming-ling-ceph-osd-pool-autoscale-status-wu-shu-chu-wen-ti-pai-cha-he-jie-jue_2.png)
+
+
+
+> 其实一开始的时候有搜索到红帽一个解决方案：
+>
+> https://access.redhat.com/solutions/6987628
+>
+> 但是由于这个页面只有红帽开发者才能看，等我加入红帽开发者的申请通过的时候，我已经搞定了 =。=
+>
+> <img width=300px src="https://gukaifeng.cn/posts/ceph-16-ming-ling-ceph-osd-pool-autoscale-status-wu-shu-chu-wen-ti-pai-cha-he-jie-jue/ceph-16-ming-ling-ceph-osd-pool-autoscale-status-wu-shu-chu-wen-ti-pai-cha-he-jie-jue_3.jpg" />
