@@ -1,6 +1,14 @@
 {
     "posts": [
         {
+            "filename": "Ceph 获取不到 admin_socket 问题解决.md",
+            "header": {
+                "categories": "[分布式存储系统]",
+                "tags": "[Linux,Ceph]",
+                "title": "Ceph 获取不到 admin_socket 问题解决"
+            }
+        },
+        {
             "filename": "记一次严重的 Ceph backfill_toofull 处理.md",
             "header": {
                 "categories": "[分布式存储系统]",
